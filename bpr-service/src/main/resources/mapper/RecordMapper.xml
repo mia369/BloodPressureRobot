@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--接口位置-->
+<mapper namespace="com.ht.hhr.mapper.RecordMapper">
+
+
+    <insert id="insert" parameterType="Record" useGeneratedKeys="true">
+        insert into hhr_record
+        (open_id,
+         high_blood_pressure,
+         low_blood_pressure,
+         heart_rate,
+         used_pills,
+         measure_time)
+        values (#{openId},
+                #{highBloodPressure},
+                #{lowBloodPressure},
+                #{heartRate},
+                #{usedPills},
+                #{measureTime});
+    </insert>
+
+    <delete id="deleteByPk">
+        delete from hhr_record
+        where id = #{recordPk};
+    </delete>
+
+    <select id="selectByPk" resultType="com.ht.hhr.entity.Record">
+        select *
+        from hhr_record
+        where id = #{recordPk};
+    </select>
+
+    <select id="select" parameterType="com.ht.hhr.entity.query.RecordQuery" resultType="com.ht.hhr.entity.Record">
+        select *
+        from hhr_record
+        <where>
+            open_id = '123123123'
+            <if test="query.startTime != null">
+                and measure_time &gt;= #{query.startTime}
+            </if>
+            <if test="query.endTime != null">
+                and measure_time &lt;= #{query.endTime}
+            </if>
+        </where>
+        <choose>
+            <when test="query.sortOrder != null">
+                <choose>
+                    <when test="query.sortOrder.startsWith(&quot;A&quot;) || query.sortOrder.startsWith(&quot;a&quot;)">
+                        order by measure_time asc
+                    </when>
+                    <otherwise>
+                        order by measure_time desc
+                    </otherwise>
+                </choose>
+            </when>
+            <otherwise>
+                order by measure_time asc
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

@@ -1,0 +1,34 @@
+<!--pages/edit/edit.wxml-->
+<van-dialog id="van-dialog" />
+<van-cell-group>
+  <van-cell title="测量时间" title-width="20%" center>
+    <van-field value="{{ record.measureTime }}" placeholder="请选择测量时间" readonly border="{{ false }}" use-button-slot>
+      <van-button slot="button" size="small" type="primary" is-link bind:click="showPopup">
+        选择时间
+      </van-button>
+    </van-field>
+    <van-popup show="{{ showMeasureTimePop }}" bind:close="onClose" position="bottom">
+      <van-picker title="测量时间" columns="{{ columns }}" show-toolbar="{{ true }}" bind:cancel="onPickerCancel" bind:confirm="onPickerConfirm" />
+    </van-popup>
+  </van-cell>
+  <van-cell title="高压" title-width="20%" center>
+    <van-field center clearable type="number" placeholder="请输入高压" border="{{ false }}" bind:change="onHighBloodPressureChange" />
+  </van-cell>
+  <van-cell title="低压" title-width="20%" center>
+    <van-field center clearable type="number" placeholder="请输入低压" border="{{ false }}" bind:change="onLowBloodPressureChange" />
+  </van-cell>
+  <van-cell title="心率" title-width="20%" center>
+    <van-field center clearable type="number" placeholder="请输入心率" border="{{ false }}" bind:change="onHeartRateChange" />
+  </van-cell>
+  <van-cell title="是否服药" title-width="20%" center>
+    <van-radio-group bind:change="onUsedPillsChange" direction="horizontal">
+      <van-radio name="0" checked-color="#51aa38">未服药</van-radio>
+      <van-radio name="1" checked-color="#51aa38">已服药</van-radio>
+    </van-radio-group>
+  </van-cell>
+  <van-cell center border="{{ false }}">
+    <button class="button" type="primary">提交</button>
+    <button class="button" type="default" bind:click="onResetForm">重置</button>
+  </van-cell>
+</van-cell-group>
+

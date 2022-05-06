@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--接口位置-->
+<mapper namespace="com.ht.hhr.mapper.UserMapper">
+
+
+    <insert id="insert" parameterType="User" useGeneratedKeys="true">
+        insert into hhr_user
+        (open_id,
+         username,
+         password,
+         salt,
+         delete_mark,
+         create_time,
+         update_time)
+        values (#{openId},
+                #{username},
+                #{password},
+                #{salt},
+                #{deleteMark}
+                #{createTime},
+                #{updateTime});
+    </insert>
+</mapper>
