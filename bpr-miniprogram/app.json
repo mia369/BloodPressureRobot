@@ -4,7 +4,12 @@
     "pages/records/records",
     "pages/analysis/analysis",
     "pages/user/user",
-    "pages/index/index"
+    "pages/index/index",
+    "pages/user/info/info",
+    "pages/user/family/family",
+    "pages/user/help/help",
+    "pages/user/comment/comment",
+    "pages/user/about/about"
   ],
   "window":{
     "backgroundTextStyle":"light",
@@ -54,6 +59,9 @@
     "van-radio-group": "@vant/weapp/radio-group/index",
     "van-cell": "@vant/weapp/cell/index",
     "van-cell-group": "@vant/weapp/cell-group/index",
-    "van-dialog": "@vant/weapp/dialog/index"
+    "van-dialog": "@vant/weapp/dialog/index",
+    "van-image": "@vant/weapp/image/index",
+    "van-icon": "@vant/weapp/icon/index",
+    "van-loading": "@vant/weapp/loading/index"
   }
 }

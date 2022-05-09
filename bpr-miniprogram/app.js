@@ -1,48 +1,73 @@
 // app.js
+import userApi from './utils/userApi'
+import requestApi from './utils/requestApi.js'
+
 App({
   onLaunch() {
-    let that = this
-    // 展示本地存储能力
-    const logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
-    
-    wx.login({
-      success(res) {
+    console.log("app on launch")
+  },
 
-        if (res.code) {
-          //发起网络请求
-          
-          console.log(res.code)
-          wx.request({
-            url: 'http://localhost:8080/user/login',
-            data: {
-              code: res.code
-            },
-            method: 'POST',
-            success: function (res) {
-              console.log(res)
-              that.globalData.openId = res.data.result.openId
-              that.globalData.sessionKey = res.data.result.sessionKey
-            }
-
-          })
-          // console.log(response)
-          // console.log(response.result.openId)
-          // console.log(response.result.sessionKey)
-          // this.globalData.openId = response.result.openId
-          // this.globalData.sessionKey = response.result.sessionKey
-          // console.log(that.globalData)
-        } else {
-          console.log('登录失败！' + res.errMsg)
-        }
-      }
+  onShow() {
+    this.userLogin().then(res => {
+      console.log(res)
     })
   },
+  /**
+   * 全局变量
+   */
   globalData: {
-    userInfo: {},
-    familyInfo: null,
+    host: 'http://localhost:8080/',
     openId: '',
     sessionKey: '',
+    userInfo: {
+      nickName: '点击登录',
+      avatarUrl: '/images/defaultAvatar.png',
+    },
+    familyInfo: null,
+  },
+  /**
+   * 全局方法
+   */
+  userLogin() {
+    console.log("调用userLogin方法")
+    let that = this
+    return new Promise(function (resolve, reject) {
+      // 静默登录
+      wx.login({
+        success(res) {
+          if (res.code) {
+            //发起网络请求
+            console.log(res.code)
+            //调用wx.request请求传递code凭证换取用户openid，并获取后台用户信息
+            wx.request({
+              url: `${that.globalData.host}/user/login`, // 后台请求用户信息方法【注意，此处必须为https数字加密证书】
+              data: {
+                code: res.code //code凭证
+              },
+              header: {
+                'content-type': 'application/json' // 默认值
+              },
+              method: 'POST',
+              success(res) {
+                //成功时回调函数
+                console.log("res: ", res)
+                that.globalData.openId = res.data.result.openId
+                that.globalData.sessionKey = res.data.result.sessionKey
+                if (res.data.result.userInfo) {
+                  that.globalData.userInfo = res.data.result.userInfo
+                }
+                console.log("openId: ", that.globalData.openId)
+                console.log("sessionKey: ", that.globalData.sessionKey)
+                console.log("userInfo: ", that.globalData.userInfo)
+              },
+              fail: function (res) {
+                //失败时回调函数
+                console.log('登录失败！' + err)
+              },
+            })
+          }
+        }
+      })
+    })
   }
 })

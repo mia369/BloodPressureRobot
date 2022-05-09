@@ -1,0 +1,8 @@
+/* pages/user/user.wxss */
+
+.van-cell__title {
+  margin-left: 20px;
+  max-width: 25%;
+  min-width: 25%;
+}
+

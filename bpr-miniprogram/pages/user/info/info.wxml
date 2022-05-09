@@ -1,0 +1,37 @@
+
+<van-dialog use-slot title="请输入昵称" show="{{ showNamePop }}" show-cancel-button confirm-button-color="#51aa38" bind:close="closePop" bind:confirm="updateUserDetails">
+  <van-cell-group>
+    <van-field value="{{ userInfo.nickName }}" bind:change="dialogInputName" input-align="center" />
+  </van-cell-group>
+</van-dialog>
+
+<van-dialog use-slot title="请输入年龄" show="{{ showAgePop }}" show-cancel-button confirm-button-color="#51aa38" bind:close="closePop" bind:confirm="updateUserDetails">
+  <input type="number" placeholder="这是一个数字输入框" />
+</van-dialog>
+
+<van-dialog use-slot title="请输入身高" show="{{ showHeightPop }}" show-cancel-button confirm-button-color="#51aa38" bind:close="closePop" bind:confirm="updateUserDetails">
+  <van-cell-group>
+    <van-field value="{{ userInfo.height }}" type="number" bind:change="dialogInputHeight" input-align="center" />
+  </van-cell-group>
+</van-dialog>
+
+<van-dialog use-slot title="请输入体重" show="{{ showWeightPop }}" show-cancel-button confirm-button-color="#51aa38" bind:close="closePop" bind:confirm="updateUserDetails">
+  <van-cell-group>
+    <van-field value="{{ userInfo.weight }}" type="number" bind:change="dialogInputWeight" input-align="center" />
+  </van-cell-group>
+</van-dialog>
+
+<van-cell-group>
+  <van-cell title="昵称" center is-link class="user-cell" bind:click="popName">
+    <van-field center readonly type="text" value="{{ userInfo.nickName }}" border="{{ false }}"/>
+  </van-cell>
+  <van-cell title="年龄" center is-link class="userCell" bind:click="popAge">
+    <van-field center readonly type="text" value="{{ userInfo.age }}" placeholder="未填写" border="{{ false }}"/>
+  </van-cell>
+  <van-cell title="身高(cm)" center is-link class="userCell" bind:click="popHeight">
+    <van-field center readonly type="text" value="{{ userInfo.height }}" placeholder="未填写" border="{{ false }}"/>
+  </van-cell>
+  <van-cell title="体重(kg)" center is-link class="userCell" bind:click="popWeight">
+    <van-field center readonly type="text" value="{{ userInfo.weight }}" placeholder="未填写" border="{{ false }}"/>
+  </van-cell>
+</van-cell-group>

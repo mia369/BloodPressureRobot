@@ -4,24 +4,47 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!--接口位置-->
-<mapper namespace="com.ht.hhr.mapper.UserMapper">
-
+<mapper namespace="com.ht.bpr.mapper.UserMapper">
 
     <insert id="insert" parameterType="User" useGeneratedKeys="true">
-        insert into hhr_user
-        (open_id,
-         username,
-         password,
-         salt,
-         delete_mark,
-         create_time,
-         update_time)
-        values (#{openId},
-                #{username},
-                #{password},
-                #{salt},
-                #{deleteMark}
-                #{createTime},
-                #{updateTime});
+        insert into bpr_user
+        (nick_name,
+         avatar_url,
+         open_id)
+        values (#{nickName},
+                #{avatarUrl},
+                #{openId});
     </insert>
+
+    <update id="updateUserInfo" parameterType="User">
+        update bpr_user
+        set nick_name = #{user.nickName},
+            avatar_url = #{user.avatarUrl},
+            open_id = #{user.openId}
+    </update>
+
+    <update id="updateUserDetails" parameterType="User">
+        update bpr_user
+        <set>
+            <if test="user.nickName != null">
+                nick_name = #{user.nickName},
+            </if>
+            <if test="user.age != null">
+                age = #{user.age},
+            </if>
+            <if test="user.height != null">
+                height = #{user.height},
+            </if>
+            <if test="user.weight != null">
+                weight = #{user.weight}
+            </if>
+        </set>
+        where open_id = #{user.openId}
+    </update>
+
+    <select id="selectOne" resultType="com.ht.bpr.entity.User">
+        select *
+        from bpr_user
+        where open_id = #{openId}
+    </select>
 </mapper>

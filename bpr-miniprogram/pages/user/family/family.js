@@ -1,6 +1,4 @@
 // pages/user/user.js
-import userApi from '../../utils/userApi.js'
-import requestApi from '../../utils/requestApi.js'
 
 const app = getApp();
 
@@ -11,13 +9,12 @@ Page({
    */
   data: {
     userInfo: {
-      nickName: '',
-      avatarUrl: '',
+      avatarUrl: "/images/defaultAvatar.png",
     },
     hasUserInfo: false,
     canIUseGetUserProfile: false,
-    userDetail: null,
 
+    
   },
 
   /**
@@ -29,17 +26,6 @@ Page({
         canIUseGetUserProfile: true
       })
     }
-    console.log("app.globalData.userInfo: ", app.globalData.userInfo)
-    this.setData({
-      userInfo: app.globalData.userInfo,
-    })
-    if (this.data.userInfo.nickName !== '点击登录') {
-      this.setData({
-        hasUserInfo: true
-      })
-    }
-    console.log("this.data.userInfo: ", this.data.userInfo)
-
   },
 
   /**
@@ -97,31 +83,23 @@ Page({
     wx.getUserProfile({
       desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
       success: (res) => {
-        console.log("getUserProfile.res: ", res)
-        app.globalData.userInfo.nickName = res.userInfo.nickName
-        app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl
         this.setData({
-          userInfo: {
-            nickName: res.userInfo.nickName,
-            avatarUrl: res.userInfo.avatarUrl,
-          },
+          userInfo: res.userInfo,
           hasUserInfo: true
         })
-        console.log("app.globalData.userInfo: ", app.globalData.userInfo)
-        //后台添加或更新user信息
-        //调用接口
-        const params = {
-          openId: app.globalData.openId,
-          nickName: app.globalData.userInfo.nickName,
-          avatarUrl: app.globalData.userInfo.avatarUrl,
-        }
-        requestApi.post(userApi.saveUserInfo, params).then(res => {
-          //成功时回调函数
-          console.log(res)
-        }).catch(err => {
-          //失败时回调函数
-          console.log(err)
+        console.log("userInfo: ", this.data.userInfo)
+        wx.request({
+          url: 'http://localhost:8080/user/authorize',
+          data: {
+            openId: app.globalData.openId,
+            name: this.data.userInfo.nickName,
+          },
+          method: 'POST',
+          success: function (res) {
+            console.log("res: ", res)
+          }
         })
+        console.log("url: ", this.data.userInfo.avatarUrl)
       }
     })
   },

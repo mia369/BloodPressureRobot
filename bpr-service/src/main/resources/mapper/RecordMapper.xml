@@ -4,41 +4,50 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!--接口位置-->
-<mapper namespace="com.ht.hhr.mapper.RecordMapper">
-
+<mapper namespace="com.ht.bpr.mapper.RecordMapper">
 
     <insert id="insert" parameterType="Record" useGeneratedKeys="true">
-        insert into hhr_record
+        insert into bpr_record
         (open_id,
          high_blood_pressure,
          low_blood_pressure,
          heart_rate,
          used_pills,
-         measure_time)
+         measure_time,
+         create_time,
+         update_time)
         values (#{openId},
                 #{highBloodPressure},
                 #{lowBloodPressure},
                 #{heartRate},
                 #{usedPills},
-                #{measureTime});
+                #{measureTime},
+                #{createTime},
+                #{updateTime});
     </insert>
 
     <delete id="deleteByPk">
-        delete from hhr_record
+        delete
+        from bpr_record
         where id = #{recordPk};
     </delete>
 
-    <select id="selectByPk" resultType="com.ht.hhr.entity.Record">
+    <select id="selectByPk" resultType="com.ht.bpr.entity.Record">
         select *
-        from hhr_record
+        from bpr_record
         where id = #{recordPk};
     </select>
 
-    <select id="select" parameterType="com.ht.hhr.entity.query.RecordQuery" resultType="com.ht.hhr.entity.Record">
+    <select id="select" parameterType="com.ht.bpr.entity.query.RecordQuery" resultType="com.ht.bpr.entity.Record">
         select *
-        from hhr_record
+        from bpr_record
         <where>
-            open_id = '123123123'
+            open_id in
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <foreach collection="query.openIds" item="openId" separator=",">
+                    #{openId}
+                </foreach>
+            </trim>
             <if test="query.startTime != null">
                 and measure_time &gt;= #{query.startTime}
             </if>

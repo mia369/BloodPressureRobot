@@ -1,19 +1,5 @@
 import Dialog from '../../miniprogram_npm/@vant/weapp/dialog/dialog';
 
-function getUserProfile(e) {
-  // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认
-  // 开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-  wx.getUserProfile({
-    desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-    success: (res) => {
-      this.setData({
-        userInfo: res.userInfo,
-        hasUserInfo: true
-      })
-    }
-  })
-}
-
 function formatDate(date) {
   // 获取当前月份
   var nowMonth = date.getMonth() + 1;
@@ -49,6 +35,10 @@ const dateTime = getDateTime();
 
 const app = getApp();
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 Page({
 
   /**
@@ -74,9 +64,7 @@ Page({
       heartRate: 0,
       usedPills: 0
     },
-    userInfo: {},
-    hasUserInfo: false,
-    canIUseGetUserProfile: true,
+
   },
 
   /*
@@ -99,38 +87,7 @@ Page({
    * !! Dialog.confirm只有确认按钮
    */
   onShow() {
-    if (app.globalData.userInfo === null) {
-      console.log("app.globalData.userInfo: ", app.globalData.userInfo)
-      Dialog.confirm({
-          message: '请先登录',
-        })
-        .then(() => {
-          // on confirm
-          //路由到用户页
-          wx.switchTab({
-            url: '/pages/user/user'
-          })
-        })
-        .catch(() => {
-          // on cancel
-        });
-    }
-    if (app.globalData.familyInfo === null) {
-      console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
-      Dialog.confirm({
-          message: '请先创建家庭',
-        })
-        .then(() => {
-          // on confirm
-          //路由到用户页
-          wx.switchTab({
-            url: '/pages/user/user'
-          })
-        })
-        .catch(() => {
-          // on cancel
-        });
-    }
+    this.checkLogin()
   },
 
   /**
@@ -268,55 +225,52 @@ Page({
     console.log(this.data.record)
   },
 
-  onResetForm(event) {
+  onResetForm(event) {},
 
-  },
-
-  addRecord() {
-    // 为确保this指向不发生改变，可以固定下this指向
-    //使用this的时候用that代替即可
-    var that = this
-    wx.request({
-      // 注意，如果小程序开启校验合法域名时必须使用https协议
-      //在测试的情况下可以不开启域名校验
-      url: 'http://127.0.0.1:8080/record/add',
-      data: {
-        // 接口设置的固定参数值
-        record: {
-
-        }
-      },
-      // 请求的方法
-      method: 'GET', // 或 ‘POST’
-      // 设置请求头，不能设置 Referer
-      header: {
-        'content-type': 'application/json' // 默认值
-      },
-      // 请求成功时的处理
-      success: function (res) {
-        // 一般在这一打印下看看是否拿到数据
-        console.log(res.data)
-        if (res.statusCode == 200) {
-          var array = res.data
-          that.setData({
-            // 将res.data保存在listDate方便我们去循环遍历
-            listDate: res.data
-            // 统计所有数据
-            // deviceNum: array.length
-          })
-        }
-      },
-      // 请求失败时的一些处理
-      fail: function () {
-        wx.showToast({
-          icon: "none",
-          mask: true,
-          title: "接口调用失败，请稍后再试。",
-        });
+  async checkLogin() {
+    var checkCount = 0
+    while (app.globalData.userInfo.nickName === "点击登录" || !app.globalData.familyInfo) {
+      console.log("循环")
+      await sleep(50)
+      if (checkCount < 30 && app.globalData.userInfo.nickName === "点击登录") {
+        checkCount = checkCount + 1
+        continue
       }
-    })
+      if (app.globalData.userInfo.nickName === "点击登录") {
+        console.log("app.globalData.userInfo: ", app.globalData.userInfo)
+
+        Dialog.confirm({
+            message: '请先登录',
+          })
+          .then(() => {
+            // on confirm
+            //路由到用户页
+            wx.switchTab({
+              url: '/pages/user/user'
+            })
+          })
+          .catch(() => {
+            // on cancel
+          });
+        break
+      }
+      if (!app.globalData.familyInfo) {
+        console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
+        Dialog.confirm({
+            message: '请先创建家庭',
+          })
+          .then(() => {
+            // on confirm
+            //路由到用户页
+            wx.switchTab({
+              url: '/pages/user/user'
+            })
+          })
+          .catch(() => {
+            // on cancel
+          });
+        break
+      }
+    }
   },
-
-
-
 })
