@@ -18,4 +18,10 @@
                 #{family.createTime}
                )
     </insert>
+    <select id="selectByFamilyId" resultType="com.ht.bpr.entity.Family">
+        select *
+        from bpr_family
+        where family_id = #{familyId}
+    </select>
+
 </mapper>

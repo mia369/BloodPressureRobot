@@ -9,7 +9,7 @@ import com.ht.bpr.entity.vo.FamilyVo;
  * @description
  */
 public interface FamilyService {
-    void add(FamilyVo familyVo);
+    FamilyVo add(FamilyVo familyVo);
 
     FamilyVo selectByOpenId(String openId);
 }

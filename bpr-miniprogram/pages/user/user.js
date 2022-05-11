@@ -14,9 +14,17 @@ Page({
       nickName: '',
       avatarUrl: '',
     },
+    familyInfo: {
+      familyId: '',
+      familyName: '',
+      familyManager: '',
+      familyMemberVos: [],
+      createTime: '',
+      updateTime: '',
+    },
     hasUserInfo: false,
     canIUseGetUserProfile: false,
-    userDetail: null,
+    familyCellValue: '查看',
 
   },
 
@@ -30,16 +38,22 @@ Page({
       })
     }
     console.log("app.globalData.userInfo: ", app.globalData.userInfo)
+    console.log("app.globalData.userInfo: ", app.globalData.familyInfo)
     this.setData({
       userInfo: app.globalData.userInfo,
+      familyInfo: app.globalData.familyInfo,
     })
     if (this.data.userInfo.nickName !== '点击登录') {
       this.setData({
         hasUserInfo: true
       })
     }
+    if (this.data.familyInfo.familyName === '') {
+      this.setData({
+        familyCellValue: '点击注册',
+      })
+    }
     console.log("this.data.userInfo: ", this.data.userInfo)
-
   },
 
   /**
@@ -125,4 +139,6 @@ Page({
       }
     })
   },
+
+
 })

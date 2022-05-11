@@ -1,5 +1,7 @@
 <!--pages/user/user.wxml-->
-<view style="height: 185px; background-color: rgba(210, 221, 218, 0.39); text-align: center; vertical-align: middle; ">
+
+
+<view style="height: 185px; background-color: rgba(160, 167, 170, 0.5); text-align: center; vertical-align: middle; ">
   <view style="padding: 75px 5px 5px 5px;">
     <van-image round fit="fill" width="80px" height="80px" src="{{ userInfo.avatarUrl }}" wx:if="{{canIUseGetUserProfile}}" bind:click="getUserProfile" style="border: 1px;"/>
     <span style="display:block">{{userInfo.nickName}}</span>
@@ -11,7 +13,7 @@
   value="查看" is-link url="/pages/user/info/info">
   </van-cell>
   <van-cell title="家庭信息" title-width="30%" center class="userCell" size="large" icon="friends"
-  value="查看" is-link url="/pages/user/family/family">
+  value="{{ familyCellValue }}" is-link url="/pages/user/family/family">
   </van-cell>
   <van-cell title="使用帮助" title-width="30%" center class="userCell" size="large" icon="comment"
   value="获取帮助" is-link url="/pages/user/help/help">

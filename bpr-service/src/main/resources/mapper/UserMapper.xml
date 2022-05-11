@@ -6,6 +6,20 @@
 <!--接口位置-->
 <mapper namespace="com.ht.bpr.mapper.UserMapper">
 
+    <resultMap id="userResultMap" type="User">
+        <result column="id" property="id"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="avatar_url" property="avatarUrl"/>
+        <result column="age" property="age"/>
+        <result column="height" property="height"/>
+        <result column="weight" property="weight"/>
+        <result column="open_id" property="openId"/>
+        <result column="union_id" property="unionId"/>
+        <result column="last_record_time" property="lastRecordTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
     <insert id="insert" parameterType="User" useGeneratedKeys="true">
         insert into bpr_user
         (nick_name,
@@ -47,4 +61,18 @@
         from bpr_user
         where open_id = #{openId}
     </select>
+
+    <select id="selectUserMapByOpenIds" parameterType="string" resultMap="userResultMap">
+        select *
+        from bpr_user
+        <where>
+            open_id in
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <foreach collection="openIds" item="openId" separator=",">
+                    #{openId}
+                </foreach>
+            </trim>
+        </where>
+    </select>
+
 </mapper>

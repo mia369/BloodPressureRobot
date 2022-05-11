@@ -239,35 +239,27 @@ Page({
       if (app.globalData.userInfo.nickName === "点击登录") {
         console.log("app.globalData.userInfo: ", app.globalData.userInfo)
 
-        Dialog.confirm({
+        Dialog.alert({
             message: '请先登录',
           })
           .then(() => {
-            // on confirm
             //路由到用户页
             wx.switchTab({
               url: '/pages/user/user'
             })
-          })
-          .catch(() => {
-            // on cancel
           });
         break
       }
-      if (!app.globalData.familyInfo) {
+      if (app.globalData.familyInfo.familyName === '') {
         console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
-        Dialog.confirm({
+        Dialog.alert({
             message: '请先创建家庭',
           })
           .then(() => {
-            // on confirm
             //路由到用户页
             wx.switchTab({
               url: '/pages/user/user'
             })
-          })
-          .catch(() => {
-            // on cancel
           });
         break
       }

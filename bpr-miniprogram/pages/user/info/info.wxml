@@ -12,7 +12,7 @@
 </van-dialog>
 
 <van-cell-group>
-  <van-cell title="昵称" center is-link class="user-cell" bind:click="popName">
+  <van-cell title="昵称" center is-link class="userCell" bind:click="popName">
     <van-field center readonly type="text" value="{{ userInfo.nickName }}" border="{{ false }}" />
   </van-cell>
   <van-cell title="年龄" center is-link class="userCell" bind:click="popAge">

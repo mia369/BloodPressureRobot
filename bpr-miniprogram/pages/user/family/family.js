@@ -1,4 +1,5 @@
-// pages/user/user.js
+import familyApi from '../../../utils/familyApi.js'
+import requestApi from '../../../utils/requestApi.js'
 
 const app = getApp();
 
@@ -8,23 +9,28 @@ Page({
    * 页面的初始数据
    */
   data: {
-    userInfo: {
-      avatarUrl: "/images/defaultAvatar.png",
+    familyInfo: {
+      familyId: '',
+      familyName: '',
+      familyManager: '',
+      familyMemberVos: [],
+      createTime: '',
+      updateTime: '',
     },
-    hasUserInfo: false,
-    canIUseGetUserProfile: false,
+    showFamilyRegisterPop: false,
 
-    
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    if (wx.getUserProfile) {
-      this.setData({
-        canIUseGetUserProfile: true
-      })
+    console.log("app.globalData.userInfo: ", app.globalData.familyInfo)
+    this.setData({
+      familyInfo: app.globalData.familyInfo,
+    })
+    if (this.data.familyInfo.familyName === '') {
+      
     }
   },
 
@@ -77,30 +83,43 @@ Page({
 
   },
 
-  getUserProfile(e) {
-    // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认
-    // 开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-    wx.getUserProfile({
-      desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-      success: (res) => {
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
-        console.log("userInfo: ", this.data.userInfo)
-        wx.request({
-          url: 'http://localhost:8080/user/authorize',
-          data: {
-            openId: app.globalData.openId,
-            name: this.data.userInfo.nickName,
-          },
-          method: 'POST',
-          success: function (res) {
-            console.log("res: ", res)
-          }
-        })
-        console.log("url: ", this.data.userInfo.avatarUrl)
-      }
+  
+  dialogInputFamilyName(event) {
+    console.log(event.detail)
+    var familyInfo = this.data.familyInfo
+    familyInfo.familyName = event.detail
+    console.log(this.data.familyInfo)
+  },
+
+  closePop() {
+    this.setData({
+      showFamilyRegisterPop: false,
     })
+  },
+
+  registerFamily(event) {
+    console.log(this.data.familyInfo)
+    if (this.data.familyInfo.familyName === '') {
+      Dialog.alert({
+        message: '创建失败, 家庭名称不能为空, 请重新注册',
+      }).then(() => {
+        // on close
+      });
+    } else {
+      this.data.familyInfo.familyManager = app.globalData.openId
+      console.log(this.data.familyInfo)
+      //调用接口
+      requestApi.post(familyApi.registerFamily, this.data.familyInfo).then(res => {
+        //成功时回调函数
+        console.log("返回结果: ", res)
+        app.globalData.familyInfo = res.data.result.familyInfo
+        this.data.familyInfo = res.data.result.familyInfo
+        console.log("this.data.familyInfo: ", this.data.familyInfo)
+      }).catch(err => {
+        //失败时回调函数
+        console.log(err)
+      })
+      // this.onLoad()
+    }
   },
 })

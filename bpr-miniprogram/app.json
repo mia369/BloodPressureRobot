@@ -62,6 +62,10 @@
     "van-dialog": "@vant/weapp/dialog/index",
     "van-image": "@vant/weapp/image/index",
     "van-icon": "@vant/weapp/icon/index",
-    "van-loading": "@vant/weapp/loading/index"
+    "van-loading": "@vant/weapp/loading/index",
+    "van-nav-bar": "@vant/weapp/nav-bar/index",
+    "van-panel": "@vant/weapp/panel/index",
+    "van-grid": "@vant/weapp/grid/index",
+    "van-grid-item": "@vant/weapp/grid-item/index"
   }
 }

@@ -8,6 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Zhu Shaoqin
  * @email zsqmia@163.com
@@ -72,6 +76,15 @@ public class UserServiceImpl implements UserService {
         user.setHeight(userVo.getHeight());
         user.setWeight(userVo.getWeight());
         userMapper.updateUserDetails(user);
+    }
+
+    @Override
+    public Map<String, User> selectUserMapByOpenIds(List<String> openIds) {
+        Map<String, User> userMap = new HashMap<>();
+        if (openIds != null && openIds.size() > 0) {
+            userMap = userMapper.selectUserMapByOpenIds(openIds);
+        }
+        return userMap;
     }
 
     private void updateUserInfo(User user) {

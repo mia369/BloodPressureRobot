@@ -57,4 +57,13 @@ public class FamilyMemberServiceImpl implements FamilyMemberService {
         //保存member表
         familyMemberMapper.add(familyMember);
     }
+
+    @Override
+    public List<FamilyMember> selectByFamilyId(String familyId) {
+        if (StringUtils.isBlank(familyId)) {
+            throw new RuntimeException("familyId is null");
+        }
+        List<FamilyMember> members = familyMemberMapper.selectByFamilyId(familyId);
+        return members;
+    }
 }

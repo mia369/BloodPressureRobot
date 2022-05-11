@@ -2,6 +2,7 @@ package com.ht.bpr.service;
 
 import com.ht.bpr.entity.FamilyMember;
 import com.ht.bpr.entity.vo.FamilyMemberVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface FamilyMemberService {
     FamilyMember selectByOpenId(String openId);
 
     void add(FamilyMember member);
+
+    List<FamilyMember> selectByFamilyId(String familyId);
 }

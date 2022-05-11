@@ -1,3 +1,41 @@
-<view>
-  family
-</view>
+<van-dialog use-slot title="创建家庭" show="{{ showFamilyRegisterPop }}" show-cancel-button confirm-button-color="#51aa38" bind:close="closePop" bind:confirm="registerFamily">
+  <van-field value="{{ familyInfo.familyName }}" type="text" bind:change="dialogInputFamilyName" input-align="center" placeholder="请输入家庭名称" error-message="注意: 家庭名称不能未空" error-message-align="center" />
+</van-dialog>
+
+
+<van-panel title="家庭信息">
+  <van-cell-group>
+    <van-cell title="家庭名称" center>
+      <van-field center readonly type="text" value="{{ familyInfo.familyName }}" border="{{ false }}" />
+    </van-cell>
+    <van-cell title="成员数量" center>
+      <van-field center readonly type="text" value="{{ familyInfo.memberCount }}" border="{{ false }}" />
+    </van-cell>
+    <van-cell title="管理员" center>
+      <van-field center readonly type="text" value="{{ familyInfo.familyManager }}" border="{{ false }}" />
+    </van-cell>
+    <van-cell title="创建时间" center>
+      <van-field center readonly type="text" value="{{ familyInfo.createTime }}" border="{{ false }}" />
+    </van-cell>
+  </van-cell-group>
+  <van-button type="primary" disabled="{{false}}">添加成员</van-button>
+  <van-button type="danger" disabled="{{false}}">退出家庭</van-button>
+</van-panel>
+
+<van-button type="primary" wx:if="{{true}}">创建家庭</van-button>
+
+<van-grid column-num="1" direction="vertical">
+  <van-grid-item use-slot>
+    A
+  </van-grid-item>
+  <van-grid-item use-slot>
+    <van-grid column-num="2">
+      <van-grid-item use-slot custom-class="myGridItem">
+        a
+      </van-grid-item>
+      <van-grid-item use-slot custom-class="myGridItem">
+        b
+      </van-grid-item>
+    </van-grid>
+  </van-grid-item>
+</van-grid>

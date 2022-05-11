@@ -23,7 +23,14 @@ App({
       nickName: '点击登录',
       avatarUrl: '/images/defaultAvatar.png',
     },
-    familyInfo: null,
+    familyInfo: {
+      familyId: '',
+      familyName: '',
+      familyManager: '',
+      familyMemberVos: [],
+      createTime: '',
+      updateTime: '',
+    },
   },
   /**
    * 全局方法
@@ -56,9 +63,13 @@ App({
                 if (res.data.result.userInfo) {
                   that.globalData.userInfo = res.data.result.userInfo
                 }
+                if (res.data.result.familyInfo) {
+                  that.globalData.familyInfo = res.data.result.familyInfo
+                }
                 console.log("openId: ", that.globalData.openId)
                 console.log("sessionKey: ", that.globalData.sessionKey)
                 console.log("userInfo: ", that.globalData.userInfo)
+                console.log("familyInfo: ", that.globalData.familyInfo)
               },
               fail: function (res) {
                 //失败时回调函数

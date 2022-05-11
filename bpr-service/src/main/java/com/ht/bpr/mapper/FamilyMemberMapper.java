@@ -4,6 +4,8 @@ import com.ht.bpr.entity.FamilyMember;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author Zhu Shaoqin
  * @email zsqmia@163.com
@@ -15,4 +17,6 @@ public interface FamilyMemberMapper {
     FamilyMember selectByOpenId(@Param("openId") String openId);
 
     void add(@Param("member") FamilyMember Member);
+
+    List<FamilyMember> selectByFamilyId(@Param("familyId") String familyId);
 }

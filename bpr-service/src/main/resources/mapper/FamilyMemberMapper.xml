@@ -22,4 +22,9 @@
         from bpr_family_member
         where open_id = #{openId}
     </select>
+    <select id="selectByFamilyId" resultType="com.ht.bpr.entity.FamilyMember">
+        select *
+        from bpr_family_member
+        where family_id = #{familyId}
+    </select>
 </mapper>

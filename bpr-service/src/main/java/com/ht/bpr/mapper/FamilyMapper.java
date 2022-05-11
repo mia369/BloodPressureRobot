@@ -13,4 +13,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface FamilyMapper {
     void add(@Param("family") Family family);
+
+    Family selectByFamilyId(@Param("familyId") String familyId);
 }

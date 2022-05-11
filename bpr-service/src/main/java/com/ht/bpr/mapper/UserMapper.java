@@ -1,8 +1,12 @@
 package com.ht.bpr.mapper;
 
 import com.ht.bpr.entity.User;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Zhu Shaoqin
@@ -19,4 +23,7 @@ public interface UserMapper {
     void updateUserInfo(@Param("user") User user);
 
     void updateUserDetails(@Param("user") User user);
+
+    @MapKey("openId")
+    Map<String, User> selectUserMapByOpenIds(@Param("openIds") List<String> openIds);
 }

@@ -3,6 +3,9 @@ package com.ht.bpr.service;
 import com.ht.bpr.entity.User;
 import com.ht.bpr.entity.vo.UserVo;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Zhu Shaoqin
  * @email zsqmia@163.com
@@ -18,4 +21,6 @@ public interface UserService {
     void saveUserInfo(UserVo userVo);
 
     void saveUserDetails(UserVo userVo);
+
+    Map<String, User> selectUserMapByOpenIds(List<String> openIds);
 }
