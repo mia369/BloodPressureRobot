@@ -7,7 +7,36 @@
     <van-grid-item use-slot content-class="grid-info-class" center="false">
       <van-row style="text-align: left;" gutter="0">
           <van-row span="24" style="text-align: left;margin-top: 5px;margin-bottom: 5px;">
-          <h2 style="color: rgba(75, 80, 82, 0.8); font-size: 14px;line-height: 16px;font-weight: 600;">家庭名称: 测试家庭</h2>
+          <h2 style="color: rgba(75, 80, 82, 0.8); font-size: 14px;line-height: 16px;font-weight: 600;">家庭名称: {{ familyInfo.familyName }}</h2>
+        </van-row>
+        <van-row  span="24" style="text-align: left;margin-top: 5px;margin-bottom: 5px;">
+          <h2 style="color: rgba(75, 80, 82, 0.8); font-size: 14px;line-height: 16px;font-weight: 600;">成员数量: 1</h2>
+        </van-row >
+        <van-col span="24" style="text-align: left;margin-top: 5px;margin-bottom: 5px;">
+          <h2 style="color: rgba(75, 80, 82, 0.8); font-size: 14px;line-height: 16px;font-weight: 600;">创建时间: 2020-01-01 11:11:11</h2>
+        </van-col>
+        <van-col span="24" style="text-align: left;margin-top: 5px;margin-bottom: 5px;">
+          <h2 style="color: rgba(75, 80, 82, 0.8); font-size: 14px;line-height: 16px;font-weight: 600;">家庭管理员: weiwan</h2>
+        </van-col>
+      </van-row>
+    </van-grid-item>
+    <van-grid-item use-slot content-class="grid-item-action-class">
+      <van-row style="width: 100%;">
+        <van-col span="12" style="text-align: center;">
+          <a style="color: rgb(0, 140, 255);">邀请成员</a>
+        </van-col>
+        <van-col span="12" style="text-align: center;">
+          <a style="color: rgb(255, 0, 0);">退出家庭</a>
+        </van-col>
+      </van-row>
+    </van-grid-item>
+  </van-grid>
+
+  <van-grid column-num="1" custom-class="grid-class">
+    <van-grid-item use-slot content-class="grid-info-class" center="false">
+      <van-row style="text-align: left;" gutter="0">
+          <van-row span="24" style="text-align: left;margin-top: 5px;margin-bottom: 5px;">
+          <h2 style="color: rgba(75, 80, 82, 0.8); font-size: 14px;line-height: 16px;font-weight: 600;">家庭名称: {{ familyInfo.familyName }}</h2>
         </van-row>
         <van-row  span="24" style="text-align: left;margin-top: 5px;margin-bottom: 5px;">
           <h2 style="color: rgba(75, 80, 82, 0.8); font-size: 14px;line-height: 16px;font-weight: 600;">成员数量: 1</h2>
