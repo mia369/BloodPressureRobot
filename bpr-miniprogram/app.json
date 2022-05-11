@@ -66,6 +66,9 @@
     "van-nav-bar": "@vant/weapp/nav-bar/index",
     "van-panel": "@vant/weapp/panel/index",
     "van-grid": "@vant/weapp/grid/index",
-    "van-grid-item": "@vant/weapp/grid-item/index"
+    "van-grid-item": "@vant/weapp/grid-item/index",
+    "van-row": "@vant/weapp/row/index",
+    "van-col": "@vant/weapp/col/index",
+    "van-divider": "@vant/weapp/divider/index"
   }
 }
