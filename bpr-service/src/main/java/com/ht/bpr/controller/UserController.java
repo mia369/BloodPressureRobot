@@ -3,11 +3,13 @@ package com.ht.bpr.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.ht.bpr.common.Result;
 import com.ht.bpr.config.WeChatConfig;
-import com.ht.bpr.entity.UserInfoRequest;
-import com.ht.bpr.entity.LoginRequest;
-import com.ht.bpr.entity.LoginResponse;
+import com.ht.bpr.entity.http.UserInfoRequest;
+import com.ht.bpr.entity.http.LoginRequest;
+import com.ht.bpr.entity.http.LoginResponse;
 import com.ht.bpr.entity.User;
+import com.ht.bpr.entity.vo.FamilyVo;
 import com.ht.bpr.entity.vo.UserVo;
+import com.ht.bpr.service.FamilyService;
 import com.ht.bpr.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private FamilyService familyService;
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
@@ -54,11 +58,13 @@ public class UserController {
         String sessionKey = jsonObject.getString("session_key");
 
         User user = userService.selectOne(openId);
+        FamilyVo familyVo = familyService.selectByOpenId(openId);
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setOpenId(openId);
         loginResponse.setSessionKey(sessionKey);
         loginResponse.setUserInfo(user);
+        loginResponse.setFamilyInfo(familyVo);
         return Result.success(loginResponse);
     }
 

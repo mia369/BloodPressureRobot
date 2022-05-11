@@ -1,5 +1,7 @@
-package com.ht.bpr.entity;
+package com.ht.bpr.entity.http;
 
+import com.ht.bpr.entity.User;
+import com.ht.bpr.entity.vo.FamilyVo;
 import lombok.Data;
 
 /**
@@ -13,4 +15,5 @@ public class LoginResponse {
     private String openId;
     private String sessionKey;
     private User userInfo;
+    private FamilyVo familyInfo;
 }

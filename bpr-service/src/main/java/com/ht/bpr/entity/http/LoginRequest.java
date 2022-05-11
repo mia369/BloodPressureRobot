@@ -1,4 +1,4 @@
-package com.ht.bpr.entity;
+package com.ht.bpr.entity.http;
 
 import lombok.Data;
 

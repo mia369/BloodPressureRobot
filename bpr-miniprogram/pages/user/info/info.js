@@ -29,7 +29,7 @@ Page({
     this.setData({
       userInfo: app.globalData.userInfo,
     })
-    console.log(this.data.userInfo)
+    console.log("onload: ", this.data.userInfo)
   },
 
   /**
@@ -116,48 +116,28 @@ Page({
 
   dialogInputName(event) {
     console.log(event.detail)
-    console.log("userInfo: ", this.data.userInfo)
-    this.setData({
-      userInfo: {
-        nickName: event.detail,
-      }
-    })
-    console.log("nickName: ", this.data.userInfo.nickName)
+    var userInfo = this.data.userInfo
+    userInfo.nickName = event.detail
   },
 
   dialogInputAge(event) {
     console.log(event.detail)
-    console.log("userInfo: ", this.data.userInfo)
-    this.setData({
-      userInfo: {
-        age: event.detail,
-      }
-    })
-    console.log("age: ", this.data.userInfo.age)
+    var userInfo = this.data.userInfo
+    userInfo.age = event.detail
   },
 
   
   dialogInputHeight(event) {
     console.log(event.detail)
-    console.log("userInfo: ", this.data.userInfo)
-    this.setData({
-      userInfo: {
-        height: event.detail,
-      }
-    })
-    console.log("height: ", this.data.userInfo.height)
+    var userInfo = this.data.userInfo
+    userInfo.height = event.detail
   },
 
   
   dialogInputWeight(event) {
     console.log(event.detail)
-    console.log("userInfo: ", this.data.userInfo)
-    this.setData({
-      userInfo: {
-        weight: event.detail,
-      }
-    })
-    console.log("weight: ", this.data.userInfo.weight)
+    var userInfo = this.data.userInfo
+    userInfo.weight = event.detail
   },
 
   updateUserDetails(event) {
@@ -173,5 +153,6 @@ Page({
       //失败时回调函数
       console.log(err)
     })
+    this.onLoad()
   },
 })

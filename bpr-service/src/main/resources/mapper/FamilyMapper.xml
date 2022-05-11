@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--接口位置-->
+<mapper namespace="com.ht.bpr.mapper.FamilyMapper">
+
+    <insert id="add" parameterType="Family" useGeneratedKeys="true">
+        insert into bpr_family
+        (family_id,
+         family_name,
+         family_manager,
+         create_time)
+        values (#{family.familyId},
+                #{family.familyName},
+                #{family.familyManager},
+                #{family.createTime}
+               )
+    </insert>
+</mapper>

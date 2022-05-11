@@ -8,5 +8,5 @@ package com.ht.bpr.common;
  */
 public class Constants {
 
-    public static final String MEASUREDATETIME_FORMAT = "%s %s";
+    public static final String FAMILY_ID_FORMAT = "%s-%s";
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--接口位置-->
+<mapper namespace="com.ht.bpr.mapper.FamilyMemberMapper">
+    <insert id="add" parameterType="FamilyMember" useGeneratedKeys="true">
+        insert into bpr_family_member
+        (open_id,
+         family_id,
+         family_manager_mark,
+         create_time)
+        values (#{member.openId},
+                #{member.familyId},
+                #{member.familyManagerMark},
+                #{member.createTime})
+    </insert>
+
+    <select id="selectByOpenId" resultType="com.ht.bpr.entity.FamilyMember">
+        select *
+        from bpr_family_member
+        where open_id = #{openId}
+    </select>
+</mapper>
