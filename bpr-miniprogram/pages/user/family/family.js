@@ -13,10 +13,15 @@ Page({
       familyId: '',
       familyName: '',
       familyManager: '',
-      familyMemberVos: [],
+      familyMemberVos: [
+        {name: "张三"},
+        {name: "李四"}
+      ],
       createTime: '',
       updateTime: '',
     },
+    isFamilyAdmin: true,
+    haveFamily: false,
     showFamilyRegisterPop: false,
 
   },
