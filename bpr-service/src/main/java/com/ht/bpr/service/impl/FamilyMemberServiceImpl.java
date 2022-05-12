@@ -1,14 +1,18 @@
 package com.ht.bpr.service.impl;
 
 import com.ht.bpr.entity.FamilyMember;
+import com.ht.bpr.entity.User;
+import com.ht.bpr.entity.vo.FamilyMemberVo;
 import com.ht.bpr.mapper.FamilyMemberMapper;
 import com.ht.bpr.service.FamilyMemberService;
+import com.ht.bpr.service.UserService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Zhu Shaoqin
@@ -18,20 +22,24 @@ import java.util.List;
  */
 @Service
 public class FamilyMemberServiceImpl implements FamilyMemberService {
+    private static final Logger logger = LoggerFactory.getLogger(FamilyMemberServiceImpl.class);
+
     @Autowired
     private FamilyMemberMapper familyMemberMapper;
+    @Autowired
+    private UserService userService;
 
     @Override
     public FamilyMember selectByOpenId(String openId) {
         if (StringUtils.isBlank(openId)) {
             throw new RuntimeException("openId is null");
         }
-        FamilyMember familyMember = familyMemberMapper.selectByOpenId(openId);
-        return familyMember;
+        FamilyMember members = familyMemberMapper.selectByOpenId(openId);
+        return members;
     }
 
     @Override
-    public void add(FamilyMember member) {
+    public FamilyMemberVo add(FamilyMember member) {
         //校验
         if (StringUtils.isBlank(member.getOpenId())) {
             throw new RuntimeException("openId is null");
@@ -39,23 +47,24 @@ public class FamilyMemberServiceImpl implements FamilyMemberService {
         if (StringUtils.isBlank(member.getFamilyId())) {
             throw new RuntimeException("familyId is null");
         }
-        Integer managerMark = member.getFamilyManagerMark();
-        if (managerMark == null) {
-            managerMark = 0;
-        }
-        Date createTime = member.getCreateTime();
-        if (createTime == null) {
-            createTime = new Date();
-        }
         //组装member对象
         FamilyMember familyMember = new FamilyMember();
         familyMember.setOpenId(member.getOpenId());
         familyMember.setFamilyId(member.getFamilyId());
-        familyMember.setFamilyManagerMark(managerMark);
-        familyMember.setCreateTime(createTime);
-
+        familyMember.setCreateTime(new Date());
         //保存member表
         familyMemberMapper.add(familyMember);
+        //member转换为memberVo
+        User user = userService.selectOne(member.getOpenId());
+        FamilyMemberVo memberVo = new FamilyMemberVo();
+        memberVo.setId(familyMember.getId());
+        memberVo.setOpenId(familyMember.getOpenId());
+        memberVo.setFamilyId(familyMember.getFamilyId());
+        memberVo.setCreateTime(familyMember.getCreateTime());
+        memberVo.setNickName(user.getNickName());
+        memberVo.setAge(user.getAge());
+        memberVo.setLastRecordTime(user.getLastRecordTime());
+        return memberVo;
     }
 
     @Override

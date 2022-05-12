@@ -12,14 +12,16 @@ mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 pagehelper:
   helper-dialect: mysql
   reasonable: true
   support-methods-arguments: true
 logging:
+  config: classpath:logback-spring.xml
   level:
-    com.ht.hhr.mapper: trace
+    root: info
+    com.ht.bpr.mapper: debug
 wechat:
   appId: wxe89ca7e0e8457f64
   secret: a237050f08dc5e26833fc619fb91cc92

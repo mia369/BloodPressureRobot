@@ -18,7 +18,7 @@ public class FamilyMemberVo {
     private Integer age;
     private String familyId;
     private String familyIdentity;
-    private Integer familyManagerMark;
+    private String lastRecordTime;
     private Date createTime;
     private Date updateTime;
 }

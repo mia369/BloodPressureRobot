@@ -26,16 +26,16 @@ App({
     familyInfo: {
       familyId: '',
       familyName: '',
-      familyManager: '',
-      familyMemberVos: [
-        {name: "张三"},
-        {name: "李四"},
-        {name: "王五"},
-        {name: "赵六"}
-      ],
+      familyManager: {
+        openId: '',
+        nickName: '',
+        lastRecordTime: '',
+      },
+      familyMemberVos: [],
       createTime: '',
       updateTime: '',
     },
+    shareUser: '',
   },
   /**
    * 全局方法

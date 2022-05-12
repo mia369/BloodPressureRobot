@@ -1,6 +1,8 @@
 package com.ht.bpr.service;
 
+import com.ht.bpr.entity.vo.FamilyMemberVo;
 import com.ht.bpr.entity.vo.FamilyVo;
+
 
 /**
  * @author Zhu Shaoqin
@@ -9,7 +11,10 @@ import com.ht.bpr.entity.vo.FamilyVo;
  * @description
  */
 public interface FamilyService {
-    FamilyVo add(FamilyVo familyVo);
 
     FamilyVo selectByOpenId(String openId);
+
+    FamilyVo addFamily(FamilyVo familyVo);
+
+    FamilyVo addMember(FamilyMemberVo familyMemberVo);
 }

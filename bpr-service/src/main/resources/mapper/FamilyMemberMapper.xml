@@ -5,15 +5,13 @@
 
 <!--接口位置-->
 <mapper namespace="com.ht.bpr.mapper.FamilyMemberMapper">
-    <insert id="add" parameterType="FamilyMember" useGeneratedKeys="true">
+    <insert id="add" parameterType="FamilyMember" useGeneratedKeys="true" keyProperty="id">
         insert into bpr_family_member
         (open_id,
          family_id,
-         family_manager_mark,
          create_time)
         values (#{member.openId},
                 #{member.familyId},
-                #{member.familyManagerMark},
                 #{member.createTime})
     </insert>
 
@@ -28,13 +26,4 @@
         from bpr_family_member
         where family_id = #{familyId}
     </select>
-
-    <resultMap id="familyMemberResultMap" type="FamilyMember">
-        <result column="id" property="id"/>
-        <result column="open_id" property="openId"/>
-        <result column="family_id" property="familyId"/>
-        <result column="family_manager_mark" property="familyManagerMark"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
-    </resultMap>
 </mapper>

@@ -3,7 +3,7 @@
 <van-cell-group>
   <van-cell title="测量时间" title-width="20%" center>
     <van-field value="{{ record.measureTime }}" placeholder="请选择测量时间" readonly border="{{ false }}" use-button-slot>
-      <van-button slot="button" size="small" type="primary" is-link bind:click="showPopup">
+      <van-button color="#1aad19" slot="button" size="small" type="primary" is-link bind:click="showPopup">
         选择时间
       </van-button>
     </van-field>

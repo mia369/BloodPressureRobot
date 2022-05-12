@@ -1,10 +1,12 @@
 package com.ht.bpr.mapper;
 
 import com.ht.bpr.entity.FamilyMember;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Zhu Shaoqin
@@ -19,4 +21,5 @@ public interface FamilyMemberMapper {
     void add(@Param("member") FamilyMember Member);
 
     List<FamilyMember> selectByFamilyId(@Param("familyId") String familyId);
+
 }

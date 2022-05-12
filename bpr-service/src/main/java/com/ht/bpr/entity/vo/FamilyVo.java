@@ -16,7 +16,7 @@ public class FamilyVo {
     private Integer id;
     private String familyId;
     private String familyName;
-    private String familyManager;
+    private FamilyMemberVo familyManager;
     private List<FamilyMemberVo> familyMemberVos;
     private Date createTime;
     private Date updateTime;

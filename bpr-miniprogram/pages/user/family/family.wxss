@@ -13,13 +13,14 @@
 .grid-class {
   margin-top: 10px !important;
   box-shadow: 0 0 8px hsl(0deg 0% 45% / 65%);
-  font-family: Menlo,Monaco,Consolas,Courier New,monospace;
+  /* font-family: Menlo,Monaco,Consolas,Courier New,monospace; */
+  font-family: ‘Franklin Gothic Medium’, ‘Arial Narrow’, Arial, sans-serif;
   border-radius: 10px;
   padding: 3px 0px 0px 0px;
   margin: 5px 8px 5px 8px;
   /* border: 1px dashed black; */
   background-color: rgb(219, 233, 205, 0) !important;
-  background-image: linear-gradient(to right, rgb(182, 255, 114) -6%, #ffe65b, rgb(182, 255, 114) 100%);
+  /* background-image: linear-gradient(to right, rgba(175, 175, 175, 0.8) -6%, #ffffff, rgb(175, 175, 175, 0.8) 100%); */
 }
 
 .grid-info-class {
@@ -37,7 +38,7 @@
   padding-right: 5px !important;
   padding-top: 5px !important;
   padding-bottom: 5px !important;
-  border-top: 0.5pt dashed rgb(0, 0, 0);
+  /* border-top: 0.5pt dashed rgb(0, 0, 0); */
   background-color: rgb(219, 233, 205, 0) !important;
 }
 
@@ -49,7 +50,7 @@
 .family-list-grid-class {
   margin-top: 20px !important;
   box-shadow: 0 0 8px hsl(0deg 0% 45% / 65%);
-  font-family: Menlo,Monaco,Consolas,Courier New,monospace;
+  font-family: ‘Franklin Gothic Medium’, ‘Arial Narrow’, Arial, sans-serif;
   border-radius: 10px;
   padding: 0px 0px 0px 0px;
   margin: 5px 8px 5px 8px;
@@ -72,7 +73,7 @@
   border-top: 1pt solid rgb(194, 194, 194);
   text-align: left !important;
   align-items: normal !important;
-  padding: var(--grid-item-content-padding,0px 0px 0px 8px) !important;
+  padding: var(--grid-item-content-padding,0px 0px 0px 15px) !important;
   background-color: rgba(255, 255, 255, 1) !important;
 }
 

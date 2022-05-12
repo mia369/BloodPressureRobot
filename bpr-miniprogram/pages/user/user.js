@@ -1,6 +1,8 @@
 // pages/user/user.js
 import userApi from '../../utils/userApi.js'
+import familyApi from '../../utils/familyApi.js'
 import requestApi from '../../utils/requestApi.js'
+import Dialog from '../../miniprogram_npm/@vant/weapp/dialog/dialog';
 
 const app = getApp();
 
@@ -17,7 +19,11 @@ Page({
     familyInfo: {
       familyId: '',
       familyName: '',
-      familyManager: '',
+      familyManager: {
+        openId: '',
+        nickName: '',
+        lastRecordTime: '',
+      },
       familyMemberVos: [],
       createTime: '',
       updateTime: '',
@@ -25,7 +31,7 @@ Page({
     hasUserInfo: false,
     canIUseGetUserProfile: false,
     familyCellValue: '查看',
-
+    shareUser: '',
   },
 
   /**
@@ -37,22 +43,12 @@ Page({
         canIUseGetUserProfile: true
       })
     }
-    console.log("app.globalData.userInfo: ", app.globalData.userInfo)
-    console.log("app.globalData.userInfo: ", app.globalData.familyInfo)
+    console.log("app.globalData: ", app.globalData)
     this.setData({
       userInfo: app.globalData.userInfo,
       familyInfo: app.globalData.familyInfo,
+      shareUser: app.globalData.shareUser,
     })
-    if (this.data.userInfo.nickName !== '点击登录') {
-      this.setData({
-        hasUserInfo: true
-      })
-    }
-    if (this.data.familyInfo.familyName === '') {
-      this.setData({
-        familyCellValue: '点击注册',
-      })
-    }
     console.log("this.data.userInfo: ", this.data.userInfo)
   },
 
@@ -67,7 +63,33 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
+    if (this.data.userInfo.nickName !== '点击登录') {
+      this.setData({
+        hasUserInfo: true
+      })
+    }
+    if (this.data.familyInfo.familyName === '') {
+      this.setData({
+        familyCellValue: '点击注册',
+      })
+    } else {
+      this.setData({
+        familyCellValue: '查看',
+      })
+    }
+    if (this.data.userInfo.nickName !== '点击登录' && this.data.familyInfo.familyId !== '' && this.data.familyInfo.familyName === '' && this.data.shareUser !== '') {
+      Dialog.confirm({
+          title: '加入家庭',
+          message: '是否加入 ' + this.data.shareUser + ' 的家庭?',
+        })
+        .then(() => {
+          // on confirm
+          this.joinFamily()
+        })
+        .catch(() => {
+          // on cancel
+        });
+    }
   },
 
   /**
@@ -132,6 +154,7 @@ Page({
         requestApi.post(userApi.saveUserInfo, params).then(res => {
           //成功时回调函数
           console.log(res)
+          this.onShow()
         }).catch(err => {
           //失败时回调函数
           console.log(err)
@@ -140,5 +163,34 @@ Page({
     })
   },
 
+  // closePop() {
+  //   this.setData({
+  //     //清空familyId, 需要个人注册家庭
+  //   })
+  // },
 
+  joinFamily() {
+    console.log("调用joinFamily")
+    console.log("app.globalData.familyInfo.familyId: ", app.globalData.familyInfo.familyId)
+    //调用接口
+    const params = {
+      openId: app.globalData.openId,
+      familyId: app.globalData.familyInfo.familyId,
+    }
+    requestApi.post(familyApi.registerMember, params).then(res => {
+      //成功时回调函数
+      console.log(res)
+      app.globalData.familyInfo = res.result
+      app.globalData.shareUser = ''
+      this.setData({
+        familyInfo: app.globalData.familyInfo,
+        shareUser: app.globalData.shareUser
+      })
+      console.log("this.data: ", this.data)
+      this.onShow()
+    }).catch(err => {
+      //失败时回调函数
+      console.log(err)
+    })
+  }
 })

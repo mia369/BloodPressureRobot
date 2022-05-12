@@ -6,7 +6,7 @@
 <!--接口位置-->
 <mapper namespace="com.ht.bpr.mapper.FamilyMapper">
 
-    <insert id="add" parameterType="Family" useGeneratedKeys="true">
+    <insert id="add" parameterType="Family" useGeneratedKeys="true" keyProperty="id">
         insert into bpr_family
         (family_id,
          family_name,
@@ -22,6 +22,18 @@
         select *
         from bpr_family
         where family_id = #{familyId}
+    </select>
+    <select id="selectBatchByFamilyIds" parameterType="string" resultType="com.ht.bpr.entity.Family">
+        select *
+        from bpr_family
+        <where>
+            family_id in
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <foreach collection="familyIds" item="familyId" separator=",">
+                    #{familyId}
+                </foreach>
+            </trim>
+        </where>
     </select>
 
 </mapper>

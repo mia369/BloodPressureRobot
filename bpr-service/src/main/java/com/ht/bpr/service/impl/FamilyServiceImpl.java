@@ -7,7 +7,6 @@ import com.ht.bpr.entity.User;
 import com.ht.bpr.entity.vo.FamilyMemberVo;
 import com.ht.bpr.entity.vo.FamilyVo;
 import com.ht.bpr.mapper.FamilyMapper;
-import com.ht.bpr.mapper.FamilyMemberMapper;
 import com.ht.bpr.service.FamilyMemberService;
 import com.ht.bpr.service.FamilyService;
 import com.ht.bpr.service.UserService;
@@ -16,12 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.security.provider.MD5;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -43,61 +38,45 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public FamilyVo add(FamilyVo familyVo) {
-        //familyName判空
+    public FamilyVo addFamily(FamilyVo familyVo) {
+        //校验familyName, manager
         if (StringUtils.isBlank(familyVo.getFamilyName())) {
             throw new RuntimeException("familyName is null");
         }
-
-        //查询familyManager是否已经有家庭, 如果没有, 则可以创建
-        String managerOpenId = familyVo.getFamilyManager();
-        FamilyMember members = familyMemberService.selectByOpenId(managerOpenId);
-        if (members != null) {
-            throw new RuntimeException("User already has a family");
+        if (familyVo.getFamilyManager() == null) {
+            throw new RuntimeException("familyManager is null");
         }
-
+        if (StringUtils.isBlank(familyVo.getFamilyManager().getOpenId())) {
+            throw new RuntimeException("openId of familyManager is null");
+        }
         //生成familyId
+        String managerOpenId = familyVo.getFamilyManager().getOpenId();
         Date createTime = new Date();
         String rawFamilyId = String.format(Constants.FAMILY_ID_FORMAT, managerOpenId, createTime);
         String familyId = Md5Util.md5(rawFamilyId);
-
-        //保存family表和member表
+        //保存到family表
         Family family = new Family();
         family.setFamilyId(familyId);
         family.setFamilyName(familyVo.getFamilyName());
         family.setFamilyManager(managerOpenId);
         family.setCreateTime(createTime);
         familyMapper.add(family);
-
+        //manager保存到member表
         FamilyMember member = new FamilyMember();
         member.setOpenId(managerOpenId);
         member.setFamilyId(familyId);
-        member.setFamilyManagerMark(1);
         member.setCreateTime(createTime);
-        familyMemberService.add(member);
-
-        //member转换为memberVo
-        User user = userService.selectOne(managerOpenId);
+        FamilyMemberVo managerVo = familyMemberService.add(member);
         List<FamilyMemberVo> memberVos = new ArrayList<>();
-        FamilyMemberVo memberVo = new FamilyMemberVo();
-        memberVo.setId(member.getId());
-        memberVo.setOpenId(managerOpenId);
-        memberVo.setFamilyId(familyId);
-        memberVo.setFamilyManagerMark(member.getFamilyManagerMark());
-        memberVo.setNickName(user.getNickName());
-        memberVo.setAge(user.getAge());
-        memberVo.setCreateTime(createTime);
-        memberVos.add(memberVo);
-
+        memberVos.add(managerVo);
         //组装familyVo
         FamilyVo vo = new FamilyVo();
         vo.setId(family.getId());
         vo.setFamilyId(familyId);
         vo.setFamilyName(familyVo.getFamilyName());
-        vo.setFamilyManager(managerOpenId);
+        vo.setFamilyManager(managerVo);
         vo.setCreateTime(createTime);
         vo.setFamilyMemberVos(memberVos);
-
         return vo;
     }
 
@@ -118,37 +97,50 @@ public class FamilyServiceImpl implements FamilyService {
         String familyId = familyMember.getFamilyId();
         Family family = familyMapper.selectByFamilyId(familyId);
         List<FamilyMember> members = familyMemberService.selectByFamilyId(familyId);
-
         //查询user表, 根据openId查询user的nickName和age
         List<String> openIds = members.stream().map(m -> m.getOpenId()).collect(Collectors.toList());
         Map<String, User> userMap = userService.selectUserMapByOpenIds(openIds);
-
         //组装memberVo
         List<FamilyMemberVo> memberVos = new ArrayList<>();
+        FamilyMemberVo managerVo = new FamilyMemberVo();
         for (FamilyMember member : members) {
             FamilyMemberVo memberVo = new FamilyMemberVo();
             memberVo.setId(member.getId());
             memberVo.setOpenId(member.getOpenId());
             memberVo.setFamilyId(familyId);
             memberVo.setFamilyIdentity(member.getFamilyIdentity());
-            memberVo.setFamilyManagerMark(member.getFamilyManagerMark());
             memberVo.setCreateTime(member.getCreateTime());
             memberVo.setUpdateTime(member.getUpdateTime());
             User user = userMap.get(member.getOpenId());
             memberVo.setNickName(user.getNickName());
             memberVo.setAge(user.getAge());
+            memberVo.setLastRecordTime(user.getLastRecordTime());
             memberVos.add(memberVo);
+            if (member.getOpenId().equals(family.getFamilyManager())) {
+                managerVo = memberVo;
+            }
         }
-
         //组装familyVo
         FamilyVo familyVo = new FamilyVo();
         familyVo.setId(family.getId());
         familyVo.setFamilyId(familyId);
         familyVo.setFamilyName(family.getFamilyName());
-        familyVo.setFamilyManager(family.getFamilyManager());
+        familyVo.setFamilyManager(managerVo);
         familyVo.setFamilyMemberVos(memberVos);
         familyVo.setCreateTime(family.getCreateTime());
         familyVo.setUpdateTime(family.getUpdateTime());
         return familyVo;
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public FamilyVo addMember(FamilyMemberVo familyMemberVo) {
+        FamilyMember member = new FamilyMember();
+        member.setOpenId(familyMemberVo.getOpenId());
+        member.setFamilyId(familyMemberVo.getFamilyId());
+        familyMemberService.add(member);
+        FamilyVo familyVo = selectByOpenId(member.getOpenId());
+        return familyVo;
+    }
+
 }

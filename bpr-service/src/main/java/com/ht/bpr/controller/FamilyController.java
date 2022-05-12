@@ -1,6 +1,7 @@
 package com.ht.bpr.controller;
 
 import com.ht.bpr.common.Result;
+import com.ht.bpr.entity.vo.FamilyMemberVo;
 import com.ht.bpr.entity.vo.FamilyVo;
 import com.ht.bpr.service.FamilyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,9 @@ public class FamilyController {
     @Autowired
     private FamilyService familyService;
 
-    @PostMapping("add")
-    public Result<FamilyVo> add(@RequestBody FamilyVo familyVo) {
-        FamilyVo vo = familyService.add(familyVo);
+    @PostMapping("addFamily")
+    public Result<FamilyVo> addFamily(@RequestBody FamilyVo familyVo) {
+        FamilyVo vo = familyService.addFamily(familyVo);
         return Result.success(vo);
     }
 
@@ -32,6 +33,10 @@ public class FamilyController {
         return Result.success(familyVo);
     }
 
-//    public Result addFamilyMember()
+    @PostMapping("addMember")
+    public Result<FamilyVo> addMember(@RequestBody FamilyMemberVo familyMemberVo) {
+        FamilyVo familyVo = familyService.addMember(familyMemberVo);
+        return Result.success(familyVo);
+    }
 
 }

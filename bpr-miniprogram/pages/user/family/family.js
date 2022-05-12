@@ -12,15 +12,16 @@ Page({
     familyInfo: {
       familyId: '',
       familyName: '',
-      familyManager: '',
-      familyMemberVos: [
-        {name: "张三"},
-        {name: "李四"}
-      ],
+      familyManager: {
+        openId: '',
+        nickName: '',
+        lastRecordTime: '',
+      },
+      familyMemberVos: [],
       createTime: '',
       updateTime: '',
     },
-    isFamilyAdmin: true,
+    isFamilyManager: false,
     haveFamily: false,
     showFamilyRegisterPop: false,
 
@@ -30,13 +31,16 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    console.log("app.globalData.userInfo: ", app.globalData.familyInfo)
     this.setData({
       familyInfo: app.globalData.familyInfo,
     })
-    if (this.data.familyInfo.familyName === '') {
-      
+    console.log("this.data.familyInfo: ", this.data.familyInfo)
+    if (this.data.familyInfo.familyId !== '') {
+      this.setData({
+        haveFamily: true,
+      })
     }
+
   },
 
   /**
@@ -50,7 +54,11 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
+    if (this.data.familyInfo.familyManager.openId === app.globalData.openId) {
+      this.setData({
+        isFamilyManager: true,
+      })
+    }
   },
 
   /**
@@ -85,7 +93,13 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage() {
-
+    return {
+      title: '弹出分享时显示的分享标题',
+      desc: '分享页面的内容',
+      path: '/pages/add/add?familyId=123&shareUser=hutao',
+      // path: '/pages/add/add?familyId='+ app.globalData.familyInfo.familyId +'&shareUser' + app.globalData.userInfo.nickName,
+      // path: '/pages/add/add?familyId=' + app.globalData.familyInfo.familyId, // 路径，传递参数到指定页面。
+  }
   },
 
   
@@ -103,7 +117,7 @@ Page({
   },
 
   registerFamily(event) {
-    console.log(this.data.familyInfo)
+    console.log("调用registerFamily: ", this.data.familyInfo)
     if (this.data.familyInfo.familyName === '') {
       Dialog.alert({
         message: '创建失败, 家庭名称不能为空, 请重新注册',
@@ -111,20 +125,33 @@ Page({
         // on close
       });
     } else {
-      this.data.familyInfo.familyManager = app.globalData.openId
-      console.log(this.data.familyInfo)
+      var familyInfo = this.data.familyInfo
+      familyInfo.familyManager.openId = app.globalData.openId
+      console.log("var familyInfo: ", familyInfo)
       //调用接口
-      requestApi.post(familyApi.registerFamily, this.data.familyInfo).then(res => {
+      requestApi.post(familyApi.registerFamily, familyInfo).then(res => {
         //成功时回调函数
         console.log("返回结果: ", res)
-        app.globalData.familyInfo = res.data.result.familyInfo
-        this.data.familyInfo = res.data.result.familyInfo
+        app.globalData.familyInfo = res.result
+        this.setData({
+          familyInfo: res.result,
+          haveFamily: true,
+        })
+        console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
         console.log("this.data.familyInfo: ", this.data.familyInfo)
+        this.onShow()
       }).catch(err => {
         //失败时回调函数
         console.log(err)
       })
-      // this.onLoad()
     }
   },
+
+  showRegisterPop() {
+    this.setData({
+      showFamilyRegisterPop: true,
+    })
+  },
+
+
 })

@@ -71,7 +71,14 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-
+    console.log("add onload options: ", options);
+    console.log("add onload options: ", options.familyId);
+    if (options.familyId && options.familyId !== '') {
+      app.globalData.familyInfo.familyId = options.familyId
+    }
+    if (options.shareUser && options.shareUser !== '') {
+      app.globalData.shareUser = options.shareUser
+    }
   },
 
   /**
@@ -229,10 +236,10 @@ Page({
 
   async checkLogin() {
     var checkCount = 0
-    while (app.globalData.userInfo.nickName === "点击登录" || !app.globalData.familyInfo) {
+    while (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '') {
       console.log("循环")
       await sleep(50)
-      if (checkCount < 30 && app.globalData.userInfo.nickName === "点击登录") {
+      if (checkCount < 30 && (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '')) {
         checkCount = checkCount + 1
         continue
       }
@@ -253,7 +260,7 @@ Page({
       if (app.globalData.familyInfo.familyName === '') {
         console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
         Dialog.alert({
-            message: '请先创建家庭',
+            message: '请先创建或加入家庭',
           })
           .then(() => {
             //路由到用户页

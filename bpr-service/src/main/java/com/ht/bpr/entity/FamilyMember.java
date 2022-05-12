@@ -16,7 +16,6 @@ public class FamilyMember {
     private String openId;
     private String familyId;
     private String familyIdentity;
-    private Integer familyManagerMark;
     private Date createTime;
     private Date updateTime;
 }
