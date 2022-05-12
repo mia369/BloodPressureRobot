@@ -76,15 +76,18 @@ public class FamilyServiceImpl implements FamilyService {
         member.setCreateTime(createTime);
         familyMemberService.add(member);
 
-        //查询user表
-
-
         //member转换为memberVo
+        User user = userService.selectOne(managerOpenId);
         List<FamilyMemberVo> memberVos = new ArrayList<>();
         FamilyMemberVo memberVo = new FamilyMemberVo();
         memberVo.setId(member.getId());
         memberVo.setOpenId(managerOpenId);
-
+        memberVo.setFamilyId(familyId);
+        memberVo.setFamilyManagerMark(member.getFamilyManagerMark());
+        memberVo.setNickName(user.getNickName());
+        memberVo.setAge(user.getAge());
+        memberVo.setCreateTime(createTime);
+        memberVos.add(memberVo);
 
         //组装familyVo
         FamilyVo vo = new FamilyVo();
@@ -93,8 +96,9 @@ public class FamilyServiceImpl implements FamilyService {
         vo.setFamilyName(familyVo.getFamilyName());
         vo.setFamilyManager(managerOpenId);
         vo.setCreateTime(createTime);
+        vo.setFamilyMemberVos(memberVos);
 
-        return null;
+        return vo;
     }
 
     @Override

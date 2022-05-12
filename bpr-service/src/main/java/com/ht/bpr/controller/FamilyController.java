@@ -26,10 +26,12 @@ public class FamilyController {
         return Result.success(vo);
     }
 
-    @PostMapping("search")
+    @GetMapping("search")
     public Result<FamilyVo> search(String openId) {
         FamilyVo familyVo = familyService.selectByOpenId(openId);
         return Result.success(familyVo);
     }
+
+//    public Result addFamilyMember()
 
 }
