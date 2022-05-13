@@ -14,6 +14,23 @@
                 #{member.familyId},
                 #{member.createTime})
     </insert>
+    <update id="updateFamilyIdentity">
+        update bpr_family_member
+        set family_identity = #{newIdentity}
+        where family_id = #{familyId}
+          and open_id = #{openId}
+    </update>
+    <delete id="deleteByFamilyId">
+        delete
+        from bpr_family_member
+        where family_id = #{familyId}
+    </delete>
+    <delete id="deleteByFamilyIdAndOpenId">
+        delete
+        from bpr_family_member
+        where family_id = #{familyId}
+          and open_id = #{openId}
+    </delete>
 
     <select id="selectByOpenId" resultType="com.ht.bpr.entity.FamilyMember">
         select *
@@ -25,5 +42,11 @@
         select *
         from bpr_family_member
         where family_id = #{familyId}
+    </select>
+    <select id="selectByFamilyIdAndOpenId" resultType="com.ht.bpr.entity.FamilyMember">
+        select *
+        from bpr_family_member
+        where family_id = #{familyId}
+          and open_id = #{openId}
     </select>
 </mapper>

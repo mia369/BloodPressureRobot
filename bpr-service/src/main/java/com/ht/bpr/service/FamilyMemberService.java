@@ -2,6 +2,7 @@ package com.ht.bpr.service;
 
 import com.ht.bpr.entity.FamilyMember;
 import com.ht.bpr.entity.vo.FamilyMemberVo;
+import com.ht.bpr.entity.vo.FamilyVo;
 
 import java.util.List;
 
@@ -19,5 +20,9 @@ public interface FamilyMemberService {
 
     List<FamilyMember> selectByFamilyId(String familyId);
 
+    void deleteBatchByFamilyId(String familyId);
 
+    void deleteMember(FamilyMemberVo memberVo);
+
+    void updateFamilyIdentity(FamilyMemberVo familyMemberVo);
 }

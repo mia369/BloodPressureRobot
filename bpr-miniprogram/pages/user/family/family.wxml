@@ -1,9 +1,13 @@
 <wxs module="dateFormat" src="/utils/dateFormat.wxs"></wxs>
+<van-dialog id="van-dialog" />
 
 <view>
   <view>
     <van-dialog use-slot title="创建家庭" show="{{ showFamilyRegisterPop }}" show-cancel-button confirm-button-color="#1aad19" bind:close="closePop" bind:confirm="registerFamily">
       <van-field value="{{ familyInfo.familyName }}" type="text" bind:change="dialogInputFamilyName" input-align="center" placeholder="请输入家庭名称" error-message="注意: 家庭名称不能为空" error-message-align="center" />
+    </van-dialog>
+    <van-dialog use-slot title="设置成员称谓" show="{{ showIdentityUpdatePop }}" show-cancel-button confirm-button-color="#1aad19" bind:close="closePop" bind:confirm="updateFamilyIdentity">
+      <van-field value="{{ updatingMember.familyIdentity }}" type="text" bind:change="dialogInputFamilyIdentity" input-align="center" placeholder="请输入成员称谓" />
     </van-dialog>
 
     <van-grid column-num="1" custom-class="grid-class">
@@ -32,29 +36,20 @@
         </van-row>
       </van-grid-item>
       <van-grid-item use-slot content-class="grid-item-action-class">
-        <van-row style="width: 90%;">
-          <van-button wx:if="{{ familyInfo.familyName }}" round type="info" color="#1aad19" open-type="share">
-            邀请成员
-          </van-button>
-          <van-button wx:if="{{ !isFamilyManager && familyInfo.familyName }}" round type="danger" color="#FD0000" plain>
-            退出家庭
-          </van-button>
-          <van-button wx:if="{{ isFamilyManager && familyInfo.familyName }}" round type="danger" color="#FD0000" plain>
-            解散家庭
-          </van-button>
-          <!-- <van-col span="12" style="text-align: center;">
-            <a style="color: rgb(0, 140, 255);">
+        <van-row style="width: 100%; text-align: center; align-items: center; ">
+          <van-col span="12">
+            <van-button block size="small" custom-style="grid-info-action-button" wx:if="{{ familyInfo.familyName }}" round type="info" color="#1aad19" open-type="share">
               邀请成员
-            </a>
+            </van-button>
           </van-col>
-          <van-col span="12" style="text-align: center;">
-            <a wx:if="{{ !isFamilyManager }}" style="color: rgb(255, 0, 0);">
+          <van-col span="12">
+            <van-button block size="small" custom-style="grid-info-action-button" wx:if="{{ !isFamilyManager && familyInfo.familyName }}" round type="danger" color="#FD0000" plain bind:click="exitFamily">
               退出家庭
-            </a>
-            <a wx:if="{{ isFamilyManager }}" style="color: rgb(255, 0, 0);">
+            </van-button>
+            <van-button block size="small" wx:if="{{ isFamilyManager && familyInfo.familyName }}" round type="danger" color="#FD0000" plain bind:click="deleteFamily">
               解散家庭
-            </a>
-          </van-col> -->
+            </van-button>
+          </van-col>
         </van-row>
       </van-grid-item>
     </van-grid>
@@ -65,13 +60,12 @@
     </view>
   </view>
   <view wx:if="{{ haveFamily }}">
-    <!-- <van-divider contentPosition="center"> 家庭成员 </van-divider> -->
     <van-grid column-num="1" custom-class="family-list-grid-class">
       <van-grid-item use-slot style="text-align: left ;align-items: normal ; width: 100%;" content-class="family-list-title-class" center="false">
         家庭成员
       </van-grid-item>
       <van-grid-item use-slot content-class="family-list-item-class" wx:for="{{ familyInfo.familyMemberVos }}" wx:for-item="member">
-        <van-swipe-cell right-width="{{ 90 }}" style="width: 100%;" disabled="{{ !isFamilyManager }}">
+        <van-swipe-cell right-width="{{ 170 }}" style="width: 100%;" disabled="{{ !isFamilyManager }}">
           <van-row style="text-align: left;" gutter="0">
             <van-row span="24" style="text-align: left; margin-top: 5px; margin-bottom: 16px;">
               <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 14px; line-height: 25px; font-weight: 700; ">
@@ -94,12 +88,18 @@
               </h2>
             </van-row>
           </van-row>
-          <van-button wx:if="{{ isFamilyManager }}" block square slot="right" type="primary" color="red" custom-style="height: 100%; width: 90px">
-            移出家庭
-          </van-button>
-          <van-button wx:if="{{ isFamilyManager }}" block square slot="right" type="primary" color="red" custom-style="height: 100%; width: 90px">
-            修改称谓
-          </van-button>
+          <van-row slot="right">
+            <van-col span="12">
+              <van-button wx:if="{{ isFamilyManager }}" bind:click="showIdentityPop" data-member="{{ member }}" square type="primary" color="#1aad19" custom-style="min-height: 100px; width: 100%">
+                修改称谓
+              </van-button>
+            </van-col>
+            <van-col span="12">
+              <van-button wx:if="{{ isFamilyManager }}" disabled="{{ member.openId === openId }}" bind:click="deleteMember" data-member="{{ member }}" square type="primary" color="red" custom-style="height: 100px; width: 100%">
+                移出家庭
+              </van-button>
+            </van-col>
+          </van-row>
         </van-swipe-cell>
       </van-grid-item>
     </van-grid>

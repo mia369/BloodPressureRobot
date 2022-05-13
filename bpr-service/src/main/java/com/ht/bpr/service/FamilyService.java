@@ -17,4 +17,12 @@ public interface FamilyService {
     FamilyVo addFamily(FamilyVo familyVo);
 
     FamilyVo addMember(FamilyMemberVo familyMemberVo);
+
+    void deleteFamily(FamilyVo familyVo);
+
+    FamilyVo deleteMember(FamilyMemberVo memberVo);
+
+    void exitFamily(FamilyMemberVo memberVo);
+
+    FamilyVo updateFamilyIdentity(FamilyMemberVo memberVo);
 }

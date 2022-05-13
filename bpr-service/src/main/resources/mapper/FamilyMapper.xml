@@ -18,6 +18,10 @@
                 #{family.createTime}
                )
     </insert>
+    <delete id="deleteByFamilyId">
+        delete from bpr_family
+        where family_id = #{familyId}
+    </delete>
     <select id="selectByFamilyId" resultType="com.ht.bpr.entity.Family">
         select *
         from bpr_family

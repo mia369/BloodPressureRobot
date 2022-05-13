@@ -19,4 +19,6 @@ public interface FamilyMapper {
     Family selectByFamilyId(@Param("familyId") String familyId);
 
     List<Family> selectBatchByFamilyIds(@Param("familyIds") List<String> familyIds);
+
+    void deleteByFamilyId(@Param("familyId") String familyId);
 }

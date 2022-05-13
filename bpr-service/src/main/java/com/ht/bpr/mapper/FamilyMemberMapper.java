@@ -22,4 +22,11 @@ public interface FamilyMemberMapper {
 
     List<FamilyMember> selectByFamilyId(@Param("familyId") String familyId);
 
+    void deleteByFamilyId(@Param("familyId") String familyId);
+
+    FamilyMember selectByFamilyIdAndOpenId(@Param("familyId") String familyId, @Param("openId") String openId);
+
+    void deleteByFamilyIdAndOpenId(@Param("familyId") String familyId, @Param("openId") String openId);
+
+    void updateFamilyIdentity(@Param("familyId") String familyId, @Param("openId") String openId, @Param("newIdentity") String newIdentity);
 }

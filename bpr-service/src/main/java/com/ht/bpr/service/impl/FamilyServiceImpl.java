@@ -143,4 +143,111 @@ public class FamilyServiceImpl implements FamilyService {
         return familyVo;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteFamily(FamilyVo familyVo) {
+        if (familyVo == null) {
+            throw new RuntimeException("familyVo is null");
+        }
+        String familyId = familyVo.getFamilyId();
+        if (StringUtils.isBlank(familyId)) {
+            throw new RuntimeException("familyId is null");
+        }
+        Family family = familyMapper.selectByFamilyId(familyId);
+        if (family == null) {
+            throw new RuntimeException("family does not exist");
+        }
+        familyMapper.deleteByFamilyId(familyId);
+        familyMemberService.deleteBatchByFamilyId(familyId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public FamilyVo deleteMember(FamilyMemberVo familyMemberVo) {
+        if (familyMemberVo == null) {
+            throw new RuntimeException("familyMemberVo is null");
+        }
+        if (StringUtils.isBlank(familyMemberVo.getFamilyId())) {
+            throw new RuntimeException("familyId is null");
+        }
+        if (StringUtils.isBlank(familyMemberVo.getOpenId())) {
+            throw new RuntimeException("openId of member is null");
+        }
+        //删除成员
+        familyMemberService.deleteMember(familyMemberVo);
+        List<FamilyMemberVo> memberVos = getFamilyMemberVos(familyMemberVo);
+        //存入familyVo并返回
+        FamilyVo familyVo = new FamilyVo();
+        familyVo.setFamilyMemberVos(memberVos);
+        return familyVo;
+    }
+
+    @Override
+    public void exitFamily(FamilyMemberVo familyMemberVo) {
+        //校验
+        if (familyMemberVo == null) {
+            throw new RuntimeException("familyMemberVo is null");
+        }
+        if (StringUtils.isBlank(familyMemberVo.getFamilyId())) {
+            throw new RuntimeException("familyId is null");
+        }
+        if (StringUtils.isBlank(familyMemberVo.getOpenId())) {
+            throw new RuntimeException("openId of member is null");
+        }
+        //查询member表, 如果有记录则删除
+        familyMemberService.deleteMember(familyMemberVo);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public FamilyVo updateFamilyIdentity(FamilyMemberVo familyMemberVo) {
+        //校验
+        if (familyMemberVo == null) {
+            throw new RuntimeException("familyMemberVo is null");
+        }
+        if (StringUtils.isBlank(familyMemberVo.getFamilyId())) {
+            throw new RuntimeException("familyId is null");
+        }
+        if (StringUtils.isBlank(familyMemberVo.getOpenId())) {
+            throw new RuntimeException("openId of member is null");
+        }
+        if(StringUtils.isBlank(familyMemberVo.getFamilyIdentity())) {
+            throw new RuntimeException("familyIdentity is null");
+        }
+        //修改member的identity
+        familyMemberService.updateFamilyIdentity(familyMemberVo);
+        //重新查询家庭成员
+        List<FamilyMemberVo> memberVos = getFamilyMemberVos(familyMemberVo);
+        //存入familyVo并返回
+        FamilyVo familyVo = new FamilyVo();
+        familyVo.setFamilyMemberVos(memberVos);
+        return familyVo;
+    }
+
+
+    private List<FamilyMemberVo> getFamilyMemberVos(FamilyMemberVo familyMemberVo) {
+        //重新查询家庭成员
+        List<FamilyMember> members = familyMemberService.selectByFamilyId(familyMemberVo.getFamilyId());
+        //members 转换为 memberVos
+        List<String> openIds = members.stream().map(m -> m.getOpenId()).collect(Collectors.toList());
+        Map<String, User> userMap = userService.selectUserMapByOpenIds(openIds);
+        //组装memberVo
+        List<FamilyMemberVo> memberVos = new ArrayList<>();
+        for (FamilyMember member : members) {
+            FamilyMemberVo memberVo = new FamilyMemberVo();
+            memberVo.setId(member.getId());
+            memberVo.setOpenId(member.getOpenId());
+            memberVo.setFamilyId(familyMemberVo.getFamilyId());
+            memberVo.setFamilyIdentity(member.getFamilyIdentity());
+            memberVo.setCreateTime(member.getCreateTime());
+            memberVo.setUpdateTime(member.getUpdateTime());
+            User user = userMap.get(member.getOpenId());
+            memberVo.setNickName(user.getNickName());
+            memberVo.setAge(user.getAge());
+            memberVo.setLastRecordTime(user.getLastRecordTime());
+            memberVos.add(memberVo);
+        }
+        return memberVos;
+    }
+
 }
