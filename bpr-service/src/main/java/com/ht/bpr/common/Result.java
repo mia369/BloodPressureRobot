@@ -1,5 +1,6 @@
 package com.ht.bpr.common;
 
+import com.ht.bpr.exception.BprException;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -29,8 +30,8 @@ public class Result<T> implements Serializable {
     public static <T> Result<T> success(T obj) {
         Result<T> result = new Result<>();
         result.setSuccess(true);
-        result.setCode(ResultStatus.OK.getCode());
-        result.setMessage(ResultStatus.OK.getMessage());
+        result.setCode(BprResultStatus.OK.getCode());
+        result.setMessage(BprResultStatus.OK.getMessage());
         result.setResult(obj);
         return result;
     }
@@ -43,11 +44,26 @@ public class Result<T> implements Serializable {
         return result;
     }
 
-    public static Result failure(ResultStatus status, Exception e) {
+    public static Result failure(ResultStatus status, String message) {
         Result result = new Result<>();
         result.setSuccess(false);
         result.setCode(status.getCode());
-        result.setMessage(e.getMessage());
+        result.setMessage(message);
+        return result;
+    }
+
+    public static Result failure(int code, String message) {
+        Result result = new Result<>();
+        result.setSuccess(false);
+        result.setCode(code);
+        result.setMessage(message);
+        return result;
+    }
+
+    public static Result failure(String message) {
+        Result result = new Result<>();
+        result.setSuccess(false);
+        result.setMessage(message);
         return result;
     }
 

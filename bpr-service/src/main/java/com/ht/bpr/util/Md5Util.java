@@ -1,5 +1,8 @@
 package com.ht.bpr.util;
 
+import com.ht.bpr.common.BprResultStatus;
+import com.ht.bpr.exception.BprException;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -16,7 +19,7 @@ public class Md5Util {
         try {
             codeBytes = MessageDigest.getInstance("md5").digest(code.getBytes());
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("没有这个md5算法！");
+            throw new BprException(BprResultStatus.ILLEGAL_MD5_ALGORITHM);
         }
         StringBuilder md5code = new StringBuilder(new BigInteger(1, codeBytes).toString(16));
         for (int i = 0; i < 32 - md5code.length(); i++) {

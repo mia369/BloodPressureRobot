@@ -6,6 +6,8 @@ import com.ht.bpr.entity.query.RecordQuery;
 import com.ht.bpr.entity.vo.RecordVo;
 import com.ht.bpr.mapper.RecordMapper;
 import com.ht.bpr.service.RecordService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,8 @@ import java.util.List;
  */
 @Service
 public class RecordServiceImpl implements RecordService {
+
+    private static final Logger logger = LoggerFactory.getLogger(RecordServiceImpl.class);
 
     @Autowired
     private RecordMapper recordMapper;

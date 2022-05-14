@@ -1,0 +1,32 @@
+<van-dropdown-menu>
+  <van-dropdown-item value="{{ selectedMemberValue }}" options="{{ memberSelector }}" />
+  <van-dropdown-item id="calendar" title="{{ selectedDateInterval }}" bind:open="onShowCalendar">
+    <van-calendar 
+    show="{{ showCalendar }}" 
+    type="range" 
+    position="top" 
+    color="#1aad19"
+    confirm-text="完成"
+    confirm-disabled-text="请选择结束时间"
+    bind:close="onCloseCalendar" 
+    bind:confirm="onConfirmCalendar" />
+  </van-dropdown-item>
+</van-dropdown-menu>
+<van-cell-group>
+  <van-cell>
+    <van-row>
+      <van-col span="6" class="list-title-col-class">测量时间</van-col>
+      <van-col span="6" class="list-title-col-class">高压</van-col>
+      <van-col span="6" class="list-title-col-class">低压</van-col>
+      <van-col span="6" class="list-title-col-class">心率</van-col>
+    </van-row>
+  </van-cell>
+  <van-cell>
+    <van-row style="justify-content:center;">
+      <van-col span="6" class="list-content-col-class">2022-05-12\n12:00</van-col>
+      <van-col span="6" class="list-content-col-class" style=" line-height: 48px;">130</van-col>
+      <van-col span="6" class="list-content-col-class" style=" line-height: 48px;">70</van-col>
+      <van-col span="6" class="list-content-col-class" style=" line-height: 48px;">70</van-col>
+    </van-row>
+  </van-cell>
+</van-cell-group>

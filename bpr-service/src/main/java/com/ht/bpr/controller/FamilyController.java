@@ -21,8 +21,6 @@ public class FamilyController {
 
     @Autowired
     private FamilyService familyService;
-    @Autowired
-    private FamilyMemberService familyMemberService;
 
     @PostMapping("addFamily")
     public Result<FamilyVo> addFamily(@RequestBody FamilyVo familyVo) {

@@ -1,10 +1,14 @@
 package com.ht.bpr.service.impl;
 
+import com.ht.bpr.common.BprResultStatus;
 import com.ht.bpr.entity.User;
 import com.ht.bpr.entity.vo.UserVo;
+import com.ht.bpr.exception.BprException;
 import com.ht.bpr.mapper.UserMapper;
 import com.ht.bpr.service.UserService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +25,15 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     private UserMapper userMapper;
 
     @Override
     public User selectOne(String openId) {
         if (StringUtils.isBlank(openId)) {
-            throw new RuntimeException("openId is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
         }
         User user = userMapper.selectOne(openId);
         return user;
@@ -36,13 +42,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void add(User user) {
         if (StringUtils.isBlank(user.getOpenId())) {
-            throw new RuntimeException("openId is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
         }
         if (StringUtils.isBlank(user.getNickName())) {
-            throw new RuntimeException("nickName is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "nickName is null");
         }
         if (StringUtils.isBlank(user.getAvatarUrl())) {
-            throw new RuntimeException("avatarUrl is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "avatarUrl is null");
         }
         userMapper.insert(user);
     }
@@ -67,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUserDetails(UserVo userVo) {
         if (userVo.getOpenId() == null) {
-            throw new RuntimeException("openId is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
         }
         User user = new User();
         user.setOpenId(userVo.getOpenId());
@@ -89,13 +95,13 @@ public class UserServiceImpl implements UserService {
 
     private void updateUserInfo(User user) {
         if (StringUtils.isBlank(user.getOpenId())) {
-            throw new RuntimeException("openId is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
         }
         if (StringUtils.isBlank(user.getNickName())) {
-            throw new RuntimeException("nickName is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "nickName is null");
         }
         if (StringUtils.isBlank(user.getAvatarUrl())) {
-            throw new RuntimeException("avatarUrl is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "avatarUrl is null");
         }
         userMapper.updateUserInfo(user);
     }

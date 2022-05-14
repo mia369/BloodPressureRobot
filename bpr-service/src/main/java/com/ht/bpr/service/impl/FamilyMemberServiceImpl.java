@@ -1,9 +1,11 @@
 package com.ht.bpr.service.impl;
 
+import com.ht.bpr.common.BprResultStatus;
 import com.ht.bpr.entity.FamilyMember;
 import com.ht.bpr.entity.User;
 import com.ht.bpr.entity.vo.FamilyMemberVo;
 import com.ht.bpr.entity.vo.FamilyVo;
+import com.ht.bpr.exception.BprException;
 import com.ht.bpr.mapper.FamilyMemberMapper;
 import com.ht.bpr.service.FamilyMemberService;
 import com.ht.bpr.service.UserService;
@@ -34,7 +36,7 @@ public class FamilyMemberServiceImpl implements FamilyMemberService {
     @Override
     public FamilyMember selectByOpenId(String openId) {
         if (StringUtils.isBlank(openId)) {
-            throw new RuntimeException("openId is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
         }
         FamilyMember members = familyMemberMapper.selectByOpenId(openId);
         return members;
@@ -44,10 +46,10 @@ public class FamilyMemberServiceImpl implements FamilyMemberService {
     public FamilyMemberVo add(FamilyMember member) {
         //校验
         if (StringUtils.isBlank(member.getOpenId())) {
-            throw new RuntimeException("openId is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
         }
         if (StringUtils.isBlank(member.getFamilyId())) {
-            throw new RuntimeException("familyId is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyId is null");
         }
         //组装member对象
         FamilyMember familyMember = new FamilyMember();
@@ -72,7 +74,7 @@ public class FamilyMemberServiceImpl implements FamilyMemberService {
     @Override
     public List<FamilyMember> selectByFamilyId(String familyId) {
         if (StringUtils.isBlank(familyId)) {
-            throw new RuntimeException("familyId is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyId is null");
         }
         List<FamilyMember> members = familyMemberMapper.selectByFamilyId(familyId);
         return members;
@@ -81,7 +83,7 @@ public class FamilyMemberServiceImpl implements FamilyMemberService {
     @Override
     public void deleteBatchByFamilyId(String familyId) {
         if (StringUtils.isBlank(familyId)) {
-            throw new RuntimeException("familyId is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyId is null");
         }
         familyMemberMapper.deleteByFamilyId(familyId);
     }
@@ -90,13 +92,13 @@ public class FamilyMemberServiceImpl implements FamilyMemberService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteMember(FamilyMemberVo memberVo) {
         if (memberVo == null) {
-            throw new RuntimeException("familyMemberVo is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyMemberVo is null");
         }
         if (StringUtils.isBlank(memberVo.getFamilyId())) {
-            throw new RuntimeException("familyId is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyId is null");
         }
         if (StringUtils.isBlank(memberVo.getOpenId())) {
-            throw new RuntimeException("openId of member is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId of member is null");
         }
         FamilyMember member = familyMemberMapper.selectByFamilyIdAndOpenId(memberVo.getFamilyId(), memberVo.getOpenId());
         if (member != null) {
@@ -109,16 +111,16 @@ public class FamilyMemberServiceImpl implements FamilyMemberService {
     public void updateFamilyIdentity(FamilyMemberVo familyMemberVo) {
         //校验
         if (familyMemberVo == null) {
-            throw new RuntimeException("familyMemberVo is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyMemberVo is null");
         }
         if (StringUtils.isBlank(familyMemberVo.getFamilyId())) {
-            throw new RuntimeException("familyId is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyId is null");
         }
         if (StringUtils.isBlank(familyMemberVo.getOpenId())) {
-            throw new RuntimeException("openId of member is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId of member is null");
         }
         if (StringUtils.isBlank(familyMemberVo.getFamilyIdentity())) {
-            throw new RuntimeException("familyIdentity is null");
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyIdentity is null");
         }
         //校验member是否存在, 如存在, 则修改
         String familyId = familyMemberVo.getFamilyId();
@@ -126,7 +128,7 @@ public class FamilyMemberServiceImpl implements FamilyMemberService {
         String newIdentity = familyMemberVo.getFamilyIdentity();
         FamilyMember checkMember = familyMemberMapper.selectByFamilyIdAndOpenId(familyId, openId);
         if (checkMember == null) {
-            throw new RuntimeException("familyMember does not exist");
+            throw new BprException(BprResultStatus.FAMILY_MEMBER_NOT_EXIST);
         }
         if (StringUtils.isNotBlank(checkMember.getFamilyIdentity()) && checkMember.getFamilyIdentity().equals(newIdentity)) {
             return;

@@ -1,0 +1,9 @@
+.list-title-col-class {
+  text-align: center;
+  color: black;
+}
+
+.list-content-col-class {
+  text-align: center;
+  color: black;
+}
