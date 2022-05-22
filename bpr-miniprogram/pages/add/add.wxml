@@ -1,8 +1,9 @@
-<!--pages/edit/edit.wxml-->
 <van-dialog id="van-dialog" />
+<van-toast id="van-toast" />
+
 <van-cell-group>
   <van-cell title="测量时间" title-width="20%" center>
-    <van-field value="{{ record.measureTime }}" placeholder="请选择测量时间" readonly border="{{ false }}" use-button-slot>
+    <van-field value="{{ measureTime }}" placeholder="请选择测量时间" readonly border="{{ false }}" use-button-slot>
       <van-button color="#1aad19" slot="button" size="small" type="primary" is-link bind:click="showPopup">
         选择时间
       </van-button>
@@ -12,23 +13,25 @@
     </van-popup>
   </van-cell>
   <van-cell title="高压" title-width="20%" center>
-    <van-field center clearable type="number" placeholder="请输入高压" border="{{ false }}" bind:change="onHighBloodPressureChange" />
+    <van-field center clearable type="number" placeholder="请输入高压" border="{{ false }}" bind:change="onHighBloodPressureChange" value="{{ highBloodPressure }}" />
   </van-cell>
   <van-cell title="低压" title-width="20%" center>
-    <van-field center clearable type="number" placeholder="请输入低压" border="{{ false }}" bind:change="onLowBloodPressureChange" />
+    <van-field center clearable type="number" placeholder="请输入低压" border="{{ false }}" bind:change="onLowBloodPressureChange" value="{{ lowBloodPressure }}" />
   </van-cell>
   <van-cell title="心率" title-width="20%" center>
-    <van-field center clearable type="number" placeholder="请输入心率" border="{{ false }}" bind:change="onHeartRateChange" />
+    <van-field center clearable type="number" placeholder="请输入心率" border="{{ false }}" bind:change="onHeartRateChange" value="{{ heartRate }}" />
   </van-cell>
   <van-cell title="是否服药" title-width="20%" center>
-    <van-radio-group bind:change="onUsedPillsChange" direction="horizontal">
-      <van-radio name="0" checked-color="#51aa38">未服药</van-radio>
-      <van-radio name="1" checked-color="#51aa38">已服药</van-radio>
+    <van-radio-group bind:change="onUsedPillsChange" direction="horizontal" value="{{ usedPills }}">
+      <van-radio name="0" checked-color="#51aa38" style="padding: 10px; padding-left: 16px;">未服药</van-radio>
+      <van-radio name="1" checked-color="#51aa38" style="padding: 10px; padding-left: 16px;">已服药</van-radio>
     </van-radio-group>
   </van-cell>
+
   <van-cell center border="{{ false }}">
-    <button class="button" type="primary">提交</button>
-    <button class="button" type="default" bind:click="onResetForm">重置</button>
+    <van-button type="primary" color="#1aad19" bind:click="onSubmitRecord" size="normal" icon="passed">提交</van-button>
+  </van-cell>
+  <van-cell center border="{{ false }}">
+    <van-button plain type="primary" size="normal" icon="replay">重置</van-button>
   </van-cell>
 </van-cell-group>
-

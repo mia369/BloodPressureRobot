@@ -1,7 +1,6 @@
-
-
 const request = (url, options) => {
   return new Promise((resolve, reject) => {
+    // wx.request封装
     const app = getApp()
     wx.request({
       url: `${app.globalData.host}${url}`, //获取域名接口地址
@@ -11,15 +10,14 @@ const request = (url, options) => {
       header: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      //header中可以监听到token值的变化
-      success(request) {
+      success(response) {
         //监听成功后的操作
-        if (request.data.code === 200) {
-          //此处10000是项目中数据获取成功后返回的值,成功后将request.data传入resolve方法中
-          resolve(request.data)
+        if (response.data.code === 0) {
+          //此处0是项目中数据获取成功后返回的值,成功后将request.data传入resolve方法中
+          resolve(response.data)
         } else {
           //如果没有获取成功返回值,把request.data传入到reject中
-          reject(request.data)
+          reject(response.data)
         }
       },
       fail(error) {
@@ -58,10 +56,10 @@ const remove = (url, options) => {
     data: options
   })
 }
-
+//抛出wx.request的post,get,put,remove方法
 module.exports = {
   get,
   post,
   put,
-  remove,
+  remove
 }

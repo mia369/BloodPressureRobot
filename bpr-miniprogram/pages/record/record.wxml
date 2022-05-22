@@ -1,15 +1,9 @@
+<wxs module="util" src="/utils/util.wxs"></wxs>
+
 <van-dropdown-menu>
-  <van-dropdown-item value="{{ selectedMemberValue }}" options="{{ memberSelector }}" />
-  <van-dropdown-item id="calendar" title="{{ selectedDateInterval }}" bind:open="onShowCalendar">
-    <van-calendar 
-    show="{{ showCalendar }}" 
-    type="range" 
-    position="top" 
-    color="#1aad19"
-    confirm-text="完成"
-    confirm-disabled-text="请选择结束时间"
-    bind:close="onCloseCalendar" 
-    bind:confirm="onConfirmCalendar" />
+  <van-dropdown-item value="{{ selectedMemberValue }}" options="{{ memberSelector }}" bind:change="onSelectMember" />
+  <van-dropdown-item id="calendar" title="{{ selectedDate }}" bind:open="onShowCalendar">
+    <van-calendar show="{{ showCalendar }}" min-date="{{ minDate }}" max-date="{{ maxDate }}" position="top" color="#1aad19" confirm-text="完成" bind:close="onCloseCalendar" bind:confirm="onConfirmCalendar" show-confirm="{{ false }}" />
   </van-dropdown-item>
 </van-dropdown-menu>
 <van-cell-group>
@@ -21,12 +15,15 @@
       <van-col span="6" class="list-title-col-class">心率</van-col>
     </van-row>
   </van-cell>
-  <van-cell>
-    <van-row style="justify-content:center;">
-      <van-col span="6" class="list-content-col-class">2022-05-12\n12:00</van-col>
-      <van-col span="6" class="list-content-col-class" style=" line-height: 48px;">130</van-col>
-      <van-col span="6" class="list-content-col-class" style=" line-height: 48px;">70</van-col>
-      <van-col span="6" class="list-content-col-class" style=" line-height: 48px;">70</van-col>
-    </van-row>
-  </van-cell>
+  <van-cell-group wx:if="{{ records || records.length > 0 }}" wx:for="{{ records }}" wx:for-item="record">
+    <van-cell>
+      <van-row>
+        <van-col span="6" class="list-content-col-class">{{ util.cutString(record.measureTime, ' ', ':') }}</van-col>
+        <van-col span="6" class="list-content-col-class">{{ record.highBloodPressure }}</van-col>
+        <van-col span="6" class="list-content-col-class">{{ record.lowBloodPressure }}</van-col>
+        <van-col span="6" class="list-content-col-class">{{ record.heartRate }}</van-col>
+      </van-row>
+    </van-cell>
+  </van-cell-group>
 </van-cell-group>
+<van-empty wx:if="{{ !records || records.length === 0 }}" image="search" description="暂无测量记录" />

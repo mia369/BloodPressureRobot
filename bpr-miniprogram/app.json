@@ -83,6 +83,11 @@
     "i-card": "iview/dist/card/index",
     "van-dropdown-menu": "@vant/weapp/dropdown-menu/index",
     "van-dropdown-item": "@vant/weapp/dropdown-item/index",
-    "van-calendar": "@vant/weapp/calendar/index"
+    "van-calendar": "@vant/weapp/calendar/index",
+    "van-empty": "@vant/weapp/empty/index",
+    "i-page": "iview/dist/page/index",
+    "i-icon": "iview/dist/icon/index",
+    "i-input": "iview/dist/input/index",
+    "van-toast": "@vant/weapp/toast/index"
   }
 }

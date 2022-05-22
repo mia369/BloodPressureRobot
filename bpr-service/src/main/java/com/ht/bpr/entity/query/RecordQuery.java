@@ -2,7 +2,9 @@ package com.ht.bpr.entity.query;
 
 import lombok.Data;
 
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author Zhu Shaoqin
@@ -12,10 +14,8 @@ import java.util.List;
  */
 @Data
 public class RecordQuery {
-    private Integer pageNum;
-    private Integer pageSize;
-    private String sortOrder;
-    private List<String> openIds;
+    private String openId;
     private String startTime;
     private String endTime;
 }
+

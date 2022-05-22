@@ -1,5 +1,22 @@
 <!--pages/pic/pic.wxml-->
-
+<van-dropdown-menu>
+  <van-dropdown-item value="{{ selectedMemberValue }}" options="{{ memberSelector }}" bind:change="onSelectMember" />
+</van-dropdown-menu>
 <view class="container">
-  <ec-canvas id="mychart-dom-bar" canvas-id="mychart-bar" ec="{{ ec }}"></ec-canvas>
+  <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ecLineWeek }}"></ec-canvas>
+</view>
+<view class="container">
+  <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ecLineMonth }}"></ec-canvas>
+</view>
+<view class="container">
+  <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ecLineYear }}"></ec-canvas>
+</view>
+<view class="pieContainer">
+  <ec-canvas id="mychart-dom-pie" canvas-id="mychart-pie" ec="{{ ecPieHigh }}"></ec-canvas>
+</view>
+<view class="pieContainer">
+  <ec-canvas id="mychart-dom-pie" canvas-id="mychart-pie" ec="{{ ecPieLow }}"></ec-canvas>
+</view>
+<view class="pieContainer">
+  <ec-canvas id="mychart-dom-pie" canvas-id="mychart-pie" ec="{{ ecPieHeart }}"></ec-canvas>
 </view>

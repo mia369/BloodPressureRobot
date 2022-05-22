@@ -1,4 +1,7 @@
 import Dialog from '../../miniprogram_npm/@vant/weapp/dialog/dialog';
+import Toast from '../../miniprogram_npm/@vant/weapp/toast/toast';
+import recordApi from '../../utils/recordApi.js'
+import requestApi from '../../utils/requestApi.js'
 
 function formatDate(date) {
   // 获取当前月份
@@ -45,6 +48,11 @@ Page({
    * 页面的初始数据
    */
   data: {
+    openId: '',
+    userInfo: {
+      nickName: '点击登录',
+      avatarUrl: '/images/defaultAvatar.png',
+    },
     showMeasureTimePop: false,
     columns: [{
         values: Object.keys(dateTime),
@@ -57,27 +65,25 @@ Page({
         defaultIndex: 0
       },
     ],
-    record: {
-      measureTime: "",
-      highBloodPressure: 0,
-      lowBloodPressure: 0,
-      heartRate: 0,
-      usedPills: 0
-    },
-
+    measureTime: null,
+    highBloodPressure: null,
+    lowBloodPressure: null,
+    heartRate: null,
+    usedPills: null,
   },
 
   /*
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    console.log("add onload options: ", options);
-    console.log("add onload options: ", options.familyId);
-    if (options.familyId && options.familyId !== '') {
-      app.globalData.familyInfo.familyId = options.familyId
-    }
-    if (options.shareUser && options.shareUser !== '') {
-      app.globalData.shareUser = options.shareUser
+    console.log("add onload options: ", options)
+    if (options && options !== {}) {
+      if (options.familyId && options.familyId !== '') {
+        app.globalData.familyInfo.familyId = options.familyId
+      }
+      if (options.shareUser && options.shareUser !== '') {
+        app.globalData.shareUser = options.shareUser
+      }
     }
   },
 
@@ -90,8 +96,6 @@ Page({
 
   /**
    * 生命周期函数--监听页面显示
-   * 
-   * !! Dialog.confirm只有确认按钮
    */
   onShow() {
     this.checkLogin()
@@ -145,21 +149,6 @@ Page({
     });
   },
 
-  onMeasureTimeChange(event) {
-    const {
-      picker,
-      value,
-      index
-    } = event.detail;
-    picker.setColumnValues(1, dateTime[value[0]]);
-    this.setData({
-      record: {
-        measureTime: value[0] + " " + value[1]
-      }
-    })
-    console.log(this.data.record);
-  },
-
   onPickerConfirm(event) {
     const {
       picker,
@@ -167,85 +156,64 @@ Page({
       index
     } = event.detail;
     this.setData({
-      record: {
-        measureTime: value[0] + " " + value[1]
-      }
+      showMeasureTimePop: false,
+      measureTime: value[0] + " " + value[1]
     })
-    console.log(this.data.record);
-    this.setData({
-      showMeasureTimePop: false
-    });
   },
 
   onPickerCancel() {
     this.setData({
       showMeasureTimePop: false
     });
-    console.log(this.data.record);
   },
 
   onHighBloodPressureChange(event) {
     const value = parseInt(event.detail)
-    const r = this.data.record
-    r.highBloodPressure = value
     if (value) {
       this.setData({
-        record: r
+        highBloodPressure: value
       })
     }
-    console.log(this.data.record)
   },
 
   onLowBloodPressureChange(event) {
     const value = parseInt(event.detail)
-    const r = this.data.record
-    r.lowBloodPressure = value
     if (value) {
       this.setData({
-        record: r
+        lowBloodPressure: value
       })
     }
-    console.log(this.data.record)
   },
 
   onHeartRateChange(event) {
     const value = parseInt(event.detail)
-    const r = this.data.record
-    r.heartRate = value
     if (value) {
       this.setData({
-        record: r
+        heartRate: value
       })
     }
-    console.log(this.data.record)
   },
 
   onUsedPillsChange(event) {
-    const value = parseInt(event.detail)
-    const r = this.data.record
-    r.usedPills = value
+    const value = event.detail
     if (value) {
       this.setData({
-        record: r
+        usedPills: value
       })
     }
-    console.log(this.data.record)
   },
-
-  onResetForm(event) {},
 
   async checkLogin() {
     var checkCount = 0
     while (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '') {
       console.log("循环")
       await sleep(50)
-      if (checkCount < 30 && (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '')) {
+      if (checkCount < 40 && (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '')) {
         checkCount = checkCount + 1
         continue
       }
       if (app.globalData.userInfo.nickName === "点击登录") {
         console.log("app.globalData.userInfo: ", app.globalData.userInfo)
-
         Dialog.alert({
             message: '请先登录',
           })
@@ -271,5 +239,51 @@ Page({
         break
       }
     }
+    this.setData({
+      openId: app.globalData.openId,
+      userInfo: app.globalData.userInfo,
+    })
+  },
+
+  onSubmitRecord() {
+    console.log(this.data.openId)
+    console.log(this.data.userInfo)
+    if (!this.data.measureTime || !this.data.highBloodPressure || !this.data.lowBloodPressure || !this.data.heartRate || !this.data.usedPills) {
+      Toast.fail("请填写完整");
+    } else {
+      const params = {
+        openId: this.data.openId,
+        measureTime: this.data.measureTime,
+        highBloodPressure: this.data.highBloodPressure,
+        lowBloodPressure: this.data.lowBloodPressure,
+        heartRate: this.data.heartRate,
+        usedPills: parseInt(this.data.usedPills)
+      }
+      console.log(params)
+      requestApi.post(recordApi.addRecord, params).then(res => {
+        console.log("返回结果: ", res)
+        Toast.success("添加成功");
+        this.setData({
+          measureTime: null,
+          highBloodPressure: null,
+          lowBloodPressure: null,
+          heartRate: null,
+          usedPills: null,
+        })
+        this.onShow()
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+  },
+
+  onResetForm() {
+    this.setData({
+      measureTime: null,
+      highBloodPressure: null,
+      lowBloodPressure: null,
+      heartRate: null,
+      usedPills: null,
+    })
   },
 })

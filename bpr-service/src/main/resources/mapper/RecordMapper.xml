@@ -25,6 +25,15 @@
                 #{createTime},
                 #{updateTime});
     </insert>
+    <update id="update" parameterType="Record">
+        update bpr_record
+        set high_blood_pressure = #{record.highBloodPressure},
+            low_blood_pressure  = #{record.lowBloodPressure},
+            heart_rate          = #{record.heartRate},
+            used_pills          = #{record.usedPills}
+        where open_id = #{record.openId}
+          and measure_time = #{record.measureTime}
+    </update>
 
     <delete id="deleteByPk">
         delete
@@ -32,43 +41,272 @@
         where id = #{recordPk};
     </delete>
 
-    <select id="selectByPk" resultType="com.ht.bpr.entity.Record">
+    <select id="selectByPk" resultType="Record">
         select *
         from bpr_record
         where id = #{recordPk};
     </select>
 
-    <select id="select" parameterType="com.ht.bpr.entity.query.RecordQuery" resultType="com.ht.bpr.entity.Record">
+    <select id="select" parameterType="RecordQuery" resultType="Record">
         select *
         from bpr_record
         <where>
-            open_id in
-            <trim prefix="(" suffix=")" suffixOverrides=",">
-                <foreach collection="query.openIds" item="openId" separator=",">
-                    #{openId}
-                </foreach>
-            </trim>
-            <if test="query.startTime != null">
+            open_id = #{query.openId}
+            <if test="query.startTime != null &amp; query.startTime != &quot;&quot;">
                 and measure_time &gt;= #{query.startTime}
             </if>
-            <if test="query.endTime != null">
+            <if test="query.endTime != null &amp; query.endTime != &quot;&quot;">
                 and measure_time &lt;= #{query.endTime}
             </if>
         </where>
-        <choose>
-            <when test="query.sortOrder != null">
-                <choose>
-                    <when test="query.sortOrder.startsWith(&quot;A&quot;) || query.sortOrder.startsWith(&quot;a&quot;)">
-                        order by measure_time asc
-                    </when>
-                    <otherwise>
-                        order by measure_time desc
-                    </otherwise>
-                </choose>
-            </when>
-            <otherwise>
-                order by measure_time asc
-            </otherwise>
-        </choose>
+        order by measure_time asc
     </select>
+    <select id="selectMinMeasureTime" resultType="Record">
+        SELECT *
+        FROM bpr_record
+        WHERE measure_time = (SELECT min(measure_time) FROM bpr_record WHERE open_id = #{openId});
+    </select>
+    <select id="count" parameterType="RecordQuery" resultType="java.lang.Integer">
+        select count(1)
+        from bpr_record
+        <where>
+            open_id = #{query.openId}
+            <if test="query.startTime != null &amp; query.startTime != &quot;&quot;">
+                and measure_time &gt;= #{query.startTime}
+            </if>
+            <if test="query.endTime != null &amp; query.endTime != &quot;&quot;">
+                and measure_time &lt;= #{query.endTime}
+            </if>
+        </where>
+    </select>
+    <select id="selectByMeasureTime" parameterType="Record" resultType="Record">
+        select *
+        from bpr_record
+        where open_id = #{record.openId}
+          and measure_time = #{record.measureTime}
+    </select>
+    <select id="selectRange" resultMap="lineRecordMap">
+        SELECT CONCAT_WS('-', datetime, range_time) as 'measure_range', avg_high,
+               avg_low,
+               avg_heart,
+               max_high,
+               max_low,
+               max_heart
+        FROM (SELECT DATE_FORMAT(measure_time, '%m-%d') 'datetime', (
+            CASE
+                WHEN timeType = 1 THEN
+                    '早上'
+                WHEN timeType = 2 THEN
+                    '上午'
+                WHEN timeType = 3 THEN
+                    '下午'
+                WHEN timeType = 4 THEN
+                    '晚上'
+                ELSE '其它'
+                END
+            ) 'range_time', avg( high_blood_pressure ) 'avg_high', avg( low_blood_pressure ) 'avg_low', avg( heart_rate ) 'avg_heart', max( high_blood_pressure ) 'max_high', max( low_blood_pressure ) 'max_low', max( heart_rate ) 'max_heart'
+              FROM (SELECT high_blood_pressure,
+                           low_blood_pressure,
+                           heart_rate,
+                           measure_time,
+                           CASE
+                               WHEN HOUR ( measure_time) BETWEEN 4
+        AND 8 THEN
+        '1'
+        WHEN HOUR ( measure_time ) BETWEEN 9
+        AND 12 THEN
+        '2'
+        WHEN HOUR ( measure_time ) BETWEEN 13
+        AND 18 THEN
+        '3'
+        WHEN HOUR ( measure_time ) &gt;= 19
+        AND HOUR ( measure_time ) &lt;= 3 THEN
+        '4' ELSE 4
+        END timeType
+              FROM
+                  bpr_record
+              where open_id = #{openId}) AS time_record
+        WHERE measure_time &gt;= #{startTime}
+        GROUP BY DATE_FORMAT(measure_time, '%m-%d'),
+                 time_record.timeType
+        ORDER BY DATE_FORMAT(measure_time, '%m-%d'),
+                 timeType ASC ) AS tb_week
+    </select>
+    <select id="selectDay" resultMap="lineRecordMap">
+        SELECT DATE_FORMAT(measure_time, '%Y-%m-%d') as 'measure_day', avg(high_blood_pressure) as 'avg_high', avg(low_blood_pressure) as 'avg_low', avg(heart_rate) as 'avg_heart', max(high_blood_pressure) as 'max_high', max(low_blood_pressure) as 'max_low', max(heart_rate) as 'max_heart'
+        FROM bpr_record
+        WHERE open_id = #{openId}
+          and measure_time &gt;= #{startTime}
+        GROUP BY DATE_FORMAT(
+                         measure_time,
+                         '%Y-%m-%d'
+                     )
+        ORDER BY DATE_FORMAT(
+                         measure_time,
+                         '%Y-%m-%d')
+    </select>
+    <select id="selectMonth" resultMap="lineRecordMap">
+        SELECT
+            DATE_FORMAT( measure_time, '%Y-%m' ) 'measure_month',
+                avg( high_blood_pressure ) 'avg_high',
+                avg( low_blood_pressure ) 'avg_low',
+                avg( heart_rate ) 'avg_heart',
+                max( high_blood_pressure ) 'max_high',
+                max( low_blood_pressure ) 'max_low',
+                max( heart_rate ) 'max_heart'
+        FROM
+            bpr_record
+        WHERE open_id = #{openId}
+          and measure_time &gt;= #{startTime}
+        GROUP BY
+            DATE_FORMAT( measure_time, '%Y-%m' )
+        ORDER BY
+            DATE_FORMAT(
+                    measure_time,
+                    '%Y-%m')
+    </select>
+    <select id="selectHighBloodPressureLevel" resultMap="pieRecordMap">
+        SELECT
+            (
+                CASE
+                    WHEN hbp_record.avg_high BETWEEN 0
+                        AND 89 THEN
+                        '低血压'
+                    WHEN hbp_record.avg_high BETWEEN 89
+                        AND 139 THEN
+                        '正常血压'
+                    WHEN hbp_record.avg_high BETWEEN 139
+                        AND 159 THEN
+                        '1级高血压'
+                    WHEN hbp_record.avg_high BETWEEN 159
+                        AND 179 THEN
+                        '2级高血压'
+                    WHEN hbp_record.avg_high BETWEEN 179
+                        AND 300 THEN
+                        '3级高血压' ELSE '异常数据'
+                    END
+                ) AS 'level_name',
+                sum( 1 ) AS 'date_count',
+                GROUP_CONCAT( hbp_record.measure_date ) AS 'date_detail'
+        FROM
+            (
+                SELECT
+                    DATE_FORMAT( measure_time, '%Y-%m-%d' ) AS 'measure_date',
+                        avg( high_blood_pressure ) AS 'avg_high'
+                FROM
+                    bpr_record
+                WHERE
+                    open_id = #{openId}
+                  AND measure_time &gt;= #{startTime}
+                GROUP BY
+                    DATE_FORMAT( measure_time, '%Y-%m-%d' )
+            ) AS hbp_record
+        GROUP BY
+            DATE_FORMAT( hbp_record.measure_date, '%Y-%m' ),
+            level_name
+        ORDER BY
+            date_count desc;
+    </select>
+    <select id="selectLowBloodPressureLevel" resultMap="pieRecordMap">
+        SELECT
+            (
+                CASE
+                    WHEN lbp_record.avg_low BETWEEN 0
+                        AND 59 THEN
+                        '低血压'
+                    WHEN lbp_record.avg_low BETWEEN 59
+                        AND 89 THEN
+                        '正常血压'
+                    WHEN lbp_record.avg_low BETWEEN 89
+                        AND 99 THEN
+                        '1级高血压'
+                    WHEN lbp_record.avg_low BETWEEN 99
+                        AND 109 THEN
+                        '2级高血压'
+                    WHEN lbp_record.avg_low BETWEEN 109
+                        AND 200 THEN
+                        '3级高血压' ELSE '异常数据'
+                    END
+                ) AS 'level_name',
+                sum( 1 ) AS 'date_count',
+                GROUP_CONCAT( lbp_record.measure_date ) AS 'date_detail'
+        FROM
+            (
+                SELECT
+                    DATE_FORMAT( measure_time, '%Y-%m-%d' ) AS 'measure_date',
+                        avg( low_blood_pressure ) AS 'avg_low'
+                FROM
+                    bpr_record
+                WHERE
+                    open_id = #{openId}
+                  AND measure_time &gt;= #{startTime}
+                GROUP BY
+                    DATE_FORMAT( measure_time, '%Y-%m-%d' )
+            ) AS lbp_record
+        GROUP BY
+            DATE_FORMAT( lbp_record.measure_date, '%Y-%m' ),
+            level_name
+        ORDER BY
+            date_count desc;
+    </select>
+    <select id="selectHeartRateLevel" resultMap="pieRecordMap">
+        SELECT
+            (
+                CASE
+                    WHEN hr_record.avg_heart BETWEEN 0
+                        AND 39 THEN
+                        '异常缓慢'
+                    WHEN hr_record.avg_heart BETWEEN 39
+                        AND 59 THEN
+                        '心动过缓'
+                    WHEN hr_record.avg_heart BETWEEN 59
+                        AND 100 THEN
+                        '正常心率'
+                    WHEN hr_record.avg_heart BETWEEN 100
+                        AND 160 THEN
+                        '心动过速'
+                    WHEN hr_record.avg_heart BETWEEN 160
+                        AND 300 THEN
+                        '异常快速' ELSE '异常数据'
+                    END
+                ) AS 'level_name',
+                sum( 1 ) AS 'date_count',
+                GROUP_CONCAT( hr_record.measure_date ) AS 'date_detail'
+        FROM
+            (
+                SELECT
+                    DATE_FORMAT( measure_time, '%Y-%m-%d' ) AS 'measure_date',
+                        avg( heart_rate ) AS 'avg_heart'
+                FROM
+                    bpr_record
+                WHERE
+                    open_id = #{openId}
+                  AND measure_time &gt;= #{startTime}
+                GROUP BY
+                    DATE_FORMAT( measure_time, '%Y-%m-%d' )
+            ) AS hr_record
+        GROUP BY
+            DATE_FORMAT( hr_record.measure_date, '%Y-%m' ),
+            level_name
+        ORDER BY
+            date_count desc;
+    </select>
+
+    <resultMap id="lineRecordMap" type="LineRecord">
+        <result column="avg_high" property="avgHighBloodPressure"/>
+        <result column="avg_low" property="avgLowBloodPressure"/>
+        <result column="avg_heart" property="avgHeartRate"/>
+        <result column="max_high" property="maxHighBloodPressure"/>
+        <result column="max_low" property="maxLowBloodPressure"/>
+        <result column="max_heart" property="maxHeartRate"/>
+        <result column="measure_range" property="measureRange"/>
+        <result column="measure_day" property="measureDay"/>
+        <result column="measure_month" property="measureMonth"/>
+    </resultMap>
+
+    <resultMap id="pieRecordMap" type="PieRecord">
+        <result column="level_name" property="name"/>
+        <result column="date_count" property="value"/>
+        <result column="date_detail" property="detail"/>
+    </resultMap>
 </mapper>

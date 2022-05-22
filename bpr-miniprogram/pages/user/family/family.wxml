@@ -1,4 +1,4 @@
-<wxs module="dateFormat" src="/utils/dateFormat.wxs"></wxs>
+<wxs module="util" src="/utils/util.wxs"></wxs>
 <van-dialog id="van-dialog" />
 
 <view>
@@ -30,7 +30,7 @@
           </van-col>
           <van-col span="24" style="text-align: left;margin-top: 5px;margin-bottom: 16px;">
             <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 14px;line-height: 24px;font-weight: 600;">
-              创建时间: {{dateFormat.formatTime(familyInfo.createTime, 'yyyy-MM-dd hh:mm:ss')}}
+              创建时间: {{util.formatTime(familyInfo.createTime, 'yyyy-MM-dd hh:mm:ss')}}
             </h2>
           </van-col>
         </van-row>
