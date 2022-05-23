@@ -1,3 +1,62 @@
-<view>
-  help
-</view>
+<van-cell-group>
+  <van-cell title="初次登录" class="title-cell-class" />
+  <van-cell class="content-cell-class">
+    初次登录的用户需要完成登录和创建/加入家庭后，方可使用小程序功能。
+  </van-cell>
+  <van-cell title="功能介绍" class="title-cell-class" />
+  <van-collapse accordion value="{{ activeFunction }}" bind:change="onActiveFunctionChange">
+    <van-collapse-item class="subtitle-cell-class" title="记录功能" name="1">
+      <van-cell class="content-cell-class">
+        在添加页面随时记录血压和心率。
+      </van-cell>
+    </van-collapse-item>
+    <van-collapse-item class="subtitle-cell-class" title="查看功能" name="2">
+      <van-cell class="content-cell-class">
+        在记录页面查看每日记录列表，可查看本人以及同一个家庭中其他家庭成员的血压和心率记录。
+      </van-cell>
+    </van-collapse-item>
+    <van-collapse-item class="subtitle-cell-class" title="分析功能" name="3">
+      <van-cell class="content-cell-class">
+        在分析页面查看血压心率综合分析图表，可查看本人以及同一个家庭中其他家庭成员的血压和心率记录分析。
+      </van-cell>
+    </van-collapse-item>
+    <van-collapse-item class="subtitle-cell-class" title="家庭功能" name="4">
+      <van-cell class="content-cell-class">
+        管理员：创建家庭的用户成为该家庭的管理员。管理员拥有邀请成员、移除成员、设置成员称谓、解散家庭的权限。
+      </van-cell>
+      <van-cell class="content-cell-class">
+        成员：通过小程序分享页加入家庭的用户成为该家庭的成员。成员拥有邀请成员、退出家庭的权限。
+      </van-cell>
+    </van-collapse-item>
+  </van-collapse>
+  <van-cell title="数据统计标准" class="title-cell-class" />
+  <van-collapse accordion value="{{ activeData }}" bind:change="onActiveDataChange">
+    <van-collapse-item class="subtitle-cell-class" title="高压/收缩压" name="1">
+      <van-cell class="content-cell-class">
+        <text>低血压: {{ '<' }}90 mmHg{{ '\n' }}</text>
+            <text>正常血压: 90-139 mmHg{{ '\n' }}</text>
+            <text>1级高血压: 140-159 mmHg{{ '\n' }}</text>
+            <text>2级高血压: 160-179 mmHg{{ '\n' }}</text>
+            <text>3级高血压: {{ '>' }}179 mmHg</text>
+      </van-cell>
+    </van-collapse-item>
+    <van-collapse-item class="subtitle-cell-class" title="低压/舒张压" name="2">
+      <van-cell class="content-cell-class">
+        <text>低血压: {{ '<' }}60 mmHg{{ '\n' }}</text>
+            <text>正常血压: 60-89 mmHg{{ '\n' }}</text>
+            <text>1级高血压: 90-99 mmHg{{ '\n' }}</text>
+            <text>2级高血压: 100-109 mmHg{{ '\n' }}</text>
+            <text>3级高血压: {{ '>' }}109 mmHg</text>
+      </van-cell>
+    </van-collapse-item>
+    <van-collapse-item class="subtitle-cell-class" title="静息心率" name="3">
+      <van-cell class="content-cell-class">
+        <text>异常缓慢: {{ '<' }}39 bpm{{ '\n' }}</text>
+            <text>心动过缓: 40-59 bpm{{ '\n' }}</text>
+            <text>正常心率: 60-100 bpm{{ '\n' }}</text>
+            <text>心动过速: 101-160 bpm{{ '\n' }}</text>
+            <text>异常快速: {{ '>' }}160 bpm</text>
+      </van-cell>
+    </van-collapse-item>
+  </van-collapse>
+</van-cell-group>

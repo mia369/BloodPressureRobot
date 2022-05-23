@@ -1,13 +1,14 @@
 <wxs module="util" src="/utils/util.wxs"></wxs>
+<van-dialog id="van-dialog" />
 
 <van-dropdown-menu>
   <van-dropdown-item value="{{ selectedMemberValue }}" options="{{ memberSelector }}" bind:change="onSelectMember" />
   <van-dropdown-item id="calendar" title="{{ selectedDate }}" bind:open="onShowCalendar">
-    <van-calendar show="{{ showCalendar }}" min-date="{{ minDate }}" max-date="{{ maxDate }}" position="top" color="#1aad19" confirm-text="完成" bind:close="onCloseCalendar" bind:confirm="onConfirmCalendar" show-confirm="{{ false }}" />
+    <van-calendar show="{{ showCalendar }}" min-date="{{ minDate }}" max-date="{{ maxDate }}" position="top" color="#099268" confirm-text="完成" bind:close="onCloseCalendar" bind:confirm="onConfirmCalendar" show-confirm="{{ false }}" />
   </van-dropdown-item>
 </van-dropdown-menu>
 <van-cell-group>
-  <van-cell>
+  <van-cell class="list-title-class">
     <van-row>
       <van-col span="6" class="list-title-col-class">测量时间</van-col>
       <van-col span="6" class="list-title-col-class">高压</van-col>
@@ -16,7 +17,15 @@
     </van-row>
   </van-cell>
   <van-cell-group wx:if="{{ records || records.length > 0 }}" wx:for="{{ records }}" wx:for-item="record">
-    <van-cell>
+    <van-cell wx:if="{{ index % 2 === 0 }}">
+      <van-row>
+        <van-col span="6" class="list-content-col-class">{{ util.cutString(record.measureTime, ' ', ':') }}</van-col>
+        <van-col span="6" class="list-content-col-class">{{ record.highBloodPressure }}</van-col>
+        <van-col span="6" class="list-content-col-class">{{ record.lowBloodPressure }}</van-col>
+        <van-col span="6" class="list-content-col-class">{{ record.heartRate }}</van-col>
+      </van-row>
+    </van-cell>
+    <van-cell wx:if="{{ index % 2 === 1 }}" class="list-content-cell-class">
       <van-row>
         <van-col span="6" class="list-content-col-class">{{ util.cutString(record.measureTime, ' ', ':') }}</van-col>
         <van-col span="6" class="list-content-col-class">{{ record.highBloodPressure }}</van-col>

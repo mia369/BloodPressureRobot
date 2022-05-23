@@ -5,7 +5,6 @@ import com.ht.bpr.entity.LineRecord;
 import com.ht.bpr.entity.PieRecord;
 import com.ht.bpr.entity.Record;
 import com.ht.bpr.entity.query.RecordQuery;
-import com.ht.bpr.entity.vo.ChartVo;
 import com.ht.bpr.entity.vo.LineRecordVo;
 import com.ht.bpr.entity.vo.PieRecordVo;
 import com.ht.bpr.entity.vo.RecordVo;
@@ -98,92 +97,6 @@ public class RecordServiceImpl implements RecordService {
             }
         }
         return recordVos;
-    }
-
-    @Override
-    public Record selectMinMeasureTime(String openId) {
-        if (StringUtils.isBlank(openId)) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
-        }
-        Record record = recordMapper.selectMinMeasureTime(openId);
-        return record;
-    }
-
-//    @Override
-//    public LineRecordVo analyzeRange(RecordQuery query) {
-//        if (query == null) {
-//            throw new BprException(BprResultStatus.PARAM_IS_NULL, "recordQuery is null");
-//        }
-//        if (StringUtils.isBlank(query.getOpenId())) {
-//            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
-//        }
-//        if (StringUtils.isBlank(query.getStartTime())) {
-//            throw new BprException(BprResultStatus.PARAM_IS_NULL, "startTime is null");
-//        }
-//        //查询
-//        List<LineRecord> lineRecords = recordMapper.selectRange(query);
-//        if (lineRecords == null) {
-//            return null;
-//        }
-//        //转换Vo
-//        LineRecordVo lineRecordVo = new LineRecordVo();
-//        List<Integer> avgHighBloodPressure = new ArrayList<>();
-//        List<Integer> avgLowBloodPressure = new ArrayList<>();
-//        List<Integer> avgHeartRate = new ArrayList<>();
-//        List<Integer> maxHighBloodPressure = new ArrayList<>();
-//        List<Integer> maxLowBloodPressure = new ArrayList<>();
-//        List<Integer> maxHeartRate = new ArrayList<>();
-//        List<String> measureRange = new ArrayList<>();
-//        for (LineRecord lineRecord : lineRecords) {
-//            avgHighBloodPressure.add(lineRecord.getAvgHighBloodPressure());
-//            avgLowBloodPressure.add(lineRecord.getAvgLowBloodPressure());
-//            avgHeartRate.add(lineRecord.getAvgHeartRate());
-//            maxHighBloodPressure.add(lineRecord.getMaxHighBloodPressure());
-//            maxLowBloodPressure.add(lineRecord.getMaxLowBloodPressure());
-//            maxHeartRate.add(lineRecord.getMaxHeartRate());
-//            measureRange.add(lineRecord.getMeasureRange());
-//        }
-//        lineRecordVo.setAvgHighBloodPressure(avgHighBloodPressure);
-//        lineRecordVo.setAvgLowBloodPressure(avgLowBloodPressure);
-//        lineRecordVo.setAvgHeartRate(avgHeartRate);
-//        lineRecordVo.setMaxHighBloodPressure(maxHighBloodPressure);
-//        lineRecordVo.setMaxLowBloodPressure(maxLowBloodPressure);
-//        lineRecordVo.setMaxHeartRate(maxHeartRate);
-//        lineRecordVo.setMeasureTime(measureRange);
-//        return lineRecordVo;
-//    }
-
-    @Override
-    public ChartVo analyzeRecord(RecordQuery query) {
-        if (query == null) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "recordQuery is null");
-        }
-        if (StringUtils.isBlank(query.getOpenId())) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
-        }
-        //处理日期
-        Calendar calendar = Calendar.getInstance();
-        String weekAgo = getEarlyDate(calendar, 7);
-        String monthAgo = getEarlyDate(calendar, 30);
-        String yearAgo = getEarlyDate(calendar, 365);
-        //获取line和pie数据
-        List<LineRecord> lineWeekRecords = recordMapper.selectRange(query.getOpenId(), weekAgo);
-        List<LineRecord> lineMonthRecords = recordMapper.selectDay(query.getOpenId(), monthAgo);
-        List<LineRecord> lineYearRecords = recordMapper.selectMonth(query.getOpenId(), yearAgo);
-//        recordMapper.selectMonthHigh(query.getOpenId(), monthAgo);
-
-        //数据转换成vo
-        LineRecordVo lineWeek = LineRecordVo.fromRecordToVo(lineWeekRecords);
-        LineRecordVo lineMonth = LineRecordVo.fromRecordToVo(lineMonthRecords);
-        LineRecordVo lineYear = LineRecordVo.fromRecordToVo(lineYearRecords);
-
-        //组装chartVo
-        ChartVo chartVo = new ChartVo();
-        chartVo.setLineWeek(lineWeek);
-        chartVo.setLineMonth(lineMonth);
-        chartVo.setLineYear(lineYear);
-
-        return chartVo;
     }
 
     @Override

@@ -1,9 +1,7 @@
-/* pages/user/user.wxss */
 
-:root{
-  --van-cell-line-height: 50px;
-}
-
-.van-cell {
-  line-height: var(--van-cell-line-height, 36px) !important;
+.content-cell-class .van-cell__value {
+  font-size: 15px;
+  color: #262626 !important;
+  text-align: left !important;
+  line-height: 26px;
 }

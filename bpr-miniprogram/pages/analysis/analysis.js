@@ -2,6 +2,11 @@ import * as echarts from '../../ec-canvas/echarts'
 import recordApi from '../../utils/recordApi.js'
 import requestApi from '../../utils/requestApi.js'
 import util from '../../utils/util'
+import Dialog from '../../miniprogram_npm/@vant/weapp/dialog/dialog';
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 const app = getApp();
 
@@ -152,6 +157,7 @@ Page({
     ecPieHeart: {
       onInit: initPieHeartChart
     },
+    showTitle: false,
   },
 
   /**
@@ -170,7 +176,27 @@ Page({
       openId: this.data.openId,
       startTime: util.formatTime(new Date(today.getTime() - 604800000))
     }
-    requestApi.post(recordApi.analyzeWeek, weekQuery).then(res => {
+    const monthQuery = {
+      openId: this.data.openId,
+      startTime: util.formatTime(new Date(today.getTime() - 2592000000))
+    }
+    const yearQuery = {
+      openId: this.data.openId,
+      startTime: util.formatTime(new Date(today.getTime() - 31536000000))
+    }
+    this.getLineWeek(weekQuery)
+    this.getLineMonth(monthQuery)
+    this.getLineYear(yearQuery)
+    this.getPie(monthQuery)
+    setTimeout(() => {
+      this.setData({
+        showTitle: true
+      })
+    }, 900)
+  },
+
+  getLineWeek(params) {
+    requestApi.post(recordApi.analyzeWeek, params).then(res => {
       console.log("返回结果: ", res.result)
       this.setData({
         lineWeek: res.result
@@ -179,12 +205,10 @@ Page({
     }).catch(err => {
       console.log(err)
     })
+  },
 
-    const monthQuery = {
-      openId: this.data.openId,
-      startTime: util.formatTime(new Date(today.getTime() - 2592000000))
-    }
-    requestApi.post(recordApi.analyzeMonth, monthQuery).then(res => {
+  getLineMonth(params) {
+    requestApi.post(recordApi.analyzeMonth, params).then(res => {
       console.log("返回结果: ", res.result)
       this.setData({
         lineMonth: res.result
@@ -193,12 +217,10 @@ Page({
     }).catch(err => {
       console.log(err)
     })
+  },
 
-    const yearQuery = {
-      openId: this.data.openId,
-      startTime: util.formatTime(new Date(today.getTime() - 31536000000))
-    }
-    requestApi.post(recordApi.analyzeYear, yearQuery).then(res => {
+  getLineYear(params) {
+    requestApi.post(recordApi.analyzeYear, params).then(res => {
       console.log("返回结果: ", res.result)
       this.setData({
         lineYear: res.result
@@ -207,30 +229,32 @@ Page({
     }).catch(err => {
       console.log(err)
     })
+  },
 
-    requestApi.post(recordApi.analyzeDistribution, monthQuery).then(res => {
+  getPie(params) {
+    requestApi.post(recordApi.analyzeDistribution, params).then(res => {
       console.log("analyzeDistribution返回结果: ", res.result)
       const highRecords = res.result.pieHighBloodPressure
       for (let i = 0; i < highRecords.length; i++) {
         if (highRecords[i].name === '正常血压') {
           highRecords[i].itemStyle = {
-            color: "#58D68D"
+            color: "#69db7c"
           }
         } else if (highRecords[i].name === '低血压') {
           highRecords[i].itemStyle = {
-            color: "#5DADE2 "
+            color: "#40a9ff"
           }
         } else if (highRecords[i].name === '1级高血压') {
           highRecords[i].itemStyle = {
-            color: "#F4D03F "
+            color: "#ffec3d"
           }
         } else if (highRecords[i].name === '2级高血压') {
           highRecords[i].itemStyle = {
-            color: "#EB984E"
+            color: "#ffa940"
           }
         } else if (highRecords[i].name === '3级高血压') {
           highRecords[i].itemStyle = {
-            color: "#EC7063 "
+            color: "#ff4d4f"
           }
         }
       }
@@ -238,23 +262,23 @@ Page({
       for (let i = 0; i < lowRecords.length; i++) {
         if (lowRecords[i].name === '正常血压') {
           lowRecords[i].itemStyle = {
-            color: "#58D68D"
+            color: "#69db7c"
           }
         } else if (lowRecords[i].name === '低血压') {
           lowRecords[i].itemStyle = {
-            color: "#5DADE2 "
+            color: "#40a9ff"
           }
         } else if (lowRecords[i].name === '1级高血压') {
           lowRecords[i].itemStyle = {
-            color: "#F4D03F "
+            color: "#ffec3d"
           }
         } else if (lowRecords[i].name === '2级高血压') {
           lowRecords[i].itemStyle = {
-            color: "#EB984E"
+            color: "#ffa940"
           }
         } else if (lowRecords[i].name === '3级高血压') {
           lowRecords[i].itemStyle = {
-            color: "#EC7063 "
+            color: "#ff4d4f"
           }
         }
       }
@@ -262,27 +286,26 @@ Page({
       for (let i = 0; i < heartRecords.length; i++) {
         if (heartRecords[i].name === '正常心率') {
           heartRecords[i].itemStyle = {
-            color: "#58D68D"
+            color: "#69db7c"
           }
         } else if (heartRecords[i].name === '心动过缓') {
           heartRecords[i].itemStyle = {
-            color: "#5DADE2 "
+            color: "#40a9ff"
           }
         } else if (heartRecords[i].name === '异常缓慢') {
           heartRecords[i].itemStyle = {
-            color: "#AF7AC5 "
+            color: "#b37feb"
           }
         } else if (heartRecords[i].name === '心动过速') {
           heartRecords[i].itemStyle = {
-            color: "#F4D03F"
+            color: "#ffec3d"
           }
         } else if (heartRecords[i].name === '异常快速') {
           heartRecords[i].itemStyle = {
-            color: "#EB984E "
+            color: "#ffa940"
           }
         }
       }
-
       this.setData({
         pieRecord: res.result
       })
@@ -296,41 +319,44 @@ Page({
 
   setLineWeekOption() {
     var option = {
-      title: {
-        text: '近一周 血压心率走势图',
-        left: 'center',
-        textStyle: {
-          color: 'black',
-          fontWeight: 'normal',
-          fontSize: 14
-        }
-      },
       backgroundColor: "#ffffff",
       legend: {
         data: ['平均高压', '平均低压', '平均心率', '最高高压', '最高低压', '最高心率'],
-        top: 25,
+        top: '3%',
         left: 'center',
         backgroundColor: 'white',
-        z: -1,
         width: 300
       },
       grid: {
-        left: '10%', // 与容器左侧的距离
-        right: '10%', // 与容器右侧的距离
-        top: '30%', // 与容器顶部的距离
-        bottom: '10%', // 与容器底部的距离
+        left: '5%', // 与容器左侧的距离
+        right: '8%', // 与容器右侧的距离
+        top: '20%', // 与容器顶部的距离
+        bottom: '5%', // 与容器底部的距离
+        containLabel: true
       },
       tooltip: {
         show: true,
-        trigger: 'axis'
+        trigger: 'axis',
+        z: 10,
+        position: function (pos, _params, dom, rect, size) {
+          // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
+          var obj = {top: 60};
+          obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 5;
+          return obj;
+         }
       },
       xAxis: {
+        // name: '测量时间',
+        // nameLocation: 'middle',
         type: 'category',
         boundaryGap: false,
         data: this.data.lineWeek.measureTime,
-        // show: false
+        axisLabel: {
+          showMaxLabel: true
+        }
       },
       yAxis: {
+        // name: '值',
         x: 'center',
         type: 'value',
         splitLine: {
@@ -338,7 +364,6 @@ Page({
             type: 'dashed'
           }
         }
-        // show: false
       },
       series: [{
         name: '平均高压',
@@ -404,39 +429,39 @@ Page({
 
   setLineMonthOption() {
     var option = {
-      title: {
-        text: '近一月 血压心率走势图',
-        left: 'center',
-        textStyle: {
-          color: 'black',
-          fontWeight: 'normal',
-          fontSize: 14
-        }
-      },
       backgroundColor: "#ffffff",
       legend: {
         data: ['平均高压', '平均低压', '平均心率', '最高高压', '最高低压', '最高心率'],
-        top: 25,
+        top: '3%',
         left: 'center',
         backgroundColor: 'white',
-        z: -1,
         width: 300
       },
       grid: {
-        left: '10%', // 与容器左侧的距离
-        right: '10%', // 与容器右侧的距离
-        top: '30%', // 与容器顶部的距离
-        bottom: '10%', // 与容器底部的距离
+        left: '5%', // 与容器左侧的距离
+        right: '8%', // 与容器右侧的距离
+        top: '20%', // 与容器顶部的距离
+        bottom: '5%', // 与容器底部的距离
+        containLabel: true
       },
       tooltip: {
         show: true,
-        trigger: 'axis'
+        trigger: 'axis',
+        z: 10,
+        position: function (pos, _params, dom, rect, size) {
+          // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
+          var obj = {top: 60};
+          obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 5;
+          return obj;
+         }
       },
       xAxis: {
         type: 'category',
         boundaryGap: false,
         data: this.data.lineMonth.measureTime,
-        // show: false
+        axisLabel: {
+          showMaxLabel: true
+        }
       },
       yAxis: {
         x: 'center',
@@ -446,7 +471,6 @@ Page({
             type: 'dashed'
           }
         }
-        // show: false
       },
       series: [{
         name: '平均高压',
@@ -512,39 +536,39 @@ Page({
 
   setLineYearOption() {
     var option = {
-      title: {
-        text: '近一年 血压心率走势图',
-        left: 'center',
-        textStyle: {
-          color: 'black',
-          fontWeight: 'normal',
-          fontSize: 14
-        }
-      },
       backgroundColor: "#ffffff",
       legend: {
         data: ['平均高压', '平均低压', '平均心率', '最高高压', '最高低压', '最高心率'],
-        top: 25,
+        top: '3%',
         left: 'center',
         backgroundColor: 'white',
-        z: -1,
         width: 300
       },
       grid: {
-        left: '10%', // 与容器左侧的距离
-        right: '10%', // 与容器右侧的距离
-        top: '30%', // 与容器顶部的距离
-        bottom: '10%', // 与容器底部的距离
+        left: '5%', // 与容器左侧的距离
+        right: '8%', // 与容器右侧的距离
+        top: '20%', // 与容器顶部的距离
+        bottom: '5%', // 与容器底部的距离
+        containLabel: true
       },
       tooltip: {
         show: true,
-        trigger: 'axis'
+        trigger: 'axis',
+        z: 10,
+        position: function (pos, _params, dom, rect, size) {
+          // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
+          var obj = {top: 60};
+          obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 5;
+          return obj;
+         }
       },
       xAxis: {
         type: 'category',
         boundaryGap: false,
         data: this.data.lineYear.measureTime,
-        // show: false
+        axisLabel: {
+          showMaxLabel: true
+        }
       },
       yAxis: {
         x: 'center',
@@ -554,7 +578,6 @@ Page({
             type: 'dashed'
           }
         }
-        // show: false
       },
       series: [{
         name: '平均高压',
@@ -620,30 +643,21 @@ Page({
 
   setPieHighOption() {
     var option = {
-      title: {
-        text: '近一月 高压/收缩压分布图',
-        left: 'center',
-        textStyle: {
-          color: 'black',
-          fontWeight: 'normal',
-          fontSize: 14
-        }
-      },
       backgroundColor: "#ffffff",
       grid: {
         left: '10%', // 与容器左侧的距离
         right: '10%', // 与容器右侧的距离
-        top: '20%', // 与容器顶部的距离
+        top: '0%', // 与容器顶部的距离
         bottom: '10%', // 与容器底部的距离
       },
       legend: {
         data: ['低血压', '正常血压', '1级高血压', '2级高血压', '3级高血压'],
         left: 'center',
-        top: '10%',
-        left: 'center',
+        top: '3%',
         backgroundColor: 'white',
-        z: -1,
-        width: 300
+        width: '70%',
+        itemWidth: 12,
+        icon: 'circle',
       },
       tooltip: {
         trigger: 'item',
@@ -653,18 +667,24 @@ Page({
           //拼接一个字符串
           var res =  '具体日期：' + param.data.detail;
           return res;
-        }
+        },
+        position: function (pos, _params, dom, rect, size) {
+          // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
+          var obj = {top: 60};
+          obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 5;
+          return obj;
+         }
       },
       series: [{
         label: {
           normal: {
             fontSize: 12,
-            formatter: '{b}:\n{d}%',
+            formatter: '{b}\n{d}%',
           }
         },
         type: 'pie',
         center: ['50%', '60%'],
-        radius: ['0%', '40%'],
+        radius: ['0%', '60%'],
         data: this.data.pieRecord.pieHighBloodPressure
       }]
     };
@@ -676,30 +696,21 @@ Page({
 
   setPieLowOption() {
     var option = {
-      title: {
-        text: '近一月 低压/舒张压分布图',
-        left: 'center',
-        textStyle: {
-          color: 'black',
-          fontWeight: 'normal',
-          fontSize: 14
-        }
-      },
       backgroundColor: "#ffffff",
       grid: {
         left: '10%', // 与容器左侧的距离
         right: '10%', // 与容器右侧的距离
-        top: '20%', // 与容器顶部的距离
+        top: '0%', // 与容器顶部的距离
         bottom: '10%', // 与容器底部的距离
       },
       legend: {
         data: ['低血压', '正常血压', '1级高血压', '2级高血压', '3级高血压'],
         left: 'center',
-        top: '10%',
-        left: 'center',
+        top: '3%',
         backgroundColor: 'white',
-        z: -1,
-        width: 300
+        width: '70%',
+        itemWidth: 12,
+        icon: 'circle',
       },
       tooltip: {
         trigger: 'item',
@@ -709,18 +720,24 @@ Page({
           //拼接一个字符串
           var res =  '具体日期：' + param.data.detail;
           return res;
-        }
+        },
+        position: function (pos, _params, dom, rect, size) {
+          // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
+          var obj = {top: 60};
+          obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 5;
+          return obj;
+         }
       },
       series: [{
         label: {
           normal: {
             fontSize: 12,
-            formatter: '{b}:\n{d}%',
+            formatter: '{b}\n{d}%',
           }
         },
         type: 'pie',
         center: ['50%', '60%'],
-        radius: ['0%', '40%'],
+        radius: ['0%', '60%'],
         data: this.data.pieRecord.pieLowBloodPressure
       }]
     };
@@ -732,30 +749,21 @@ Page({
 
   setPieHeartOption() {
     var option = {
-      title: {
-        text: '近一月 心率分布图',
-        left: 'center',
-        textStyle: {
-          color: 'black',
-          fontWeight: 'normal',
-          fontSize: 14
-        }
-      },
       backgroundColor: "#ffffff",
       grid: {
         left: '10%', // 与容器左侧的距离
         right: '10%', // 与容器右侧的距离
-        top: '20%', // 与容器顶部的距离
+        top: '0%', // 与容器顶部的距离
         bottom: '10%', // 与容器底部的距离
       },
       legend: {
         data: ['异常缓慢', '心动过缓', '正常心率', '心动过速', '异常快速'],
         left: 'center',
-        top: '10%',
-        left: 'center',
+        top: '3%',
         backgroundColor: 'white',
-        z: -1,
-        width: 300
+        width: '70%',
+        itemWidth: 12,
+        icon: 'circle',
       },
       tooltip: {
         trigger: 'item',
@@ -765,18 +773,24 @@ Page({
           //拼接一个字符串
           var res =  '具体日期：' + param.data.detail;
           return res;
-        }
+        },
+        position: function (pos, _params, dom, rect, size) {
+          // 鼠标在左侧时 tooltip 显示到右侧，鼠标在右侧时 tooltip 显示到左侧。
+          var obj = {top: 60};
+          obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 5;
+          return obj;
+         }
       },
       series: [{
         label: {
           normal: {
             fontSize: 12,
-            formatter: '{b}:\n{d}%',
+            formatter: '{b}\n{d}%',
           }
         },
         type: 'pie',
         center: ['50%', '60%'],
-        radius: ['0%', '40%'],
+        radius: ['0%', '60%'],
         data: this.data.pieRecord.pieHeartRate
       }]
     };
@@ -798,7 +812,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
+    this.checkLogin()
   },
 
   /**
@@ -861,21 +875,64 @@ Page({
     this.setData({
       selectedMemberValue: event.detail,
     })
-    const recordQuery = this.data.recordQuery
-    recordQuery.openId = event.detail
-    // const today = new Date(new Date().toLocaleDateString())
-    // recordQuery.startTime = util.formatTime(new Date(today.getTime() - 2592000000))
-    // recordQuery.endTime = util.formatTime(new Date(today.getTime() + 86399999))
-    // this.setData({
-    //   recordQuery: recordQuery,
-    // })
-    // console.log(this.data.recordQuery)
-    // requestApi.post(recordApi.analyze, this.data.recordQuery).then(res => {
-    //   console.log("返回结果: ", res)
-    // }).catch(err => {
-    //   console.log(err)
-    // })
+    const today = new Date(new Date().toLocaleDateString())
+    const weekQuery = {
+      openId: this.data.selectedMemberValue,
+      startTime: util.formatTime(new Date(today.getTime() - 604800000))
+    }
+    const monthQuery = {
+      openId: this.data.selectedMemberValue,
+      startTime: util.formatTime(new Date(today.getTime() - 2592000000))
+    }
+    const yearQuery = {
+      openId: this.data.selectedMemberValue,
+      startTime: util.formatTime(new Date(today.getTime() - 31536000000))
+    }
+    this.getLineWeek(weekQuery)
+    this.getLineMonth(monthQuery)
+    this.getLineYear(yearQuery)
+    this.getPie(monthQuery)
   },
 
-
+  async checkLogin() {
+    var checkCount = 0
+    while (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '') {
+      console.log("循环")
+      await sleep(50)
+      if (checkCount < 40 && (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '')) {
+        checkCount = checkCount + 1
+        continue
+      }
+      if (app.globalData.userInfo.nickName === "点击登录") {
+        console.log("app.globalData.userInfo: ", app.globalData.userInfo)
+        Dialog.alert({
+            message: '请先登录',
+          })
+          .then(() => {
+            //路由到用户页
+            wx.switchTab({
+              url: '/pages/user/user'
+            })
+          });
+        break
+      }
+      if (app.globalData.familyInfo.familyName === '') {
+        console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
+        Dialog.alert({
+            message: '请先创建或加入家庭',
+          })
+          .then(() => {
+            //路由到用户页
+            wx.switchTab({
+              url: '/pages/user/user'
+            })
+          });
+        break
+      }
+    }
+    this.setData({
+      openId: app.globalData.openId,
+      userInfo: app.globalData.userInfo,
+    })
+  },
 })

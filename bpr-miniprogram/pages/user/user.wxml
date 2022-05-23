@@ -1,8 +1,8 @@
 <van-dialog id="van-dialog" />
 
-<view style="height: 185px; background-color: rgba(160, 167, 170, 0.5); text-align: center; vertical-align: middle; ">
+<view style="height: 185px; background-image: url('../../images/background3.jpg'); background-size: 100%; background-position-y: center; text-align: center; vertical-align: middle; z-index: 10; ">
   <view style="padding: 75px 5px 5px 5px;">
-    <van-image round fit="fill" width="80px" height="80px" src="{{ userInfo.avatarUrl }}" wx:if="{{canIUseGetUserProfile}}" bind:click="getUserProfile" style="border: 1px;" />
+    <van-image round fit="fill" width="80px" height="80px" src="{{ userInfo.avatarUrl }}" wx:if="{{canIUseGetUserProfile}}" bind:click="getUserProfile" style="border: 1px; "/>
     <span style="display:block">{{userInfo.nickName}}</span>
   </view>
 </view>

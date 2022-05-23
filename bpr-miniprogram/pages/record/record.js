@@ -1,6 +1,11 @@
 import util from '../../utils/util'
 import recordApi from '../../utils/recordApi.js'
 import requestApi from '../../utils/requestApi.js'
+import Dialog from '../../miniprogram_npm/@vant/weapp/dialog/dialog';
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 const app = getApp();
 
@@ -77,7 +82,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
+    this.checkLogin()
   },
 
   /**
@@ -209,6 +214,48 @@ Page({
       this.onShow()
     }).catch(err => {
       console.log(err)
+    })
+  },
+
+  async checkLogin() {
+    var checkCount = 0
+    while (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '') {
+      console.log("循环")
+      await sleep(50)
+      if (checkCount < 40 && (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '')) {
+        checkCount = checkCount + 1
+        continue
+      }
+      if (app.globalData.userInfo.nickName === "点击登录") {
+        console.log("app.globalData.userInfo: ", app.globalData.userInfo)
+        Dialog.alert({
+            message: '请先登录',
+          })
+          .then(() => {
+            //路由到用户页
+            wx.switchTab({
+              url: '/pages/user/user'
+            })
+          });
+        break
+      }
+      if (app.globalData.familyInfo.familyName === '') {
+        console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
+        Dialog.alert({
+            message: '请先创建或加入家庭',
+          })
+          .then(() => {
+            //路由到用户页
+            wx.switchTab({
+              url: '/pages/user/user'
+            })
+          });
+        break
+      }
+    }
+    this.setData({
+      openId: app.globalData.openId,
+      userInfo: app.globalData.userInfo,
     })
   },
 

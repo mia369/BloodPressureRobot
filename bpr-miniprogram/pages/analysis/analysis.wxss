@@ -1,41 +1,40 @@
 /* pages/pic/pic.wxss */
-.container{
-  padding-top: 20px;
+
+.panel-container {
   width: 100%;
-  height: 65vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
+  height: 100%;
+  box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.2);
 }
 
-.pieContainer {
-  padding-top: 20px;
+.pie-container {
   width: 100%;
-  height: 75vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
+  height: 100%;
+  box-shadow: 1px 1px 6px 0 rgba(0, 0, 0, 0.2);
 }
-
-/* .container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-}  */
 
 ec-canvas {
   width: 100%;
   height: 100%;
+}
+
+.title-cell-class .van-cell {
+  background-color: var(--cell-background-color,#f5f5f5);
+  font-weight: bold;
+  font-size: 16px;
+  color: #434343;
+  text-align: center;
+}
+
+.chart-cell-class .van-cell {
+  padding: var(--cell-vertical-padding,0px) var(--cell-horizontal-padding,0px) !important;
+  
+}
+
+.card-class {
+  text-align: left;
+  color: #434343;
+}
+
+.card-cell-class .van-cell {
+  background-color: var(--cell-background-color,#f5f5f5);
 }

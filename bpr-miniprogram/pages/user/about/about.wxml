@@ -1,3 +1,11 @@
-<view>
-  about
-</view>
+<van-cell class="content-cell-class" border="{{ false }}">
+  <text decode="{{true}}" >
+    &emsp;&emsp;本项目主要提供了血压和心率的记录、统计和分析服务，使用户能够方便快速地上传和查看自己的血压心率记录以及分析图表。同时，本项目提供了家庭管理服务，使用户可以查看同一个家庭中其他成员的血压心率记录情况。
+  </text>
+  <text decode="{{true}}" >
+    &emsp;&emsp;最初的设计目的是给需要经常测量血压的人群提供一款便捷的记录管理服务。通过本程序，用户本人和家人可以快速地了解彼此的血压心率情况。
+  </text>
+  <text decode="{{true}}" >
+    本项目仅供学习使用。
+  </text>
+</van-cell>

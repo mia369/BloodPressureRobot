@@ -2,7 +2,6 @@ package com.ht.bpr.controller;
 
 import com.ht.bpr.common.Result;
 import com.ht.bpr.entity.query.RecordQuery;
-import com.ht.bpr.entity.vo.ChartVo;
 import com.ht.bpr.entity.vo.LineRecordVo;
 import com.ht.bpr.entity.vo.PieRecordVo;
 import com.ht.bpr.entity.vo.RecordVo;
@@ -41,12 +40,6 @@ public class RecordController {
     public Result delete(Integer recordPk) {
         recordService.deleteRecord(recordPk);
         return Result.success();
-    }
-
-    @PostMapping("analyze")
-    public Result<ChartVo> analyze(@RequestBody RecordQuery query) {
-        ChartVo chartVo = recordService.analyzeRecord(query);
-        return Result.success(chartVo);
     }
 
     @PostMapping("analyzeWeek")

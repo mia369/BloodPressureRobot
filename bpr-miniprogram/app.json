@@ -13,14 +13,14 @@
   ],
   "window":{
     "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#5ea3ef",
-    "navigationBarTitleText": "每日记录",
-    "navigationBarTextStyle":"black"
+    "navigationBarBackgroundColor": "#099268",
+    "navigationBarTitleText": "血压降",
+    "navigationBarTextStyle":"white"
   },
   "sitemapLocation": "sitemap.json",
   "tabBar": {
-    "color": "#a9b7b7",
-    "selectedColor": "#11cd6e",
+    "color": "#099268",
+    "selectedColor": "#d9480f",
     "borderStyle": "white",
     "list": [
       {
@@ -88,6 +88,9 @@
     "i-page": "iview/dist/page/index",
     "i-icon": "iview/dist/icon/index",
     "i-input": "iview/dist/input/index",
-    "van-toast": "@vant/weapp/toast/index"
+    "van-toast": "@vant/weapp/toast/index",
+    "i-panel": "iview/dist/panel/index",
+    "van-collapse": "@vant/weapp/collapse/index",
+    "van-collapse-item": "@vant/weapp/collapse-item/index"
   }
 }

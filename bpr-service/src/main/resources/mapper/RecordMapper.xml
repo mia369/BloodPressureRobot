@@ -61,11 +61,6 @@
         </where>
         order by measure_time asc
     </select>
-    <select id="selectMinMeasureTime" resultType="Record">
-        SELECT *
-        FROM bpr_record
-        WHERE measure_time = (SELECT min(measure_time) FROM bpr_record WHERE open_id = #{openId});
-    </select>
     <select id="count" parameterType="RecordQuery" resultType="java.lang.Integer">
         select count(1)
         from bpr_record

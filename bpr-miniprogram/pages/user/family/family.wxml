@@ -3,10 +3,10 @@
 
 <view>
   <view>
-    <van-dialog use-slot title="创建家庭" show="{{ showFamilyRegisterPop }}" show-cancel-button confirm-button-color="#1aad19" bind:close="closePop" bind:confirm="registerFamily">
+    <van-dialog use-slot title="创建家庭" show="{{ showFamilyRegisterPop }}" show-cancel-button confirm-button-color="#099268" bind:close="closePop" bind:confirm="registerFamily">
       <van-field value="{{ familyInfo.familyName }}" type="text" bind:change="dialogInputFamilyName" input-align="center" placeholder="请输入家庭名称" error-message="注意: 家庭名称不能为空" error-message-align="center" />
     </van-dialog>
-    <van-dialog use-slot title="设置成员称谓" show="{{ showIdentityUpdatePop }}" show-cancel-button confirm-button-color="#1aad19" bind:close="closePop" bind:confirm="updateFamilyIdentity">
+    <van-dialog use-slot title="设置成员称谓" show="{{ showIdentityUpdatePop }}" show-cancel-button confirm-button-color="#099268" bind:close="closePop" bind:confirm="updateFamilyIdentity">
       <van-field value="{{ updatingMember.familyIdentity }}" type="text" bind:change="dialogInputFamilyIdentity" input-align="center" placeholder="请输入成员称谓" />
     </van-dialog>
 
@@ -37,12 +37,15 @@
       </van-grid-item>
       <van-grid-item use-slot content-class="grid-item-action-class">
         <van-row style="width: 100%; text-align: center; align-items: center; ">
-          <van-col span="12">
-            <van-button block size="small" custom-style="grid-info-action-button" wx:if="{{ familyInfo.familyName }}" round type="info" color="#1aad19" open-type="share">
+          <van-col span="11">
+            <van-button block size="small" custom-style="grid-info-action-button" wx:if="{{ familyInfo.familyName }}" round type="info" color="#099268" open-type="share">
               邀请成员
             </van-button>
           </van-col>
-          <van-col span="12">
+          <van-col span="2">
+               <text decode="{{ true }}">&nbsp;</text>
+          </van-col>
+          <van-col span="11">
             <van-button block size="small" custom-style="grid-info-action-button" wx:if="{{ !isFamilyManager && familyInfo.familyName }}" round type="danger" color="#FD0000" plain bind:click="exitFamily">
               退出家庭
             </van-button>
@@ -54,7 +57,7 @@
       </van-grid-item>
     </van-grid>
     <view style="padding-right: 10px; padding-left: 10px;padding-top: 10px;">
-      <van-button wx:if="{{ !haveFamily }}" block color="#1aad19" hairline style="border-radius: 20px;" bind:click="showRegisterPop">
+      <van-button wx:if="{{ !haveFamily }}" block color="#099268" hairline style="border-radius: 20px;" bind:click="showRegisterPop">
         创建家庭
       </van-button>
     </view>
@@ -69,28 +72,28 @@
           <van-row style="text-align: left;" gutter="0">
             <van-row span="24" style="text-align: left; margin-top: 5px; margin-bottom: 16px;">
               <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 14px; line-height: 25px; font-weight: 700; ">
-                成员昵称: {{ member.nickName }}
+                成员昵称: {{ member.nickName || '' }}
               </h2>
             </van-row>
             <van-row span="24" style="text-align: left; margin-top: 5px; margin-bottom: 16px;">
               <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 14px; line-height: 25px; font-weight: 700; ">
-                成员年龄: {{ member.age }}
+                成员年龄: {{ member.age || '' }}
               </h2>
             </van-row>
             <van-col wx:if="{{ isFamilyManager }}" span="24" style="text-align: left; margin-top: 5px; margin-bottom: 16px;">
               <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 14px; line-height: 25px; font-weight: 700; ">
-                成员称谓: {{ member.familyIdentity }}
+                成员称谓: {{ member.familyIdentity || '' }}
               </h2>
             </van-col>
             <van-row span="24" style="text-align: left; margin-top: 5px; margin-bottom: 16px;">
               <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 14px; line-height: 25px; font-weight: 700; ">
-                上次测量时间: {{ member.lastRecordTime }}
+                上次测量时间: {{ member.lastRecordTime || '' }}
               </h2>
             </van-row>
           </van-row>
           <van-row slot="right">
             <van-col span="12">
-              <van-button wx:if="{{ isFamilyManager }}" bind:click="showIdentityPop" data-member="{{ member }}" square type="primary" color="#1aad19" custom-style="min-height: 100px; width: 100%">
+              <van-button wx:if="{{ isFamilyManager }}" bind:click="showIdentityPop" data-member="{{ member }}" square type="primary" color="#099268" custom-style="min-height: 100px; width: 100%">
                 修改称谓
               </van-button>
             </van-col>

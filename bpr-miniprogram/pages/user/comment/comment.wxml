@@ -1,3 +1,13 @@
-<view>
-  comment
-</view>
+<van-toast id="van-toast" />
+<van-cell-group>
+  <van-field
+    placeholder="请输入反馈内容"
+    input-align="left"
+    type="textarea"
+    autosize="{{ textAreaStyle }}"
+    class="field-class"
+  />
+  <van-cell center border="{{ false }}">
+    <van-button type="primary" block color="#099268" bind:click="onSubmitCommit" icon="passed">提交</van-button>
+  </van-cell>
+</van-cell-group>

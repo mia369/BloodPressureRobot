@@ -1,9 +1,7 @@
-/* pages/user/user.wxss */
-
-:root{
-  --van-cell-line-height: 50px;
-}
-
-.van-cell {
-  line-height: var(--van-cell-line-height, 36px) !important;
+.field-class .van-cell{
+  /* border: 1px solid !important; 
+  border-color: #8c8c8c !important; */
+  margin: 8px 8px 8px 8px !important;
+  width: 96%;
+  /* padding: var(--cell-vertical-padding,10px) var(--cell-horizontal-padding,15px) !important; */
 }

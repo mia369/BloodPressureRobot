@@ -25,8 +25,6 @@ public interface RecordMapper {
 
     List<Record> select(@Param("query") RecordQuery query);
 
-    Record selectMinMeasureTime(@Param("openId") String openId);
-
     Integer count(@Param("query") RecordQuery query);
 
     Record selectByMeasureTime(@Param("record") Record record);

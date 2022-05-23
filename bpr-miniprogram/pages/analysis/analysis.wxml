@@ -1,22 +1,59 @@
-<!--pages/pic/pic.wxml-->
+<van-dialog id="van-dialog" />
 <van-dropdown-menu>
   <van-dropdown-item value="{{ selectedMemberValue }}" options="{{ memberSelector }}" bind:change="onSelectMember" />
 </van-dropdown-menu>
-<view class="container">
-  <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ecLineWeek }}"></ec-canvas>
-</view>
-<view class="container">
-  <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ecLineMonth }}"></ec-canvas>
-</view>
-<view class="container">
-  <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ecLineYear }}"></ec-canvas>
-</view>
-<view class="pieContainer">
-  <ec-canvas id="mychart-dom-pie" canvas-id="mychart-pie" ec="{{ ecPieHigh }}"></ec-canvas>
-</view>
-<view class="pieContainer">
-  <ec-canvas id="mychart-dom-pie" canvas-id="mychart-pie" ec="{{ ecPieLow }}"></ec-canvas>
-</view>
-<view class="pieContainer">
-  <ec-canvas id="mychart-dom-pie" canvas-id="mychart-pie" ec="{{ ecPieHeart }}"></ec-canvas>
-</view>
+<van-cell-group>
+  <van-cell wx:if="{{ showTitle }}" title="近一周 血压心率走势图" class="title-cell-class" />
+  <van-cell class="chart-cell-class">
+    <view style="padding: 5px 5px 5px 5px; height: 280px; width: 97%; z-index: 10; background-color: #f5f5f5;">
+      <view class="panel-container">
+        <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ecLineWeek }}"></ec-canvas>
+      </view>
+    </view>
+  </van-cell>
+
+  <van-cell wx:if="{{ showTitle }}" title="近一月 血压心率走势图" class="title-cell-class" />
+  <van-cell class="chart-cell-class">
+    <view style="padding: 5px 5px 5px 5px; height: 280px; width: 97%; z-index: 10; background-color: #f5f5f5;">
+      <view class="panel-container">
+        <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ecLineMonth }}"></ec-canvas>
+      </view>
+    </view>
+  </van-cell>
+
+  <van-cell wx:if="{{ showTitle }}" title="近一年 血压心率走势图" class="title-cell-class" />
+  <van-cell class="chart-cell-class">
+    <view style="padding: 5px 5px 5px 5px; height: 280px; width: 97%; z-index: 10; background-color: #f5f5f5;">
+      <view class="panel-container">
+        <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ecLineYear }}"></ec-canvas>
+      </view>
+    </view>
+  </van-cell>
+
+  <van-cell wx:if="{{ showTitle }}" title="近一月 高压/收缩压分布图" class="title-cell-class" />
+  <van-cell class="chart-cell-class">
+    <view style="padding: 5px 5px 5px 5px; height: 280px; width: 97%; z-index: 10; background-color: #f5f5f5;">
+      <view class="pie-container">
+        <ec-canvas id="mychart-dom-pie" canvas-id="mychart-pie" ec="{{ ecPieHigh }}"></ec-canvas>
+      </view>
+    </view>
+  </van-cell>
+
+  <van-cell wx:if="{{ showTitle }}" title="近一月 低压/舒张压分布图" class="title-cell-class" />
+  <van-cell class="chart-cell-class">
+    <view style="padding: 5px 5px 5px 5px; height: 280px; width: 97%; z-index: 10; background-color: #f5f5f5;">
+      <view class="pie-container">
+        <ec-canvas id="mychart-dom-pie" canvas-id="mychart-pie" ec="{{ ecPieLow }}"></ec-canvas>
+      </view>
+    </view>
+  </van-cell>
+
+  <van-cell wx:if="{{ showTitle }}" title="近一月 心率分布图" class="title-cell-class" />
+  <van-cell class="chart-cell-class">
+    <view style="padding: 5px 5px 5px 5px; height: 280px; width: 97%; z-index: 10; background-color: #f5f5f5;">
+      <view class="pie-container">
+        <ec-canvas id="mychart-dom-pie" canvas-id="mychart-pie" ec="{{ ecPieHeart }}"></ec-canvas>
+      </view>
+    </view>
+  </van-cell>
+</van-cell-group>

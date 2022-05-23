@@ -4,7 +4,7 @@
 <van-cell-group>
   <van-cell title="测量时间" title-width="20%" center>
     <van-field value="{{ measureTime }}" placeholder="请选择测量时间" readonly border="{{ false }}" use-button-slot>
-      <van-button color="#1aad19" slot="button" size="small" type="primary" is-link bind:click="showPopup">
+      <van-button color="#099268" slot="button" size="small" type="primary" is-link bind:click="showPopup">
         选择时间
       </van-button>
     </van-field>
@@ -23,15 +23,15 @@
   </van-cell>
   <van-cell title="是否服药" title-width="20%" center>
     <van-radio-group bind:change="onUsedPillsChange" direction="horizontal" value="{{ usedPills }}">
-      <van-radio name="0" checked-color="#51aa38" style="padding: 10px; padding-left: 16px;">未服药</van-radio>
-      <van-radio name="1" checked-color="#51aa38" style="padding: 10px; padding-left: 16px;">已服药</van-radio>
+      <van-radio name="0" checked-color="#099268" style="padding: 10px; padding-left: 16px;">未服药</van-radio>
+      <van-radio name="1" checked-color="#099268" style="padding: 10px; padding-left: 16px;">已服药</van-radio>
     </van-radio-group>
   </van-cell>
 
   <van-cell center border="{{ false }}">
-    <van-button type="primary" color="#1aad19" bind:click="onSubmitRecord" size="normal" icon="passed">提交</van-button>
+    <van-button type="primary" color="#099268" bind:click="onSubmitRecord" size="normal" icon="passed">提交</van-button>
   </van-cell>
   <van-cell center border="{{ false }}">
-    <van-button plain type="primary" size="normal" icon="replay">重置</van-button>
+    <van-button plain color="#099268" type="primary" size="normal" icon="replay">重置</van-button>
   </van-cell>
 </van-cell-group>

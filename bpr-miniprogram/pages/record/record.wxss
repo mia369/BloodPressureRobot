@@ -1,9 +1,18 @@
+.list-title-class .van-cell{
+  background-color: #f5f5f5;
+}
+
 .list-title-col-class {
   text-align: center;
-  color: black;
+  color: #434343;
+  font-weight: bold;
 }
 
 .list-content-col-class {
   text-align: center;
   color: black;
+}
+
+.list-content-cell-class .van-cell{
+  background-color: #f5f5f5;
 }

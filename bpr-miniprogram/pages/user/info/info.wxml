@@ -1,13 +1,13 @@
-<van-dialog use-slot title="请输入昵称" show="{{ showNamePop }}" show-cancel-button confirm-button-color="#51aa38" bind:close="closePop" bind:confirm="updateUserDetails">
+<van-dialog use-slot title="请输入昵称" show="{{ showNamePop }}" show-cancel-button confirm-button-color="#099268" bind:close="closePop" bind:confirm="updateUserDetails">
   <van-field value="{{ userInfo.nickName }}" bind:change="dialogInputName" input-align="center" />
 </van-dialog>
-<van-dialog use-slot title="请输入年龄" show="{{ showAgePop }}" show-cancel-button confirm-button-color="#51aa38" bind:close="closePop" bind:confirm="updateUserDetails">
+<van-dialog use-slot title="请输入年龄" show="{{ showAgePop }}" show-cancel-button confirm-button-color="#099268" bind:close="closePop" bind:confirm="updateUserDetails">
   <van-field value="{{ userInfo.age }}" type="number" bind:change="dialogInputAge" input-align="center" />
 </van-dialog>
-<van-dialog use-slot title="请输入身高" show="{{ showHeightPop }}" show-cancel-button confirm-button-color="#51aa38" bind:close="closePop" bind:confirm="updateUserDetails">
+<van-dialog use-slot title="请输入身高" show="{{ showHeightPop }}" show-cancel-button confirm-button-color="#099268" bind:close="closePop" bind:confirm="updateUserDetails">
   <van-field value="{{ userInfo.height }}" type="number" bind:change="dialogInputHeight" input-align="center" />
 </van-dialog>
-<van-dialog use-slot title="请输入体重" show="{{ showWeightPop }}" show-cancel-button confirm-button-color="#51aa38" bind:close="closePop" bind:confirm="updateUserDetails">
+<van-dialog use-slot title="请输入体重" show="{{ showWeightPop }}" show-cancel-button confirm-button-color="#099268" bind:close="closePop" bind:confirm="updateUserDetails">
   <van-field value="{{ userInfo.weight }}" type="number" bind:change="dialogInputWeight" input-align="center" />
 </van-dialog>
 
