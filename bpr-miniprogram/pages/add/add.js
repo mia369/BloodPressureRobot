@@ -277,7 +277,7 @@ Page({
     }
   },
 
-  onResetForm() {
+  onResetRecord() {
     this.setData({
       measureTime: null,
       highBloodPressure: null,
@@ -285,5 +285,6 @@ Page({
       heartRate: null,
       usedPills: null,
     })
+    this.onShow()
   },
 })

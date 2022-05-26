@@ -32,6 +32,6 @@
     <van-button type="primary" color="#099268" bind:click="onSubmitRecord" size="normal" icon="passed">提交</van-button>
   </van-cell>
   <van-cell center border="{{ false }}">
-    <van-button plain color="#099268" type="primary" size="normal" icon="replay">重置</van-button>
+    <van-button plain color="#099268" type="primary" bind:click="onResetRecord" size="normal" icon="replay">重置</van-button>
   </van-cell>
 </van-cell-group>

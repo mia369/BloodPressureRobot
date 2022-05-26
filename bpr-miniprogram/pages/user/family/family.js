@@ -109,7 +109,7 @@ Page({
     return {
       title: '弹出分享时显示的分享标题',
       desc: '分享页面的内容',
-      path: '/pages/add/add?familyId=3c9d01d6d84f809488084feb7ae09419&shareUser=家庭成员2',
+      path: '/pages/add/add?familyId=2e1272bb9556b9250b862090857d1010&shareUser=家庭成员2',
       // path: '/pages/add/add?familyId='+ app.globalData.familyInfo.familyId +'&shareUser' + app.globalData.userInfo.nickName,
       // path: '/pages/add/add?familyId=' + app.globalData.familyInfo.familyId, // 路径，传递参数到指定页面。
     }

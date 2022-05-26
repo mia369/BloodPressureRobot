@@ -9,7 +9,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
 mybatis:
   type-aliases-package: com.ht.bpr.entity
-  mapper-locations: classpath:*Mapper.xml
+  mapper-locations: classpath*:*Mapper.xml
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl

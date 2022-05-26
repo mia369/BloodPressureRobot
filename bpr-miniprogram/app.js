@@ -16,8 +16,8 @@ App({
    * 全局变量
    */
   globalData: {
-    host: 'http://43.142.44.194:2590/',
-    // host: 'http://localhost:2590',
+    // host: 'http://43.142.44.194:2590/',
+    host: 'http://localhost:2590/',
     openId: '',
     sessionKey: '',
     userInfo: {
@@ -53,7 +53,7 @@ App({
             console.log(res.code)
             //调用wx.request请求传递code凭证换取用户openid，并获取后台用户信息
             wx.request({
-              url: `${that.globalData.host}/user/login`, // 后台请求用户信息方法【注意，此处必须为https数字加密证书】
+              url: `${that.globalData.host}user/login`, // 后台请求用户信息方法【注意，此处必须为https数字加密证书】
               data: {
                 code: res.code //code凭证
               },
