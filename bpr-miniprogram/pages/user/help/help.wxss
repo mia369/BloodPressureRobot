@@ -4,7 +4,7 @@
   font-size: 18px;
   color: #434343;
   text-align: center;
-  padding: var(--cell-vertical-padding, 4px) var(--cell-horizontal-padding, 16px);
+  padding: var(--cell-vertical-padding, 10px) var(--cell-horizontal-padding, 16px);
 }
 
 .content-cell-class .van-cell__value {

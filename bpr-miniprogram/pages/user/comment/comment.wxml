@@ -7,7 +7,7 @@
     autosize="{{ textAreaStyle }}"
     class="field-class"
   />
-  <van-cell center border="{{ false }}">
+  <van-cell center border="{{ false }}" class="button-cell-class">
     <van-button type="primary" block color="#099268" bind:click="onSubmitCommit" icon="passed">提交</van-button>
   </van-cell>
 </van-cell-group>

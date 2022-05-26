@@ -77,7 +77,6 @@ public class UserController {
 
     @PostMapping("saveUserInfo")
     public Result saveUserInfo(@RequestBody UserVo userVo) {
-
         userService.saveUserInfo(userVo);
         return Result.success();
     }

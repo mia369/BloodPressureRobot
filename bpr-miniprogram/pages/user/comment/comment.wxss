@@ -1,7 +1,11 @@
-.field-class .van-cell{
+.field-class .van-cell {
   /* border: 1px solid !important; 
   border-color: #8c8c8c !important; */
   margin: 8px 8px 8px 8px !important;
   width: 96%;
   /* padding: var(--cell-vertical-padding,10px) var(--cell-horizontal-padding,15px) !important; */
+}
+
+.button-cell-class .van-cell {
+  background-color: var(--cell-background-color,#f5f5f5);
 }

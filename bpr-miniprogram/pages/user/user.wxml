@@ -8,15 +8,15 @@
 </view>
 <view>
   <van-cell-group>
-    <van-cell title="个人信息" title-width="30%" center class="userCell" size="large" icon="manager" value="查看" is-link url="/pages/user/info/info">
+    <van-cell title="个人信息" title-width="30%" center class="user-cell-class" size="large" icon="manager" value="查看" is-link url="/pages/user/info/info">
     </van-cell>
-    <van-cell title="家庭信息" title-width="30%" center class="userCell" size="large" icon="friends" value="{{ familyCellValue }}" is-link url="/pages/user/family/family">
+    <van-cell title="家庭信息" title-width="30%" center class="user-cell-class" size="large" icon="friends" value="{{ familyCellValue }}" is-link url="/pages/user/family/family">
     </van-cell>
-    <van-cell title="使用帮助" title-width="30%" center class="userCell" size="large" icon="comment" value="获取帮助" is-link url="/pages/user/help/help">
+    <van-cell title="使用帮助" title-width="30%" center class="user-cell-class" size="large" icon="comment" value="获取帮助" is-link url="/pages/user/help/help">
     </van-cell>
-    <van-cell title="意见反馈" title-width="30%" center class="userCell" size="large" icon="chat" value="反馈" is-link url="/pages/user/comment/comment">
+    <van-cell title="意见反馈" title-width="30%" center class="user-cell-class" size="large" icon="chat" value="反馈" is-link url="/pages/user/comment/comment">
     </van-cell>
-    <van-cell title="关于" title-width="30%" center class="userCell" size="large" icon="info" border="{{ false }}" value="关于我们" is-link url="/pages/user/about/about">
+    <van-cell title="关于" title-width="30%" center class="user-cell-class" size="large" icon="info" border="{{ false }}" value="关于我们" is-link url="/pages/user/about/about">
     </van-cell>
   </van-cell-group>
 </view>

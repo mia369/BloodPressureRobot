@@ -16,7 +16,8 @@ App({
    * 全局变量
    */
   globalData: {
-    host: 'http://localhost:8080/',
+    host: 'http://43.142.44.194:2590/',
+    // host: 'http://localhost:2590',
     openId: '',
     sessionKey: '',
     userInfo: {
@@ -85,5 +86,7 @@ App({
         }
       })
     })
-  }
+  },
+
+
 })

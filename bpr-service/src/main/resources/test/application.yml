@@ -1,0 +1,22 @@
+server:
+  port: 2591
+spring:
+  datasource:
+    url: jdbc:mysql://sh-cynosdbmysql-grp-rir9gq66.sql.tencentcdb.com:27131/bpr?characterEncoding=utf-8&useSSL=false
+    username: root
+    password: zsqQ0218
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis:
+  type-aliases-package: com.ht.bpr.entity
+  mapper-locations: classpath:*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+logging:
+  config: ${bpr.conf.dir:./config/}logback-spring.xml
+  level:
+    com.ht.bpr.mapper: debug
+wechat:
+  appId: wxe89ca7e0e8457f64
+  secret: a237050f08dc5e26833fc619fb91cc92

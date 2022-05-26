@@ -7,3 +7,7 @@
 .van-cell {
   line-height: var(--van-cell-line-height, 36px) !important;
 }
+
+.user-cell-class .van-cell__title {
+  padding-left: 8px;
+}

@@ -33,7 +33,8 @@
     <update id="updateUserInfo" parameterType="User">
         update bpr_user
         set nick_name = #{user.nickName},
-            avatar_url = #{user.avatarUrl},
+            avatar_url = #{user.avatarUrl}
+        where
             open_id = #{user.openId}
     </update>
 
@@ -56,7 +57,7 @@
         where open_id = #{user.openId}
     </update>
 
-    <select id="selectOne" resultType="com.ht.bpr.entity.User">
+    <select id="selectByOpenId" resultType="User">
         select *
         from bpr_user
         where open_id = #{openId}

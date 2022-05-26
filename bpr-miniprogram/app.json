@@ -14,7 +14,7 @@
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#099268",
-    "navigationBarTitleText": "血压降",
+    "navigationBarTitleText": "血压酱",
     "navigationBarTextStyle":"white"
   },
   "sitemapLocation": "sitemap.json",
@@ -91,6 +91,7 @@
     "van-toast": "@vant/weapp/toast/index",
     "i-panel": "iview/dist/panel/index",
     "van-collapse": "@vant/weapp/collapse/index",
-    "van-collapse-item": "@vant/weapp/collapse-item/index"
+    "van-collapse-item": "@vant/weapp/collapse-item/index",
+    "van-overlay": "@vant/weapp/overlay/index"
   }
 }

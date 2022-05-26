@@ -54,7 +54,6 @@ Page({
         haveFamily: true,
       })
     }
-
   },
 
   /**
@@ -165,6 +164,7 @@ Page({
       }).catch(err => {
         //失败时回调函数
         console.log(err)
+        
       })
     }
   },
@@ -334,5 +334,6 @@ Page({
       console.log(err)
     })
   },
+
 
 })

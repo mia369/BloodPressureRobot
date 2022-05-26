@@ -35,38 +35,33 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isBlank(openId)) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
         }
-        User user = userMapper.selectOne(openId);
+        User user = userMapper.selectByOpenId(openId);
         return user;
     }
 
     @Override
-    public void add(User user) {
-        if (StringUtils.isBlank(user.getOpenId())) {
+    public void saveUserInfo(UserVo userVo) {
+        if (StringUtils.isBlank(userVo.getOpenId())) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
         }
-        if (StringUtils.isBlank(user.getNickName())) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "nickName is null");
+        if (StringUtils.isBlank(userVo.getNickName())) {
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "nickName is null, openId is " + userVo.getOpenId());
         }
-        if (StringUtils.isBlank(user.getAvatarUrl())) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "avatarUrl is null");
+        if (StringUtils.isBlank(userVo.getAvatarUrl())) {
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "avatarUrl is null, openId is " + userVo.getOpenId());
         }
-        userMapper.insert(user);
-    }
-
-    @Override
-    public void saveUserInfo(UserVo userVo) {
         User user = new User();
         user.setOpenId(userVo.getOpenId());
         user.setNickName(userVo.getNickName());
         user.setAvatarUrl(userVo.getAvatarUrl());
         //查询用户是否存在
-        User checkUser = selectOne(userVo.getOpenId());
+        User checkUser = userMapper.selectByOpenId(userVo.getOpenId());
         if (checkUser == null) {
             // 注册
-            add(user);
+            userMapper.insert(user);
         } else {
             //更新
-            updateUserInfo(user);
+            userMapper.updateUserInfo(user);
         }
     }
 
@@ -92,19 +87,5 @@ public class UserServiceImpl implements UserService {
         }
         return userMap;
     }
-
-    private void updateUserInfo(User user) {
-        if (StringUtils.isBlank(user.getOpenId())) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
-        }
-        if (StringUtils.isBlank(user.getNickName())) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "nickName is null");
-        }
-        if (StringUtils.isBlank(user.getAvatarUrl())) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "avatarUrl is null");
-        }
-        userMapper.updateUserInfo(user);
-    }
-
 
 }

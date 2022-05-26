@@ -55,6 +55,11 @@ public class FamilyServiceImpl implements FamilyService {
         if (StringUtils.isBlank(familyVo.getFamilyManager().getOpenId())) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId of familyManager is null");
         }
+        //校验用户是否合法
+        User checkUser = userService.selectOne(familyVo.getFamilyManager().getOpenId());
+        if (checkUser == null) {
+            throw new BprException(BprResultStatus.USER_NOT_EXIST, "user does not exist");
+        }
         //生成familyId
         String managerOpenId = familyVo.getFamilyManager().getOpenId();
         Date createTime = new Date();
@@ -118,9 +123,11 @@ public class FamilyServiceImpl implements FamilyService {
             memberVo.setCreateTime(member.getCreateTime());
             memberVo.setUpdateTime(member.getUpdateTime());
             User user = userMap.get(member.getOpenId());
-            memberVo.setNickName(user.getNickName());
-            memberVo.setAge(user.getAge());
-            memberVo.setLastRecordTime(user.getLastRecordTime());
+            if (user != null) {
+                memberVo.setNickName(user.getNickName());
+                memberVo.setAge(user.getAge());
+                memberVo.setLastRecordTime(user.getLastRecordTime());
+            }
             memberVos.add(memberVo);
             if (member.getOpenId().equals(family.getFamilyManager())) {
                 managerVo = memberVo;

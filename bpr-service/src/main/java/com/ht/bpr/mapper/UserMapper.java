@@ -18,7 +18,7 @@ import java.util.Map;
 public interface UserMapper {
     void insert(User user);
 
-    User selectOne(@Param("openId") String openId);
+    User selectByOpenId(@Param("openId") String openId);
 
     void updateUserInfo(@Param("user") User user);
 

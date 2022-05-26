@@ -11,7 +11,7 @@
     <!-- 定义日志字符集 -->
     <property name="log.charset" value="UTF-8"/>
     <!-- 定义日志级别 -->
-    <property name="log.level" value="INFO"/>
+    <property name="log.level" value="DEBUG"/>
     <!-- 定义日志存放路径 -->
     <property name="log.path" value="logs"/>
 
@@ -27,15 +27,15 @@
     </appender>
 
     <!-- 时间滚动输出日志 -->
-    <appender name="COMMON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 写入的文件名 -->
-        <file>${log.path}/common.log</file>
+        <file>${log.path}/debug.log</file>
         <!-- 追加到文件结尾 -->
         <append>true</append>
         <!-- 滚动策略：按照每天生成日志文件 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 每天日志归档路径及文件名格式 -->
-            <fileNamePattern>${log.path}/common/common.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${log.path}/debug/debug.%d{yyyy-MM-dd}.log</fileNamePattern>
             <!-- 日志文件保留天数 -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
@@ -70,7 +70,7 @@
     <!-- 根 logger -->
     <root level="${log.level}">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="COMMON"/>
+        <appender-ref ref="DEBUG"/>
         <appender-ref ref="ERROR"/>
     </root>
 

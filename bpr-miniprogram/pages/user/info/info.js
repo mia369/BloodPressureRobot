@@ -26,8 +26,12 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    const userInfo = app.globalData.userInfo
+    if (userInfo.nickName === '点击登录') {
+      userInfo.nickName = '未登录'
+    }
     this.setData({
-      userInfo: app.globalData.userInfo,
+      userInfo: userInfo,
     })
     console.log("onload: ", this.data.userInfo)
   },

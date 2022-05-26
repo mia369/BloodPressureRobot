@@ -16,8 +16,6 @@ public interface UserService {
 
     User selectOne(String openId);
 
-    void add(User user);
-
     void saveUserInfo(UserVo userVo);
 
     void saveUserDetails(UserVo userVo);

@@ -13,7 +13,8 @@ public enum BprResultStatus implements ResultStatus {
     PARAM_IS_NULL(1000, "param is null"),
     ILLEGAL_MD5_ALGORITHM(1001, "illegal md5 algorithm"),
     FAMILY_MEMBER_NOT_EXIST(1002, "familyMember does not exist"),
-    FAMILY_NOT_EXIST(1003, "family does not exist");
+    FAMILY_NOT_EXIST(1003, "family does not exist"),
+    USER_NOT_EXIST(1004, "user does not exist");
 
     private final Integer code;
 

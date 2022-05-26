@@ -35,7 +35,7 @@
           </van-col>
         </van-row>
       </van-grid-item>
-      <van-grid-item use-slot content-class="grid-item-action-class">
+      <van-grid-item wx:if="{{ haveFamily }}" use-slot content-class="grid-item-action-class">
         <van-row style="width: 100%; text-align: center; align-items: center; ">
           <van-col span="11">
             <van-button block size="small" custom-style="grid-info-action-button" wx:if="{{ familyInfo.familyName }}" round type="info" color="#099268" open-type="share">
@@ -43,13 +43,13 @@
             </van-button>
           </van-col>
           <van-col span="2">
-               <text decode="{{ true }}">&nbsp;</text>
+            <text decode="{{ true }}">&nbsp;</text>
           </van-col>
           <van-col span="11">
-            <van-button block size="small" custom-style="grid-info-action-button" wx:if="{{ !isFamilyManager && familyInfo.familyName }}" round type="danger" color="#FD0000" plain bind:click="exitFamily">
+            <van-button block size="small" custom-style="grid-info-action-button" wx:if="{{ !isFamilyManager && familyInfo.familyName }}" round type="danger" color="#f5222d" plain bind:click="exitFamily">
               退出家庭
             </van-button>
-            <van-button block size="small" wx:if="{{ isFamilyManager && familyInfo.familyName }}" round type="danger" color="#FD0000" plain bind:click="deleteFamily">
+            <van-button block size="small" wx:if="{{ isFamilyManager && familyInfo.familyName }}" round type="danger" color="#f5222d" plain bind:click="deleteFamily">
               解散家庭
             </van-button>
           </van-col>
@@ -98,7 +98,7 @@
               </van-button>
             </van-col>
             <van-col span="12">
-              <van-button wx:if="{{ isFamilyManager }}" disabled="{{ member.openId === openId }}" bind:click="deleteMember" data-member="{{ member }}" square type="primary" color="red" custom-style="height: 100px; width: 100%">
+              <van-button wx:if="{{ isFamilyManager }}" disabled="{{ member.openId === openId }}" bind:click="deleteMember" data-member="{{ member }}" square type="primary" color="#f5222d" custom-style="height: 100px; width: 100%">
                 移出家庭
               </van-button>
             </van-col>
