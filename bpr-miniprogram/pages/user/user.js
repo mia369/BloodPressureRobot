@@ -3,6 +3,7 @@ import userApi from '../../utils/userApi.js'
 import familyApi from '../../utils/familyApi.js'
 import requestApi from '../../utils/requestApi.js'
 import Dialog from '../../miniprogram_npm/@vant/weapp/dialog/dialog';
+import Toast from '../../miniprogram_npm/@vant/weapp/toast/toast';
 
 const app = getApp();
 
@@ -31,7 +32,6 @@ Page({
     hasUserInfo: false,
     canIUseGetUserProfile: false,
     familyCellValue: '查看',
-    shareUser: '',
   },
 
   /**
@@ -43,13 +43,6 @@ Page({
         canIUseGetUserProfile: true
       })
     }
-    console.log("app.globalData: ", app.globalData)
-    this.setData({
-      userInfo: app.globalData.userInfo,
-      familyInfo: app.globalData.familyInfo,
-      shareUser: app.globalData.shareUser,
-    })
-    console.log("this.data.userInfo: ", this.data.userInfo)
   },
 
   /**
@@ -63,6 +56,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
+    this.setData({
+      userInfo: app.globalData.userInfo,
+      familyInfo: app.globalData.familyInfo,
+    })
     if (this.data.userInfo.nickName !== '点击登录') {
       this.setData({
         hasUserInfo: true
@@ -77,18 +74,34 @@ Page({
         familyCellValue: '查看',
       })
     }
-    if (this.data.userInfo.nickName !== '点击登录' && this.data.familyInfo.familyId !== '' && this.data.familyInfo.familyName === '' && this.data.shareUser !== '') {
-      Dialog.confirm({
-          title: '加入家庭',
-          message: '是否加入 ' + this.data.shareUser + ' 的家庭?',
-        })
-        .then(() => {
-          // on confirm
-          this.joinFamily()
-        })
-        .catch(() => {
-          // on cancel
-        });
+    //如果有分享信息
+    if (app.globalData.shareUserInfo.familyId !== '') {
+      //如果未登录
+      if (app.globalData.userInfo.nickName === '点击登录') {
+        Toast.fail('请先登录');
+        //需要在登录方法最后提示加入家庭
+
+        //如果有家庭
+      } else if (app.globalData.familyInfo.familyId !== '') {
+        Toast.fail('已有家庭, 不能重复加入');
+        //清空数据
+        app.globalData.shareUserInfo.familyId = ''
+        app.globalData.shareUserInfo.shareUser = ''
+        //如果登录且无家庭
+      } else {
+        Dialog.confirm({
+            title: '加入家庭',
+            message: '是否加入 ' + app.globalData.shareUserInfo.shareUser + ' 的家庭?',
+          })
+          .then(() => {
+            this.joinFamily()
+          })
+          .catch(() => {
+            //清空数据
+            app.globalData.shareUserInfo.familyId = ''
+            app.globalData.shareUserInfo.shareUser = ''
+          });
+      }
     }
   },
 
@@ -145,7 +158,6 @@ Page({
         })
         console.log("app.globalData.userInfo: ", app.globalData.userInfo)
         //后台添加或更新user信息
-        //调用接口
         const params = {
           openId: app.globalData.openId,
           nickName: app.globalData.userInfo.nickName,
@@ -154,7 +166,19 @@ Page({
         requestApi.post(userApi.saveUserInfo, params).then(res => {
           //成功时回调函数
           console.log(res)
-          this.onShow()
+          //弹窗加入家庭
+          if (app.globalData.shareUserInfo.familyId !== '' && app.globalData.familyInfo.familyId === '') {
+            Dialog.confirm({
+                title: '加入家庭',
+                message: '是否加入 ' + app.globalData.shareUserInfo.shareUser + ' 的家庭?',
+              })
+              .then(() => {
+                this.joinFamily()
+              })
+              .catch(() => {
+                console.log('加入家庭失败')
+              });
+          }
         }).catch(err => {
           //失败时回调函数
           console.log(err)
@@ -163,34 +187,31 @@ Page({
     })
   },
 
-  // closePop() {
-  //   this.setData({
-  //     //清空familyId, 需要个人注册家庭
-  //   })
-  // },
-
   joinFamily() {
     console.log("调用joinFamily")
-    console.log("app.globalData.familyInfo.familyId: ", app.globalData.familyInfo.familyId)
     //调用接口
     const params = {
       openId: app.globalData.openId,
-      familyId: app.globalData.familyInfo.familyId,
+      familyId: app.globalData.shareUserInfo.familyId,
     }
     requestApi.post(familyApi.registerMember, params).then(res => {
       //成功时回调函数
-      console.log(res)
+      console.log('registerMember返回结果: ', res)
       app.globalData.familyInfo = res.result
-      app.globalData.shareUser = ''
       this.setData({
-        familyInfo: app.globalData.familyInfo,
-        shareUser: app.globalData.shareUser
+        familyInfo: res.result,
       })
+      //清空数据
+      app.globalData.shareUserInfo.familyId = ''
+      app.globalData.shareUserInfo.shareUser = ''
       console.log("this.data: ", this.data)
-      this.onShow()
+      wx.redirectTo({
+        url: '/pages/user/user',
+      })
     }).catch(err => {
       //失败时回调函数
       console.log(err)
     })
-  }
+  },
+
 })

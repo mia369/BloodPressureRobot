@@ -14,13 +14,9 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
  */
 @SpringBootApplication
 @MapperScan("com.ht.bpr.mapper")
-public class BprServiceApplication extends SpringBootServletInitializer {
+public class BprServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(BprServiceApplication.class, args);
     }
 
-    @Override//为了打包springboot项目
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(this.getClass());
-    }
 }

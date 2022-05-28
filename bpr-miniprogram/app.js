@@ -16,8 +16,8 @@ App({
    * 全局变量
    */
   globalData: {
-    // host: 'http://43.142.44.194:2590/',
-    host: 'http://localhost:2590/',
+    host: 'https://bpr.flink-dsp.com:2590/',
+    // host: 'https://localhost:2590/',
     openId: '',
     sessionKey: '',
     userInfo: {
@@ -36,7 +36,10 @@ App({
       createTime: '',
       updateTime: '',
     },
-    shareUser: '',
+    shareUserInfo: {
+      familyId: '',
+      shareUser: ''
+    },
   },
   /**
    * 全局方法

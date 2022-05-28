@@ -164,11 +164,27 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady() {
+    // 获取组件
+    this.ecComponent = this.selectComponent('#mychart-dom-line');
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow() {
     this.setData({
       openId: app.globalData.openId,
       userInfo: app.globalData.userInfo,
       familyInfo: app.globalData.familyInfo,
     })
+
     this.generateMemberSelector()
 
     const today = new Date(new Date().toLocaleDateString())
@@ -195,6 +211,89 @@ Page({
     }, 900)
   },
 
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide() {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload() {
+
+  },
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh() {
+
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom() {
+
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage() {
+
+  },
+
+  generateMemberSelector() {
+    var arr = []
+    if (app.globalData.familyInfo.familyId !== '') {
+      const members = app.globalData.familyInfo.familyMemberVos
+      for (let i = 0; i < members.length; i++) {
+        var member = {
+          text: members[i].nickName,
+          value: members[i].openId
+        }
+        arr.push(member)
+      }
+    } else {
+      arr = [{
+        text: app.globalData.userInfo.nickName === '点击登录'? '尚未登录' : app.globalData.userInfo.nickName,
+        value: app.globalData.openId
+      }]
+    }
+    this.setData({
+      selectedMemberValue: app.globalData.openId,
+      memberSelector: arr,
+    })
+  },
+
+  onSelectMember(event) {
+    console.log(event.detail)
+    this.setData({
+      selectedMemberValue: event.detail,
+    })
+    const today = new Date(new Date().toLocaleDateString())
+    const weekQuery = {
+      openId: this.data.selectedMemberValue,
+      startTime: util.formatTime(new Date(today.getTime() - 604800000))
+    }
+    const monthQuery = {
+      openId: this.data.selectedMemberValue,
+      startTime: util.formatTime(new Date(today.getTime() - 2592000000))
+    }
+    const yearQuery = {
+      openId: this.data.selectedMemberValue,
+      startTime: util.formatTime(new Date(today.getTime() - 31536000000))
+    }
+    this.getLineWeek(weekQuery)
+    this.getLineMonth(monthQuery)
+    this.getLineYear(yearQuery)
+    this.getPie(monthQuery)
+  },
+
+  
   getLineWeek(params) {
     requestApi.post(recordApi.analyzeWeek, params).then(res => {
       console.log("返回结果: ", res.result)
@@ -800,139 +899,4 @@ Page({
     }, 900)
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-    // 获取组件
-    this.ecComponent = this.selectComponent('#mychart-dom-line');
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-    this.checkLogin()
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  },
-
-  generateMemberSelector() {
-    const members = app.globalData.familyInfo.familyMemberVos
-    var arr = []
-    for (let i = 0; i < members.length; i++) {
-      var member = {
-        text: members[i].nickName,
-        value: members[i].openId
-      }
-      arr.push(member)
-      if (members[i].nickName === this.data.userInfo.nickName) {
-        this.setData({
-          selectedMemberValue: members[i].openId,
-        })
-      }
-    }
-    this.setData({
-      memberSelector: arr,
-    })
-  },
-
-  onSelectMember(event) {
-    console.log(event.detail)
-    this.setData({
-      selectedMemberValue: event.detail,
-    })
-    const today = new Date(new Date().toLocaleDateString())
-    const weekQuery = {
-      openId: this.data.selectedMemberValue,
-      startTime: util.formatTime(new Date(today.getTime() - 604800000))
-    }
-    const monthQuery = {
-      openId: this.data.selectedMemberValue,
-      startTime: util.formatTime(new Date(today.getTime() - 2592000000))
-    }
-    const yearQuery = {
-      openId: this.data.selectedMemberValue,
-      startTime: util.formatTime(new Date(today.getTime() - 31536000000))
-    }
-    this.getLineWeek(weekQuery)
-    this.getLineMonth(monthQuery)
-    this.getLineYear(yearQuery)
-    this.getPie(monthQuery)
-  },
-
-  async checkLogin() {
-    var checkCount = 0
-    while (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '') {
-      console.log("循环")
-      await sleep(50)
-      if (checkCount < 40 && (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '')) {
-        checkCount = checkCount + 1
-        continue
-      }
-      if (app.globalData.userInfo.nickName === "点击登录") {
-        console.log("app.globalData.userInfo: ", app.globalData.userInfo)
-        Dialog.alert({
-            message: '请先登录',
-          })
-          .then(() => {
-            //路由到用户页
-            wx.switchTab({
-              url: '/pages/user/user'
-            })
-          });
-        break
-      }
-      if (app.globalData.familyInfo.familyName === '') {
-        console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
-        Dialog.alert({
-            message: '请先创建或加入家庭',
-          })
-          .then(() => {
-            //路由到用户页
-            wx.switchTab({
-              url: '/pages/user/user'
-            })
-          });
-        break
-      }
-    }
-    this.setData({
-      openId: app.globalData.openId,
-      userInfo: app.globalData.userInfo,
-    })
-  },
 })

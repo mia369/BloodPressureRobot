@@ -25,12 +25,16 @@ function formatDate(date) {
 
 function getDateTime() {
   const times = {}
-  var date = new Date()
-  date.setTime(new Date().getTime() - 86400000)
-  const yesterday = formatDate(date)
-  times[yesterday] = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
+  var currentTime = new Date().getTime()
   const today = formatDate(new Date())
   times[today] = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
+  for (let i = 0; i < 90; i++) {
+    var date = new Date()
+    date.setTime(currentTime - 86400000)
+    const day = formatDate(date)
+    times[day] = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
+    currentTime = currentTime - 86400000
+  }
   return times
 }
 
@@ -57,7 +61,7 @@ Page({
     columns: [{
         values: Object.keys(dateTime),
         className: 'column1',
-        defaultIndex: 1
+        defaultIndex: 0
       },
       {
         values: dateTime[Object.keys(dateTime)[0]],
@@ -78,11 +82,11 @@ Page({
   onLoad(options) {
     console.log("add onload options: ", options)
     if (options && options !== {}) {
-      if (options.familyId && options.familyId !== '') {
-        app.globalData.familyInfo.familyId = options.familyId
-      }
-      if (options.shareUser && options.shareUser !== '') {
-        app.globalData.shareUser = options.shareUser
+      if (options.shareUser && options.shareUser !== '' && options.familyId && options.familyId !== '') {
+        app.globalData.shareUserInfo.familyId = options.familyId
+        app.globalData.shareUserInfo.shareUser = options.shareUser
+        this.handleShare()
+
       }
     }
   },
@@ -98,7 +102,10 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    this.checkLogin()
+    this.setData({
+      openId: app.globalData.openId,
+      userInfo: app.globalData.userInfo,
+    })
   },
 
   /**
@@ -203,77 +210,78 @@ Page({
     }
   },
 
-  async checkLogin() {
+  async handleShare() {
     var checkCount = 0
     while (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '') {
       console.log("循环")
       await sleep(50)
-      if (checkCount < 40 && (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '')) {
-        checkCount = checkCount + 1
-        continue
-      }
-      if (app.globalData.userInfo.nickName === "点击登录") {
-        console.log("app.globalData.userInfo: ", app.globalData.userInfo)
-        Dialog.alert({
-            message: '请先登录',
-          })
-          .then(() => {
-            //路由到用户页
-            wx.switchTab({
-              url: '/pages/user/user'
-            })
-          });
-        break
-      }
-      if (app.globalData.familyInfo.familyName === '') {
-        console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
-        Dialog.alert({
-            message: '请先创建或加入家庭',
-          })
-          .then(() => {
-            //路由到用户页
-            wx.switchTab({
-              url: '/pages/user/user'
-            })
-          });
+      if (checkCount < 30) {
+        if (app.globalData.userInfo.nickName === '点击登录' || app.globalData.familyInfo.familyId === '') {
+          checkCount = checkCount + 1
+          continue
+        }
+      } else {
+        //路由到用户页
+        wx.switchTab({
+          url: '/pages/user/user'
+        })
         break
       }
     }
-    this.setData({
-      openId: app.globalData.openId,
-      userInfo: app.globalData.userInfo,
-    })
   },
 
   onSubmitRecord() {
-    console.log(this.data.openId)
-    console.log(this.data.userInfo)
-    if (!this.data.measureTime || !this.data.highBloodPressure || !this.data.lowBloodPressure || !this.data.heartRate || !this.data.usedPills) {
-      Toast.fail("请填写完整");
-    } else {
-      const params = {
-        openId: this.data.openId,
-        measureTime: this.data.measureTime,
-        highBloodPressure: this.data.highBloodPressure,
-        lowBloodPressure: this.data.lowBloodPressure,
-        heartRate: this.data.heartRate,
-        usedPills: parseInt(this.data.usedPills)
-      }
-      console.log(params)
-      requestApi.post(recordApi.addRecord, params).then(res => {
-        console.log("返回结果: ", res)
-        Toast.success("添加成功");
-        this.setData({
-          measureTime: null,
-          highBloodPressure: null,
-          lowBloodPressure: null,
-          heartRate: null,
-          usedPills: null,
+    if (app.globalData.userInfo.nickName === "点击登录") {
+      console.log("app.globalData.userInfo: ", app.globalData.userInfo)
+      Dialog.alert({
+          message: '请先登录',
         })
-        this.onShow()
-      }).catch(err => {
-        console.log(err)
-      })
+        .then(() => {
+          //路由到用户页
+          wx.switchTab({
+            url: '/pages/user/user'
+          })
+        });
+    } else if (app.globalData.familyInfo.familyName === '') {
+      console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
+      Dialog.alert({
+          message: '请先创建或加入家庭',
+        })
+        .then(() => {
+          //路由到用户页
+          wx.switchTab({
+            url: '/pages/user/user'
+          })
+        });
+    } else {
+      console.log(this.data.openId)
+      console.log(this.data.userInfo)
+      if (!this.data.measureTime || !this.data.highBloodPressure || !this.data.lowBloodPressure || !this.data.heartRate || !this.data.usedPills) {
+        Toast.fail("请填写完整");
+      } else {
+        const params = {
+          openId: this.data.openId,
+          measureTime: this.data.measureTime,
+          highBloodPressure: this.data.highBloodPressure,
+          lowBloodPressure: this.data.lowBloodPressure,
+          heartRate: this.data.heartRate,
+          usedPills: parseInt(this.data.usedPills)
+        }
+        console.log(params)
+        requestApi.post(recordApi.addRecord, params).then(res => {
+          console.log("返回结果: ", res)
+          Toast.success("添加成功");
+          this.setData({
+            measureTime: null,
+            highBloodPressure: null,
+            lowBloodPressure: null,
+            heartRate: null,
+            usedPills: null,
+          })
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     }
   },
 
@@ -285,6 +293,5 @@ Page({
       heartRate: null,
       usedPills: null,
     })
-    this.onShow()
   },
 })

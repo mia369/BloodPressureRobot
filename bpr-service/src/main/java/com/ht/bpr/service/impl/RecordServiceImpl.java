@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class RecordServiceImpl implements RecordService {
     private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addRecord(RecordVo recordVo) {
         if (recordVo == null) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "recordVo is null");
@@ -66,6 +68,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteRecord(Integer recordPk) {
         Record record = recordMapper.selectByPk(recordPk);
         if (record != null) {

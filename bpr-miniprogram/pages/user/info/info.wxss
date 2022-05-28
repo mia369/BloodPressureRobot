@@ -6,3 +6,6 @@
   min-width: 25%;
 }
 
+.van-cell {
+  font-size: 18px !important;
+}

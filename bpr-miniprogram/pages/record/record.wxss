@@ -16,3 +16,14 @@
 .list-content-cell-class .van-cell{
   background-color: #f5f5f5;
 }
+
+.van-cell {
+  font-size: 16px !important;
+}
+
+.van-ellipsis {
+  font-size: 16px !important;
+}
+
+
+

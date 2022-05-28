@@ -1,14 +1,14 @@
 .title-cell-class .van-cell {
   background-color: var(--cell-background-color, #f5f5f5);
   font-weight: bold;
-  font-size: 18px;
+  font-size: 20px;
   color: #434343;
   text-align: center;
   padding: var(--cell-vertical-padding, 10px) var(--cell-horizontal-padding, 16px);
 }
 
 .content-cell-class .van-cell__value {
-  font-size: 15px;
+  font-size: 16px;
   color: #262626 !important;
   text-align: left !important;
   line-height: 26px;
@@ -19,6 +19,6 @@
 }
 
 .subtitle-cell-class .van-cell__title {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 600;
 }

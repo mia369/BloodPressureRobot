@@ -14,22 +14,22 @@
       <van-grid-item use-slot content-class="grid-info-class" center="false">
         <van-row style="text-align: left;" gutter="0">
           <van-row span="24" style="text-align: left;margin-top: 5px;margin-bottom: 16px;">
-            <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 14px;line-height: 24px;font-weight: 600;">
+            <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 16px;line-height: 24px;font-weight: 600;">
               家庭名称: {{ familyInfo.familyName }}
             </h2>
           </van-row>
           <van-row span="24" style="text-align: left;margin-top: 5px;margin-bottom: 16px;">
-            <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 14px;line-height: 24px;font-weight: 600;">
+            <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 16px;line-height: 24px;font-weight: 600;">
               成员数量: {{ familyInfo.familyMemberVos.length }}
             </h2>
           </van-row>
           <van-col span="24" style="text-align: left;margin-top: 5px;margin-bottom: 16px;">
-            <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 14px;line-height: 24px;font-weight: 600;">
+            <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 16px;line-height: 24px;font-weight: 600;">
               家庭管理员: {{ familyInfo.familyManager.nickName }}
             </h2>
           </van-col>
           <van-col span="24" style="text-align: left;margin-top: 5px;margin-bottom: 16px;">
-            <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 14px;line-height: 24px;font-weight: 600;">
+            <h2 style="color: rgba(40, 40, 40, 0.9); font-size: 16px;line-height: 24px;font-weight: 600;">
               创建时间: {{util.formatTime(familyInfo.createTime, 'yyyy-MM-dd hh:mm:ss')}}
             </h2>
           </van-col>
@@ -38,7 +38,7 @@
       <van-grid-item wx:if="{{ haveFamily }}" use-slot content-class="grid-item-action-class">
         <van-row style="width: 100%; text-align: center; align-items: center; ">
           <van-col span="11">
-            <van-button block size="small" custom-style="grid-info-action-button" wx:if="{{ familyInfo.familyName }}" round type="info" color="#099268" open-type="share">
+            <van-button block size="small" custom-style="grid-info-action-button" round type="info" color="#099268" open-type="share">
               邀请成员
             </van-button>
           </van-col>
@@ -46,10 +46,10 @@
             <text decode="{{ true }}">&nbsp;</text>
           </van-col>
           <van-col span="11">
-            <van-button block size="small" custom-style="grid-info-action-button" wx:if="{{ !isFamilyManager && familyInfo.familyName }}" round type="danger" color="#f5222d" plain bind:click="exitFamily">
+            <van-button block size="small" custom-style="grid-info-action-button" wx:if="{{ !isFamilyManager }}" round type="danger" color="#f5222d" plain bind:click="exitFamily">
               退出家庭
             </van-button>
-            <van-button block size="small" wx:if="{{ isFamilyManager && familyInfo.familyName }}" round type="danger" color="#f5222d" plain bind:click="deleteFamily">
+            <van-button block size="small" custom-style="grid-info-action-button" wx:if="{{ isFamilyManager }}" round type="danger" color="#f5222d" plain bind:click="deleteFamily">
               解散家庭
             </van-button>
           </van-col>
@@ -57,14 +57,14 @@
       </van-grid-item>
     </van-grid>
     <view style="padding-right: 10px; padding-left: 10px;padding-top: 10px;">
-      <van-button wx:if="{{ !haveFamily }}" block color="#099268" hairline style="border-radius: 20px;" bind:click="showRegisterPop">
+      <van-button wx:if="{{ !haveFamily }}" block color="#099268" hairline style="border-radius: 20px; font-size: 16px;" bind:click="showRegisterPop">
         创建家庭
       </van-button>
     </view>
   </view>
   <view wx:if="{{ haveFamily }}">
     <van-grid column-num="1" custom-class="family-list-grid-class">
-      <van-grid-item use-slot style="text-align: left ;align-items: normal ; width: 100%;" content-class="family-list-title-class" center="false">
+      <van-grid-item use-slot style="text-align: left ;align-items: normal ; width: 100%; " content-class="family-list-title-class" center="false">
         家庭成员
       </van-grid-item>
       <van-grid-item use-slot content-class="family-list-item-class" wx:for="{{ familyInfo.familyMemberVos }}" wx:for-item="member">

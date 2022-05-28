@@ -49,26 +49,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    const recordQuery = this.data.recordQuery
-    const today = new Date(new Date().toLocaleDateString())
-    recordQuery.startTime = util.formatTime(today)
-    recordQuery.endTime = util.formatTime(new Date(today.getTime() + 86399999))
-    this.setData({
-      openId: app.globalData.openId,
-      userInfo: app.globalData.userInfo,
-      familyInfo: app.globalData.familyInfo,
-      recordQuery: recordQuery,
-      selectedDate: this.formatDate(today)
-    })
-    this.generateMemberSelector()
-    requestApi.post(recordApi.selectRecord, this.data.recordQuery).then(res => {
-      console.log("返回结果: ", res.result)
-      this.setData({
-        records: res.result,
-      })
-    }).catch(err => {
-      console.log(err)
-    })
 
   },
 
@@ -83,7 +63,27 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    this.checkLogin()
+    const recordQuery = this.data.recordQuery
+    const today = new Date(new Date().toLocaleDateString())
+    recordQuery.startTime = util.formatTime(today)
+    recordQuery.endTime = util.formatTime(new Date(today.getTime() + 86399999))
+    this.setData({
+      openId: app.globalData.openId,
+      userInfo: app.globalData.userInfo,
+      familyInfo: app.globalData.familyInfo,
+      recordQuery: this.data.recordQuery,
+      selectedDate: this.formatDate(today)
+    })
+    this.generateMemberSelector()
+
+    requestApi.post(recordApi.selectRecord, this.data.recordQuery).then(res => {
+      console.log("返回结果: ", res.result)
+      this.setData({
+        records: res.result,
+      })
+    }).catch(err => {
+      console.log(err)
+    })
   },
 
   /**
@@ -123,26 +123,29 @@ Page({
 
   generateMemberSelector() {
     const recordQuery = this.data.recordQuery
-    const members = app.globalData.familyInfo.familyMemberVos
+    recordQuery.openId = app.globalData.openId
     var arr = []
-    for (let i = 0; i < members.length; i++) {
-      var member = {
-        text: members[i].nickName,
-        value: members[i].openId
+    if (app.globalData.familyInfo.familyId !== '') {
+      const members = app.globalData.familyInfo.familyMemberVos
+      for (let i = 0; i < members.length; i++) {
+        var member = {
+          text: members[i].nickName,
+          value: members[i].openId
+        }
+        arr.push(member)
       }
-      arr.push(member)
-      if (members[i].nickName === this.data.userInfo.nickName) {
-        recordQuery.openId = members[i].openId
-        this.setData({
-          selectedMemberValue: members[i].openId,
-          recordQuery: recordQuery,
-        })
-      }
+    } else {
+      arr = [{
+        text: app.globalData.userInfo.nickName === '点击登录'? '尚未登录' : app.globalData.userInfo.nickName,
+        value: app.globalData.openId
+      }]
     }
     this.setData({
+      selectedMemberValue: app.globalData.openId,
+      recordQuery: recordQuery,
       memberSelector: arr,
     })
-    console.log(this.data.recordQuery)
+    console.log('recordQuery: ', this.data.recordQuery)
   },
 
   onShowCalendar() {
@@ -215,48 +218,6 @@ Page({
       this.onShow()
     }).catch(err => {
       console.log(err)
-    })
-  },
-
-  async checkLogin() {
-    var checkCount = 0
-    while (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '') {
-      console.log("循环")
-      await sleep(50)
-      if (checkCount < 40 && (app.globalData.userInfo.nickName === "点击登录" || app.globalData.familyInfo.familyId === '')) {
-        checkCount = checkCount + 1
-        continue
-      }
-      if (app.globalData.userInfo.nickName === "点击登录") {
-        console.log("app.globalData.userInfo: ", app.globalData.userInfo)
-        Dialog.alert({
-            message: '请先登录',
-          })
-          .then(() => {
-            //路由到用户页
-            wx.switchTab({
-              url: '/pages/user/user'
-            })
-          });
-        break
-      }
-      if (app.globalData.familyInfo.familyName === '') {
-        console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
-        Dialog.alert({
-            message: '请先创建或加入家庭',
-          })
-          .then(() => {
-            //路由到用户页
-            wx.switchTab({
-              url: '/pages/user/user'
-            })
-          });
-        break
-      }
-    }
-    this.setData({
-      openId: app.globalData.openId,
-      userInfo: app.globalData.userInfo,
     })
   },
 

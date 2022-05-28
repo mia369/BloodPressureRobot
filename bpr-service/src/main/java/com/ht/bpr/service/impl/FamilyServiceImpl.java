@@ -112,8 +112,8 @@ public class FamilyServiceImpl implements FamilyService {
         List<String> openIds = members.stream().map(m -> m.getOpenId()).collect(Collectors.toList());
         Map<String, User> userMap = userService.selectUserMapByOpenIds(openIds);
         //组装memberVo
+        FamilyVo familyVo = new FamilyVo();
         List<FamilyMemberVo> memberVos = new ArrayList<>();
-        FamilyMemberVo managerVo = new FamilyMemberVo();
         for (FamilyMember member : members) {
             FamilyMemberVo memberVo = new FamilyMemberVo();
             memberVo.setId(member.getId());
@@ -130,15 +130,13 @@ public class FamilyServiceImpl implements FamilyService {
             }
             memberVos.add(memberVo);
             if (member.getOpenId().equals(family.getFamilyManager())) {
-                managerVo = memberVo;
+                familyVo.setFamilyManager(memberVo);
             }
         }
         //组装familyVo
-        FamilyVo familyVo = new FamilyVo();
         familyVo.setId(family.getId());
         familyVo.setFamilyId(familyId);
         familyVo.setFamilyName(family.getFamilyName());
-        familyVo.setFamilyManager(managerVo);
         familyVo.setFamilyMemberVos(memberVos);
         familyVo.setCreateTime(family.getCreateTime());
         familyVo.setUpdateTime(family.getUpdateTime());

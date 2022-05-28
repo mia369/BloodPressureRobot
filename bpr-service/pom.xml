@@ -64,8 +64,8 @@
                 <directory>src/main/resources/${active.profile}</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>**/application*.yml</include>
-                    <include>**/*.xml</include>
+                    <include>application*.yml</include>
+                    <include>*.xml</include>
                 </includes>
                 <excludes>
                     <exclude>assembly.xml</exclude>
@@ -77,6 +77,14 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <!--https证书文件-->
+            <resource>
+                <directory>src/main/resources/${active.profile}</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*.pfx</include>
                 </includes>
             </resource>
         </resources>
@@ -129,7 +137,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
     <profiles>

@@ -11,7 +11,7 @@
     <!-- 定义日志字符集 -->
     <property name="log.charset" value="UTF-8"/>
     <!-- 定义日志级别 -->
-    <property name="log.level" value="WARN"/>
+    <property name="log.level" value="INFO"/>
     <!-- 定义日志存放路径 -->
     <property name="log.path" value="logs"/>
 

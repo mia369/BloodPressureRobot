@@ -1,7 +1,8 @@
 
 .content-cell-class .van-cell__value {
-  font-size: 15px;
+  font-size: 18px;
   color: #262626 !important;
   text-align: left !important;
   line-height: 26px;
+  
 }

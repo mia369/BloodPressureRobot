@@ -10,4 +10,9 @@
 
 .user-cell-class .van-cell__title {
   padding-left: 8px;
+  font-size: 18px !important;
+}
+
+.van-cell--large .van-cell__value {
+  font-size: var(--cell-large-value-font-size,18px) !important;
 }

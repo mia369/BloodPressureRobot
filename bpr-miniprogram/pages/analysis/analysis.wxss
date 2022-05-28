@@ -38,3 +38,7 @@ ec-canvas {
 .card-cell-class .van-cell {
   background-color: var(--cell-background-color,#f5f5f5);
 }
+
+.van-ellipsis {
+  font-size: 16px !important;
+}

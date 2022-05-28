@@ -44,16 +44,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    this.setData({
-      openId: app.globalData.openId,
-      familyInfo: app.globalData.familyInfo,
-    })
-    console.log("this.data.familyInfo: ", this.data.familyInfo)
-    if (this.data.familyInfo.familyId !== '') {
-      this.setData({
-        haveFamily: true,
-      })
-    }
+
   },
 
   /**
@@ -67,11 +58,31 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    if (this.data.familyInfo.familyManager.openId === app.globalData.openId) {
-      this.setData({
-        isFamilyManager: true,
-      })
+    const params = {
+      openId: app.globalData.openId
     }
+    requestApi.get(familyApi.searchFamily, params).then(res => {
+      //成功时回调函数
+      console.log("返回结果: ", res)
+      var familyInfo = this.getNullFamilyInfo()
+      var isFamilyManager = false
+      if (res.result) {
+        familyInfo = res.result
+        isFamilyManager = res.result.familyManager.openId === app.globalData.openId
+      }
+      app.globalData.familyInfo = familyInfo
+      this.setData({
+        familyInfo: familyInfo,
+        openId: app.globalData.openId,
+        haveFamily: res.result !== null,
+        isFamilyManager: isFamilyManager
+      })
+      console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
+      console.log("this.data.familyInfo: ", this.data.familyInfo)
+    }).catch(err => {
+      //失败时回调函数
+      console.log(err)
+    })
   },
 
   /**
@@ -106,12 +117,15 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage() {
+    // var path = '/pages/user/user?familyId=' + app.globalData.familyInfo.familyId + '&shareUser=' + app.globalData.userInfo.nickName
+    // var title = '点击加入' + app.globalData.userInfo.nickName + '的家庭'
+
+    var path = '/pages/add/add?familyId=' + '84406089aa8b46bdceae4fc3bc79fc10' + '&shareUser=' + '未完'
+    var title = '点击加入' + '未完' + '的家庭'
+
     return {
-      title: '弹出分享时显示的分享标题',
-      desc: '分享页面的内容',
-      path: '/pages/add/add?familyId=2e1272bb9556b9250b862090857d1010&shareUser=家庭成员2',
-      // path: '/pages/add/add?familyId='+ app.globalData.familyInfo.familyId +'&shareUser' + app.globalData.userInfo.nickName,
-      // path: '/pages/add/add?familyId=' + app.globalData.familyInfo.familyId, // 路径，传递参数到指定页面。
+      title: title,
+      path: path
     }
   },
 
@@ -164,7 +178,6 @@ Page({
       }).catch(err => {
         //失败时回调函数
         console.log(err)
-        
       })
     }
   },
@@ -335,5 +348,18 @@ Page({
     })
   },
 
-
+  getNullFamilyInfo() {
+    return {
+      familyId: '',
+      familyName: '',
+      familyManager: {
+        openId: '',
+        nickName: '',
+        lastRecordTime: '',
+      },
+      familyMemberVos: [],
+      createTime: '',
+      updateTime: '',
+    }
+  }
 })
