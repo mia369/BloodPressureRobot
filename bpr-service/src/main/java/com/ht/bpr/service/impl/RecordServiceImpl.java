@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -117,7 +116,7 @@ public class RecordServiceImpl implements RecordService {
         if (lineWeekRecords == null) {
             return null;
         }
-        LineRecordVo lineWeek = LineRecordVo.fromRecordToVo(lineWeekRecords);
+        LineRecordVo lineWeek = LineRecordVo.fromRecordListToVo(lineWeekRecords);
         return lineWeek;
     }
 
@@ -136,7 +135,7 @@ public class RecordServiceImpl implements RecordService {
         if (lineMonthRecords == null) {
             return null;
         }
-        LineRecordVo lineMonth = LineRecordVo.fromRecordToVo(lineMonthRecords);
+        LineRecordVo lineMonth = LineRecordVo.fromRecordListToVo(lineMonthRecords);
         return lineMonth;
     }
 
@@ -155,7 +154,7 @@ public class RecordServiceImpl implements RecordService {
         if (lineYearRecords == null) {
             return null;
         }
-        LineRecordVo lineYear = LineRecordVo.fromRecordToVo(lineYearRecords);
+        LineRecordVo lineYear = LineRecordVo.fromRecordListToVo(lineYearRecords);
         return lineYear;
     }
 
@@ -164,16 +163,18 @@ public class RecordServiceImpl implements RecordService {
         if (query == null) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "recordQuery is null");
         }
-        if (StringUtils.isBlank(query.getOpenId())) {
+        String openId = query.getOpenId();
+        if (StringUtils.isBlank(openId)) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
         }
-        if (StringUtils.isBlank(query.getStartTime())) {
+        String startTime = query.getStartTime();
+        if (StringUtils.isBlank(startTime)) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "startTime is null");
         }
         //获取数据
-        List<PieRecord> highRecords = recordMapper.selectHighBloodPressureLevel(query.getOpenId(), query.getStartTime());
-        List<PieRecord> lowRecords = recordMapper.selectLowBloodPressureLevel(query.getOpenId(), query.getStartTime());
-        List<PieRecord> heartRecords = recordMapper.selectHeartRateLevel(query.getOpenId(), query.getStartTime());
+        List<PieRecord> highRecords = recordMapper.selectHighBloodPressureLevel(openId, startTime);
+        List<PieRecord> lowRecords = recordMapper.selectLowBloodPressureLevel(openId, startTime);
+        List<PieRecord> heartRecords = recordMapper.selectHeartRateLevel(openId, startTime);
         //处理数据
         for (PieRecord highRecord : highRecords) {
             PieRecord.formatDetail(highRecord);
@@ -191,32 +192,4 @@ public class RecordServiceImpl implements RecordService {
         pieRecordVo.setPieHeartRate(heartRecords);
         return pieRecordVo;
     }
-
-    private String getEarlyDate(Calendar calendar, int days) {
-        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH) - days, 0, 0, 0);
-        long time = calendar.getTime().getTime();
-        String earlyDate = formatter.format(new Date(Long.parseLong(String.valueOf(time))));
-        return earlyDate;
-    }
-
-    private List<Integer> getIntegerList(String str) {
-        List<Integer> list = new ArrayList<>();
-        String[] splits = str.split(",");
-        for (String split : splits) {
-            Integer number = Integer.parseInt(split);
-            list.add(number);
-        }
-        return list;
-    }
-
-    private List<String> getStringList(String str) {
-        List<String> list = new ArrayList<>();
-        String[] splits = str.split(",");
-        for (String split : splits) {
-            list.add(split);
-        }
-        return list;
-    }
-
-
 }

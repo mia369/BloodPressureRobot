@@ -14,7 +14,7 @@
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#099268",
-    "navigationBarTitleText": "血压酱",
+    "navigationBarTitleText": "身体指标日记",
     "navigationBarTextStyle":"white"
   },
   "sitemapLocation": "sitemap.json",

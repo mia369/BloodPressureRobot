@@ -1,6 +1,5 @@
 <wxs module="util" src="/utils/util.wxs"></wxs>
 <van-dialog id="van-dialog" />
-
 <view>
   <view>
     <van-dialog use-slot title="创建家庭" show="{{ showFamilyRegisterPop }}" show-cancel-button confirm-button-color="#099268" bind:close="closePop" bind:confirm="registerFamily">

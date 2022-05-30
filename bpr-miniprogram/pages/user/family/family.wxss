@@ -100,5 +100,5 @@
 }
 
 .van-button--normal {
-  font-size: var(--button-normal-font-size,18px) !important;
+  font-size: var(--button-normal-font-size,14px) !important;
 }

@@ -9,7 +9,7 @@ import com.ht.bpr.entity.vo.FamilyMemberVo;
 import com.ht.bpr.entity.vo.FamilyVo;
 import com.ht.bpr.exception.BprException;
 import com.ht.bpr.mapper.FamilyMapper;
-import com.ht.bpr.service.FamilyMemberService;
+import com.ht.bpr.mapper.FamilyMemberMapper;
 import com.ht.bpr.service.FamilyService;
 import com.ht.bpr.service.UserService;
 import com.ht.bpr.util.Md5Util;
@@ -38,57 +38,42 @@ public class FamilyServiceImpl implements FamilyService {
     @Autowired
     private FamilyMapper familyMapper;
     @Autowired
-    private FamilyMemberService familyMemberService;
+    private FamilyMemberMapper memberMapper;
     @Autowired
     private UserService userService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public FamilyVo addFamily(FamilyVo familyVo) {
-        //校验familyName, manager
-        if (StringUtils.isBlank(familyVo.getFamilyName())) {
+    public void addFamily(String familyName, String openId) {
+        //校验familyName, openId
+        if (StringUtils.isBlank(familyName)) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyName is null");
         }
-        if (familyVo.getFamilyManager() == null) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyManager is null");
-        }
-        if (StringUtils.isBlank(familyVo.getFamilyManager().getOpenId())) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId of familyManager is null");
+        if (StringUtils.isBlank(openId)) {
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
         }
         //校验用户是否合法
-        User checkUser = userService.selectOne(familyVo.getFamilyManager().getOpenId());
+        User checkUser = userService.selectOne(openId);
         if (checkUser == null) {
             throw new BprException(BprResultStatus.USER_NOT_EXIST, "user does not exist");
         }
         //生成familyId
-        String managerOpenId = familyVo.getFamilyManager().getOpenId();
         Date createTime = new Date();
-        String rawFamilyId = String.format(Constants.FAMILY_ID_FORMAT, managerOpenId, createTime);
+        String rawFamilyId = String.format(Constants.FAMILY_ID_FORMAT, openId, createTime);
         String familyId = Md5Util.md5(rawFamilyId);
         //保存到family表
         Family family = new Family();
         family.setFamilyId(familyId);
-        family.setFamilyName(familyVo.getFamilyName());
-        family.setFamilyManager(managerOpenId);
+        family.setFamilyName(familyName);
+        family.setFamilyManager(openId);
         family.setCreateTime(createTime);
         familyMapper.add(family);
         //manager保存到member表
         FamilyMember member = new FamilyMember();
-        member.setOpenId(managerOpenId);
+        member.setOpenId(openId);
         member.setFamilyId(familyId);
         member.setCreateTime(createTime);
-        FamilyMemberVo managerVo = familyMemberService.add(member);
-        List<FamilyMemberVo> memberVos = new ArrayList<>();
-        memberVos.add(managerVo);
-        //组装familyVo
-        FamilyVo vo = new FamilyVo();
-        vo.setId(family.getId());
-        vo.setFamilyId(familyId);
-        vo.setFamilyName(familyVo.getFamilyName());
-        vo.setFamilyManager(managerVo);
-        vo.setCreateTime(createTime);
-        vo.setFamilyMemberVos(memberVos);
-        return vo;
+        memberMapper.add(member);
     }
 
     @Override
@@ -99,7 +84,7 @@ public class FamilyServiceImpl implements FamilyService {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
         }
         //查询member表
-        FamilyMember familyMember = familyMemberService.selectByOpenId(openId);
+        FamilyMember familyMember = memberMapper.selectByOpenId(openId);
         //查询结果为空则表明未创建/加入家庭, 直接返回空
         if (familyMember == null) {
             return null;
@@ -107,7 +92,7 @@ public class FamilyServiceImpl implements FamilyService {
         //查询family表
         String familyId = familyMember.getFamilyId();
         Family family = familyMapper.selectByFamilyId(familyId);
-        List<FamilyMember> members = familyMemberService.selectByFamilyId(familyId);
+        List<FamilyMember> members = memberMapper.selectByFamilyId(familyId);
         //查询user表, 根据openId查询user的nickName和age
         List<String> openIds = members.stream().map(m -> m.getOpenId()).collect(Collectors.toList());
         Map<String, User> userMap = userService.selectUserMapByOpenIds(openIds);
@@ -145,13 +130,22 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public FamilyVo addMember(FamilyMemberVo familyMemberVo) {
+    public void addMember(FamilyMemberVo memberVo) {
+        if (memberVo == null) {
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "memberVo is null");
+        }
+        String openId = memberVo.getOpenId();
+        if (openId == null) {
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
+        }
+        String familyId = memberVo.getFamilyId();
+        if (familyId == null) {
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyId is null");
+        }
         FamilyMember member = new FamilyMember();
-        member.setOpenId(familyMemberVo.getOpenId());
-        member.setFamilyId(familyMemberVo.getFamilyId());
-        familyMemberService.add(member);
-        FamilyVo familyVo = selectByOpenId(member.getOpenId());
-        return familyVo;
+        member.setOpenId(openId);
+        member.setFamilyId(familyId);
+        memberMapper.add(member);
     }
 
     @Override
@@ -169,49 +163,54 @@ public class FamilyServiceImpl implements FamilyService {
             throw new BprException(BprResultStatus.FAMILY_NOT_EXIST);
         }
         familyMapper.deleteByFamilyId(familyId);
-        familyMemberService.deleteBatchByFamilyId(familyId);
+        memberMapper.deleteByFamilyId(familyId);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public FamilyVo deleteMember(FamilyMemberVo familyMemberVo) {
-        if (familyMemberVo == null) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyMemberVo is null");
+    public void deleteMember(FamilyMemberVo memberVo) {
+        if (memberVo == null) {
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "memberVo is null");
         }
-        if (StringUtils.isBlank(familyMemberVo.getFamilyId())) {
+        String familyId = memberVo.getFamilyId();
+        if (StringUtils.isBlank(familyId)) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyId is null");
         }
-        if (StringUtils.isBlank(familyMemberVo.getOpenId())) {
+        String openId = memberVo.getOpenId();
+        if (StringUtils.isBlank(openId)) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId of member is null");
         }
         //删除成员
-        familyMemberService.deleteMember(familyMemberVo);
-        List<FamilyMemberVo> memberVos = getFamilyMemberVos(familyMemberVo);
-        //存入familyVo并返回
-        FamilyVo familyVo = new FamilyVo();
-        familyVo.setFamilyMemberVos(memberVos);
-        return familyVo;
+        FamilyMember member = memberMapper.selectByFamilyIdAndOpenId(familyId, openId);
+        if (member != null) {
+            memberMapper.deleteByFamilyIdAndOpenId(familyId, openId);
+        }
     }
 
     @Override
-    public void exitFamily(FamilyMemberVo familyMemberVo) {
+    public void exitFamily(FamilyMemberVo memberVo) {
         //校验
-        if (familyMemberVo == null) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyMemberVo is null");
+        if (memberVo == null) {
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "memberVo is null");
         }
-        if (StringUtils.isBlank(familyMemberVo.getFamilyId())) {
+        String familyId = memberVo.getFamilyId();
+        if (StringUtils.isBlank(familyId)) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyId is null");
         }
-        if (StringUtils.isBlank(familyMemberVo.getOpenId())) {
+        String openId = memberVo.getOpenId();
+        if (StringUtils.isBlank(openId)) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId of member is null");
         }
         //查询member表, 如果有记录则删除
-        familyMemberService.deleteMember(familyMemberVo);
+        FamilyMember member = memberMapper.selectByFamilyIdAndOpenId(familyId, openId);
+        if (member != null) {
+            memberMapper.deleteByFamilyIdAndOpenId(familyId, openId);
+        }
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public FamilyVo updateFamilyIdentity(FamilyMemberVo familyMemberVo) {
+    public void updateFamilyIdentity(FamilyMemberVo familyMemberVo) {
         //校验
         if (familyMemberVo == null) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyMemberVo is null");
@@ -225,20 +224,24 @@ public class FamilyServiceImpl implements FamilyService {
         if(StringUtils.isBlank(familyMemberVo.getFamilyIdentity())) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "familyIdentity is null");
         }
-        //修改member的identity
-        familyMemberService.updateFamilyIdentity(familyMemberVo);
-        //重新查询家庭成员
-        List<FamilyMemberVo> memberVos = getFamilyMemberVos(familyMemberVo);
-        //存入familyVo并返回
-        FamilyVo familyVo = new FamilyVo();
-        familyVo.setFamilyMemberVos(memberVos);
-        return familyVo;
+        //校验member是否存在, 如存在, 则修改
+        String familyId = familyMemberVo.getFamilyId();
+        String openId = familyMemberVo.getOpenId();
+        String newIdentity = familyMemberVo.getFamilyIdentity();
+        FamilyMember checkMember = memberMapper.selectByFamilyIdAndOpenId(familyId, openId);
+        if (checkMember == null) {
+            throw new BprException(BprResultStatus.FAMILY_MEMBER_NOT_EXIST, "member does not exist");
+        }
+        if (StringUtils.isNotBlank(checkMember.getFamilyIdentity()) && checkMember.getFamilyIdentity().equals(newIdentity)) {
+            return;
+        }
+        memberMapper.updateFamilyIdentity(familyId, openId, newIdentity);
     }
 
 
     private List<FamilyMemberVo> getFamilyMemberVos(FamilyMemberVo familyMemberVo) {
         //重新查询家庭成员
-        List<FamilyMember> members = familyMemberService.selectByFamilyId(familyMemberVo.getFamilyId());
+        List<FamilyMember> members = memberMapper.selectByFamilyId(familyMemberVo.getFamilyId());
         //members 转换为 memberVos
         List<String> openIds = members.stream().map(m -> m.getOpenId()).collect(Collectors.toList());
         Map<String, User> userMap = userService.selectUserMapByOpenIds(openIds);

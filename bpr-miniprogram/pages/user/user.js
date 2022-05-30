@@ -60,27 +60,67 @@ Page({
       userInfo: app.globalData.userInfo,
       familyInfo: app.globalData.familyInfo,
     })
-    if (this.data.userInfo.nickName !== '点击登录') {
-      this.setData({
-        hasUserInfo: true
-      })
+    const params = {
+      openId: app.globalData.openId,
     }
-    if (this.data.familyInfo.familyName === '') {
+    requestApi.get(userApi.searchUser, params).then(res => {
+      //成功时回调函数
+      console.log('searchUser返回结果: ', res)
+      app.globalData.userInfo = res.result
       this.setData({
-        familyCellValue: '点击注册',
+        userInfo: res.result
       })
-    } else {
-      this.setData({
-        familyCellValue: '查看',
-      })
-    }
+    }).catch(err => {
+      //失败时回调函数
+      console.log(err)
+    })
+    requestApi.get(familyApi.searchFamily, params).then(res => {
+      //成功时回调函数
+      console.log('searchFamily返回结果: ', res)
+      if (res.result) {
+        app.globalData.familyInfo = res.result
+        this.setData({
+          familyInfo: res.result
+        })
+      } else {
+        app.globalData.familyInfo = {
+          familyId: '',
+          familyName: '',
+          familyManager: {
+            openId: '',
+            nickName: '',
+            lastRecordTime: '',
+          },
+          familyMemberVos: [],
+          createTime: '',
+          updateTime: '',
+        }
+        this.setData({
+          familyInfo: {
+            familyId: '',
+            familyName: '',
+            familyManager: {
+              openId: '',
+              nickName: '',
+              lastRecordTime: '',
+            },
+            familyMemberVos: [],
+            createTime: '',
+            updateTime: '',
+          }
+        })
+      }
+    }).catch(err => {
+      //失败时回调函数
+      console.log(err)
+    })
+
     //如果有分享信息
     if (app.globalData.shareUserInfo.familyId !== '') {
       //如果未登录
       if (app.globalData.userInfo.nickName === '点击登录') {
         Toast.fail('请先登录');
         //需要在登录方法最后提示加入家庭
-
         //如果有家庭
       } else if (app.globalData.familyInfo.familyId !== '') {
         Toast.fail('已有家庭, 不能重复加入');
@@ -102,6 +142,21 @@ Page({
             app.globalData.shareUserInfo.shareUser = ''
           });
       }
+    }
+
+    if (app.globalData.userInfo.nickName !== '点击登录') {
+      this.setData({
+        hasUserInfo: true
+      })
+    }
+    if (!app.globalData.familyInfo || app.globalData.familyInfo.familyName === '') {
+      this.setData({
+        familyCellValue: '点击注册',
+      })
+    } else {
+      this.setData({
+        familyCellValue: '查看',
+      })
     }
   },
 
@@ -176,7 +231,9 @@ Page({
                 this.joinFamily()
               })
               .catch(() => {
-                console.log('加入家庭失败')
+                //清空数据
+                app.globalData.shareUserInfo.familyId = ''
+                app.globalData.shareUserInfo.shareUser = ''
               });
           }
         }).catch(err => {
@@ -197,16 +254,12 @@ Page({
     requestApi.post(familyApi.registerMember, params).then(res => {
       //成功时回调函数
       console.log('registerMember返回结果: ', res)
-      app.globalData.familyInfo = res.result
-      this.setData({
-        familyInfo: res.result,
-      })
       //清空数据
       app.globalData.shareUserInfo.familyId = ''
       app.globalData.shareUserInfo.shareUser = ''
-      console.log("this.data: ", this.data)
-      wx.redirectTo({
-        url: '/pages/user/user',
+      //更新页面数据
+      this.setData({
+        familyCellValue: '查看',
       })
     }).catch(err => {
       //失败时回调函数

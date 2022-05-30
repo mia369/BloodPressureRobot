@@ -68,9 +68,8 @@ public class UserController {
         return Result.success(loginResponse);
     }
 
-    @PostMapping("searchOne")
-    public Result searchOne(@RequestBody UserInfoRequest request) {
-        String openId = request.getOpenId();
+    @GetMapping("search")
+    public Result<User> searchOne(String openId) {
         User user = userService.selectOne(openId);
         return Result.success(user);
     }

@@ -14,15 +14,15 @@ public interface FamilyService {
 
     FamilyVo selectByOpenId(String openId);
 
-    FamilyVo addFamily(FamilyVo familyVo);
+    void addFamily(String familyName, String openId);
 
-    FamilyVo addMember(FamilyMemberVo familyMemberVo);
+    void addMember(FamilyMemberVo familyMemberVo);
 
     void deleteFamily(FamilyVo familyVo);
 
-    FamilyVo deleteMember(FamilyMemberVo memberVo);
+    void deleteMember(FamilyMemberVo memberVo);
 
     void exitFamily(FamilyMemberVo memberVo);
 
-    FamilyVo updateFamilyIdentity(FamilyMemberVo memberVo);
+    void updateFamilyIdentity(FamilyMemberVo memberVo);
 }

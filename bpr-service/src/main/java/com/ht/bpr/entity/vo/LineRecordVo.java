@@ -22,7 +22,7 @@ public class LineRecordVo {
     private List<Integer> maxHeartRate;
     private List<String> measureTime;
 
-    public static LineRecordVo fromRecordToVo(List<LineRecord> records) {
+    public static LineRecordVo fromRecordListToVo(List<LineRecord> records) {
         LineRecordVo recordVo = new LineRecordVo();
         List<Integer> avgHighBloodPressure = new ArrayList<>();
         List<Integer> avgLowBloodPressure = new ArrayList<>();

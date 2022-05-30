@@ -41,21 +41,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUserInfo(UserVo userVo) {
-        if (StringUtils.isBlank(userVo.getOpenId())) {
+        String openId = userVo.getOpenId();
+        if (StringUtils.isBlank(openId)) {
             throw new BprException(BprResultStatus.PARAM_IS_NULL, "openId is null");
         }
         if (StringUtils.isBlank(userVo.getNickName())) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "nickName is null, openId is " + userVo.getOpenId());
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "nickName is null, openId is " + openId);
         }
         if (StringUtils.isBlank(userVo.getAvatarUrl())) {
-            throw new BprException(BprResultStatus.PARAM_IS_NULL, "avatarUrl is null, openId is " + userVo.getOpenId());
+            throw new BprException(BprResultStatus.PARAM_IS_NULL, "avatarUrl is null, openId is " + openId);
         }
         User user = new User();
-        user.setOpenId(userVo.getOpenId());
+        user.setOpenId(openId);
         user.setNickName(userVo.getNickName());
         user.setAvatarUrl(userVo.getAvatarUrl());
         //查询用户是否存在
-        User checkUser = userMapper.selectByOpenId(userVo.getOpenId());
+        User checkUser = userMapper.selectByOpenId(openId);
         if (checkUser == null) {
             // 注册
             userMapper.insert(user);

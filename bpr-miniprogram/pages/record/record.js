@@ -49,7 +49,13 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-
+    const recordQuery = this.data.recordQuery
+    const today = new Date(new Date().toLocaleDateString())
+    recordQuery.startTime = util.formatTime(today)
+    recordQuery.endTime = util.formatTime(new Date(today.getTime() + 86399999))
+    this.setData({
+      selectedDate: this.formatDate(today)
+    })
   },
 
   /**
@@ -63,16 +69,11 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    const recordQuery = this.data.recordQuery
-    const today = new Date(new Date().toLocaleDateString())
-    recordQuery.startTime = util.formatTime(today)
-    recordQuery.endTime = util.formatTime(new Date(today.getTime() + 86399999))
     this.setData({
       openId: app.globalData.openId,
       userInfo: app.globalData.userInfo,
       familyInfo: app.globalData.familyInfo,
       recordQuery: this.data.recordQuery,
-      selectedDate: this.formatDate(today)
     })
     this.generateMemberSelector()
 

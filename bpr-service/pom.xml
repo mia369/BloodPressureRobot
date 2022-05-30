@@ -80,13 +80,13 @@
                 </includes>
             </resource>
             <!--https证书文件-->
-            <resource>
-                <directory>src/main/resources/${active.profile}</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>*.pfx</include>
-                </includes>
-            </resource>
+<!--            <resource>-->
+<!--                <directory>src/main/resources/${active.profile}</directory>-->
+<!--                <filtering>true</filtering>-->
+<!--                <includes>-->
+<!--                    <include>*.pfx</include>-->
+<!--                </includes>-->
+<!--            </resource>-->
         </resources>
 
         <plugins>

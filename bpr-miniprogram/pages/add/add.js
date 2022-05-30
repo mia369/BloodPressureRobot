@@ -83,6 +83,10 @@ Page({
     console.log("add onload options: ", options)
     if (options && options !== {}) {
       if (options.shareUser && options.shareUser !== '' && options.familyId && options.familyId !== '') {
+        Toast.loading({
+          message: '加载中...',
+          forbidClick: true,
+        });
         app.globalData.shareUserInfo.familyId = options.familyId
         app.globalData.shareUserInfo.shareUser = options.shareUser
         this.handleShare()

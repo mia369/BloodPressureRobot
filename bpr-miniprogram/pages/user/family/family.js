@@ -117,11 +117,11 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage() {
-    // var path = '/pages/user/user?familyId=' + app.globalData.familyInfo.familyId + '&shareUser=' + app.globalData.userInfo.nickName
-    // var title = '点击加入' + app.globalData.userInfo.nickName + '的家庭'
+    var path = '/pages/add/add?familyId=' + app.globalData.familyInfo.familyId + '&shareUser=' + app.globalData.userInfo.nickName
+    var title = '点击加入' + app.globalData.userInfo.nickName + '的家庭'
 
-    var path = '/pages/add/add?familyId=' + '84406089aa8b46bdceae4fc3bc79fc10' + '&shareUser=' + '未完'
-    var title = '点击加入' + '未完' + '的家庭'
+    // var path = '/pages/add/add?familyId=' + '84406089aa8b46bdceae4fc3bc79fc10' + '&shareUser=' + '未完'
+    // var title = '点击加入' + '未完' + '的家庭'
 
     return {
       title: title,
@@ -160,24 +160,18 @@ Page({
         // on close
       });
     } else {
-      var familyInfo = this.data.familyInfo
-      familyInfo.familyManager.openId = app.globalData.openId
-      console.log("var familyInfo: ", familyInfo)
-      //调用接口
-      requestApi.post(familyApi.registerFamily, familyInfo).then(res => {
-        //成功时回调函数
+      const params = {
+        familyName: this.data.familyInfo.familyName,
+        openId: this.data.openId
+      }
+      requestApi.post(familyApi.registerFamily, params).then(res => {
         console.log("返回结果: ", res)
-        app.globalData.familyInfo = res.result
-        this.setData({
-          familyInfo: res.result,
-          haveFamily: true,
-        })
-        console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
-        console.log("this.data.familyInfo: ", this.data.familyInfo)
-        this.onShow()
       }).catch(err => {
         //失败时回调函数
         console.log(err)
+      })
+      wx.redirectTo({
+        url: '/pages/user/family/family',
       })
     }
   },
@@ -230,7 +224,6 @@ Page({
           app.globalData.familyInfo = this.data.familyInfo
           console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
           console.log("this.data.familyInfo: ", this.data.familyInfo)
-          this.onShow()
         }).catch(err => {
           //失败时回调函数
           console.log(err)
@@ -244,7 +237,6 @@ Page({
   deleteMember(e) {
     const member = e.currentTarget.dataset.member;
     console.log(member)
-
     Dialog.confirm({
         title: '是否将成员移出家庭?',
       })
@@ -258,13 +250,9 @@ Page({
         requestApi.remove(familyApi.deleteMember, params).then(res => {
           //成功时回调函数
           console.log("返回结果: ", res)
-          app.globalData.familyInfo.familyMemberVos = res.result.familyMemberVos
-          this.setData({
-            familyInfo: app.globalData.familyInfo,
+          wx.redirectTo({
+            url: '/pages/user/family/family',
           })
-          console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
-          console.log("this.data.familyInfo: ", this.data.familyInfo)
-          this.onShow()
         }).catch(err => {
           //失败时回调函数
           console.log(err)
@@ -307,7 +295,6 @@ Page({
           app.globalData.familyInfo = this.data.familyInfo
           console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
           console.log("this.data.familyInfo: ", this.data.familyInfo)
-          this.onShow()
         }).catch(err => {
           //失败时回调函数
           console.log(err)
@@ -320,11 +307,8 @@ Page({
 
   updateFamilyIdentity() {
     console.log(this.data.updatingMember)
-    const familyInfo = this.data.familyInfo
     requestApi.put(familyApi.updateFamilyIdentity, this.data.updatingMember).then(res => {
-      //成功时回调函数
-      console.log("返回结果: ", res)
-      familyInfo.familyMemberVos = res.result.familyMemberVos
+      //清空数据
       this.setData({
         updatingMember: {
           id: '',
@@ -338,10 +322,9 @@ Page({
           updateTime: '',
         },
       })
-      app.globalData.familyInfo = familyInfo
-      console.log("app.globalData.familyInfo: ", app.globalData.familyInfo)
-      console.log("this.data.familyInfo: ", this.data.familyInfo)
-      this.onLoad()
+      wx.redirectTo({
+        url: '/pages/user/family/family',
+      })
     }).catch(err => {
       //失败时回调函数
       console.log(err)

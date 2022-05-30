@@ -1,9 +1,9 @@
 package com.ht.bpr.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ht.bpr.common.Result;
 import com.ht.bpr.entity.vo.FamilyMemberVo;
 import com.ht.bpr.entity.vo.FamilyVo;
-import com.ht.bpr.service.FamilyMemberService;
 import com.ht.bpr.service.FamilyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +23,11 @@ public class FamilyController {
     private FamilyService familyService;
 
     @PostMapping("addFamily")
-    public Result<FamilyVo> addFamily(@RequestBody FamilyVo familyVo) {
-        FamilyVo vo = familyService.addFamily(familyVo);
-        return Result.success(vo);
+    public Result addFamily(@RequestBody JSONObject jsonObject) {
+        String familyName = jsonObject.getString("familyName");
+        String openId = jsonObject.getString("openId");
+        familyService.addFamily(familyName, openId);
+        return Result.success();
     }
 
     @GetMapping("search")
@@ -35,9 +37,9 @@ public class FamilyController {
     }
 
     @PostMapping("addMember")
-    public Result<FamilyVo> addMember(@RequestBody FamilyMemberVo familyMemberVo) {
-        FamilyVo familyVo = familyService.addMember(familyMemberVo);
-        return Result.success(familyVo);
+    public Result addMember(@RequestBody FamilyMemberVo familyMemberVo) {
+        familyService.addMember(familyMemberVo);
+        return Result.success();
     }
 
     @DeleteMapping("deleteFamily")
@@ -47,9 +49,9 @@ public class FamilyController {
     }
 
     @DeleteMapping("deleteMember")
-    public Result<FamilyVo> deleteMember(@RequestBody FamilyMemberVo memberVo) {
-        FamilyVo familyVo = familyService.deleteMember(memberVo);
-        return Result.success(familyVo);
+    public Result deleteMember(@RequestBody FamilyMemberVo memberVo) {
+        familyService.deleteMember(memberVo);
+        return Result.success();
     }
 
     @DeleteMapping("exitFamily")
@@ -59,9 +61,9 @@ public class FamilyController {
     }
 
     @PutMapping("updateFamilyIdentity")
-    public Result<FamilyVo> updateFamilyIdentity(@RequestBody FamilyMemberVo memberVo) {
-        FamilyVo familyVo = familyService.updateFamilyIdentity(memberVo);
-        return Result.success(familyVo);
+    public Result updateFamilyIdentity(@RequestBody FamilyMemberVo memberVo) {
+        familyService.updateFamilyIdentity(memberVo);
+        return Result.success();
     }
 
 }

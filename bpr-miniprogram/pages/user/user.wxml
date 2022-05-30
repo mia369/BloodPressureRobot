@@ -1,7 +1,6 @@
 <van-dialog id="van-dialog" />
 <van-toast id="van-toast" />
-
-<view style="height: 185px; background-image: url('/images/bg1.jpg'); background-size: 130%; background-position-y: center; background-position-x: center; text-align: center; vertical-align: middle; z-index: 10; ">
+<view class="background-class">
   <view style="padding: 70px 5px 5px 5px;">
     <van-image round fit="fill" width="80px" height="80px" src="{{ userInfo.avatarUrl }}" wx:if="{{canIUseGetUserProfile}}" bind:click="getUserProfile" style="border: 1px; "/>
     <span style="display:block; font-size: 18px; color: white;">{{userInfo.nickName}}</span>
