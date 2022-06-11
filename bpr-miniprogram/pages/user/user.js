@@ -66,10 +66,12 @@ Page({
     requestApi.get(userApi.searchUser, params).then(res => {
       //成功时回调函数
       console.log('searchUser返回结果: ', res)
-      app.globalData.userInfo = res.result
-      this.setData({
-        userInfo: res.result
-      })
+      if (res.result) {
+        app.globalData.userInfo = res.result
+        this.setData({
+          userInfo: res.result
+        })
+      }
     }).catch(err => {
       //失败时回调函数
       console.log(err)

@@ -7,7 +7,7 @@
   <text decode="{{true}}" >
     &emsp;&emsp;最初的设计目的是给需要经常测量血压的人群提供一款便捷的记录管理服务。通过本程序，用户本人和家人可以快速地了解彼此的血压心率情况。
   </text>
-  <text decode="{{true}}" >
+  <text decode="{{true}}" style="font-size: 16px; color: rgb(148, 147, 147);">
     本项目仅供学习使用。
   </text>
 </van-cell>

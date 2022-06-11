@@ -147,8 +147,10 @@ Page({
   updateUserDetails(event) {
     console.log("updateUserDetails");
     console.log(this.data.userInfo)
+    const userInfo = this.data.userInfo
+    userInfo.openId = app.globalData.openId
     //调用接口
-    requestApi.post(userApi.saveUserDetails, this.data.userInfo).then(res => {
+    requestApi.post(userApi.saveUserDetails, userInfo).then(res => {
       //成功时回调函数
       console.log("返回结果: ", res)
       app.globalData.userInfo = this.data.userInfo
@@ -157,6 +159,8 @@ Page({
       //失败时回调函数
       console.log(err)
     })
-    this.onLoad()
+    wx.redirectTo({
+      url: '/pages/user/info/info',
+    })
   },
 })

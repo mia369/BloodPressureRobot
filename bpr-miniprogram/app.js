@@ -16,8 +16,8 @@ App({
    * 全局变量
    */
   globalData: {
-    host: 'https://bpr.flink-dsp.com:2590/',
-    // host: 'http://localhost:2599/',
+    // host: 'https://bpr.flink-dsp.com:2590/',
+    host: 'https://www.hutao.press:2590/',
     openId: '',
     sessionKey: '',
     userInfo: {

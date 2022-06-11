@@ -119,10 +119,6 @@ Page({
   onShareAppMessage() {
     var path = '/pages/add/add?familyId=' + app.globalData.familyInfo.familyId + '&shareUser=' + app.globalData.userInfo.nickName
     var title = '点击加入' + app.globalData.userInfo.nickName + '的家庭'
-
-    // var path = '/pages/add/add?familyId=' + '84406089aa8b46bdceae4fc3bc79fc10' + '&shareUser=' + '未完'
-    // var title = '点击加入' + '未完' + '的家庭'
-
     return {
       title: title,
       path: path

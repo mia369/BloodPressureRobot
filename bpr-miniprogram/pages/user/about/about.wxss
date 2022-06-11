@@ -8,7 +8,7 @@
 
 
 .background-class {
-  height: 140px; 
+  height: 150px; 
   background-size: 130%; 
   background-position-y: center; 
   background-position-x: center; 

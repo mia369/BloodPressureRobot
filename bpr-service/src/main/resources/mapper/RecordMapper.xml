@@ -105,7 +105,7 @@
                            heart_rate,
                            measure_time,
                            CASE
-                               WHEN HOUR ( measure_time) BETWEEN 4
+                               WHEN HOUR ( measure_time) BETWEEN 0
         AND 8 THEN
         '1'
         WHEN HOUR ( measure_time ) BETWEEN 9
@@ -114,8 +114,8 @@
         WHEN HOUR ( measure_time ) BETWEEN 13
         AND 18 THEN
         '3'
-        WHEN HOUR ( measure_time ) &gt;= 19
-        AND HOUR ( measure_time ) &lt;= 3 THEN
+        WHEN HOUR ( measure_time ) BETWEEN 19
+        AND 23 THEN
         '4' ELSE 4
         END timeType
               FROM
